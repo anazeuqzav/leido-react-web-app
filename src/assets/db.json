@@ -1,0 +1,205 @@
+{
+  "libros": [
+    {
+      "titulo": "Los restos del día",
+      "autor": "Kazuo Ishiguro",
+      "anio": 1989,
+      "genero": "Ficción",
+      "leido": false,
+      "id": "1",
+      "userId": 1
+    },
+    {
+      "titulo": "La mala costumbre",
+      "autor": "Alana S. Portero",
+      "anio": 2023,
+      "genero": "Ficción",
+      "leido": false,
+      "id": "2",
+      "userId": 1
+    },
+    {
+      "titulo": "1984",
+      "autor": "George Orwell",
+      "anio": 1949,
+      "genero": "Ciencia Ficción",
+      "leido": false,
+      "id": "3",
+      "userId": 1
+    },
+    {
+      "titulo": "Cien años de soledad",
+      "autor": "Gabriel García Márquez",
+      "anio": 1967,
+      "genero": "Realismo Mágico",
+      "leido": true,
+      "puntuacion": 5,
+      "id": "4",
+      "userId": 1
+    },
+    {
+      "titulo": "El cuento de la criada",
+      "autor": "Margaret Atwood",
+      "anio": 1985,
+      "genero": "Distopía",
+      "leido": true,
+      "puntuacion": 4,
+      "id": "5",
+      "userId": 1
+    },
+    {
+      "titulo": "Orgullo y prejuicio",
+      "autor": "Jane Austen",
+      "anio": 1813,
+      "genero": "Romance",
+      "leido": false,
+      "id": "6",
+      "userId": 1
+    },
+    {
+      "titulo": "Fahrenheit 451",
+      "autor": "Ray Bradbury",
+      "anio": 1953,
+      "genero": "Ciencia Ficción",
+      "leido": true,
+      "puntuacion": 4,
+      "id": "7",
+      "userId": 1
+    },
+    {
+      "titulo": "Don Quijote de la Mancha",
+      "autor": "Miguel de Cervantes",
+      "anio": 1605,
+      "genero": "Clásico",
+      "leido": true,
+      "puntuacion": 5,
+      "id": "8",
+      "userId": 1
+    },
+    {
+      "titulo": "Las uvas de la ira",
+      "autor": "John Steinbeck",
+      "anio": 1939,
+      "genero": "Ficción",
+      "leido": false,
+      "id": "9",
+      "userId": 1
+    },
+    {
+      "titulo": "Matar a un ruiseñor",
+      "autor": "Harper Lee",
+      "anio": 1960,
+      "genero": "Ficción",
+      "leido": true,
+      "puntuacion": 5,
+      "id": "10",
+      "userId": 1
+    },
+    {
+      "titulo": "Crimen y castigo",
+      "autor": "Fiódor Dostoyevski",
+      "anio": 1866,
+      "genero": "Novela Psicológica",
+      "leido": true,
+      "puntuacion": 4,
+      "id": "11",
+      "userId": 1
+    },
+    {
+      "titulo": "El principito",
+      "autor": "Antoine de Saint-Exupéry",
+      "anio": 1943,
+      "genero": "Fábula",
+      "leido": false,
+      "id": "12",
+      "userId": 1
+    },
+    {
+      "titulo": "Ensayo sobre la ceguera",
+      "autor": "José Saramago",
+      "anio": 1995,
+      "genero": "Ficción",
+      "leido": true,
+      "puntuacion": 5,
+      "id": "13",
+      "userId": 1
+    },
+    {
+      "titulo": "Drácula",
+      "autor": "Bram Stoker",
+      "anio": 1897,
+      "genero": "Terror",
+      "leido": false,
+      "id": "14",
+      "userId": 1
+    },
+    {
+      "titulo": "El nombre del viento",
+      "autor": "Patrick Rothfuss",
+      "anio": 2007,
+      "genero": "Fantasía",
+      "leido": true,
+      "puntuacion": 5,
+      "id": "15",
+      "userId": 1
+    },
+    {
+      "titulo": "Los juegos del hambre",
+      "autor": "Suzanne Collins",
+      "anio": 2008,
+      "genero": "Distopía",
+      "leido": false,
+      "id": "16",
+      "userId": 1
+    },
+    {
+      "titulo": "Fundación",
+      "autor": "Isaac Asimov",
+      "anio": 1951,
+      "genero": "Ciencia Ficción",
+      "leido": true,
+      "puntuacion": 4,
+      "id": "17",
+      "userId": 1
+    },
+    {
+      "titulo": "La sombra del viento",
+      "autor": "Carlos Ruiz Zafón",
+      "anio": 2001,
+      "genero": "Misterio",
+      "leido": true,
+      "puntuacion": 5,
+      "id": "18",
+      "userId": 1
+    },
+    {
+      "titulo": "Los pilares de la Tierra",
+      "autor": "Ken Follett",
+      "anio": 1989,
+      "genero": "Histórica",
+      "leido": false,
+      "id": "19",
+      "userId": 1
+    },
+    {
+      "titulo": "Prueba",
+      "autor": "prueba",
+      "anio": "2000",
+      "genero": "Prueba",
+      "leido": false,
+      "id": "4p1pmMO"
+    }
+  ],
+  "users": [
+    {
+      "email": "prueba@gmail.com",
+      "password": "$2a$10$ug4fZM4NcduStGvgIWPciuK/Iz/ijtqOEj3FWgSdVp/7fl/EmdvPi",
+      "id": 1
+    },
+    {
+      "email": "anavazquez@gmail.com",
+      "password": "$2a$10$i1V48ZgxH.QO/kNLd8VCoe300KSOCORJLdX/hqMHl/AY/VqE5dSkW",
+      "id": 2
+    }
+  ]
+}
