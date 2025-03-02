@@ -2,7 +2,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { AuthContext } from "./AuthContext"; // Contexto de Autenticación para identificar al usuario
-import { getBooks, addBook, updateBook, deleteBook } from "../api/api"; // Funciones que va a utilizar
+import { getBooks, addBook, updateBook, deleteBook } from "../api/api"; // Funciones de la api para hacer CRUD
 
 // Se crea un contexto global que se utiliza para compartir el estado de los libros en toda la aplicación.
 export const BooksContext = createContext();
@@ -11,7 +11,7 @@ export const BooksContext = createContext();
 export const BooksProvider = ({ children }) => {
   const [books, setBooks] = useState([]); // Guarda los libros
   const [error, setError] = useState(null); // Estado para manejar errores
-  const { user, token } = useContext(AuthContext); // Obtiene el token para identificar al usuario
+  const { user, token } = useContext(AuthContext); // Obtiene el token y el usuario para identificar al usuario
 
   // Carga los libros desde la API
   useEffect(() => {

@@ -7,9 +7,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import GlobalStyles from "./styles/GlobalStyles";
-
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+// Configura los colores para los componentes de Material UI
 const theme = createTheme({
   palette: {
     primary: {
@@ -24,19 +24,15 @@ const theme = createTheme({
   },
 });
 
-
+// Protege las rutas si el usuario no esta autenticado
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
   return user ? children : <Navigate to="/login" />;
 };
 
-PrivateRoute.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 const App = () => {
   return (
-   
     <AuthProvider>
       <BooksProvider>
       <ThemeProvider theme={theme}>
@@ -57,3 +53,6 @@ const App = () => {
 
 export default App;
 
+PrivateRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+};

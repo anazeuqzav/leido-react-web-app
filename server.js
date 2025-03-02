@@ -8,7 +8,7 @@ const middlewares = jsonServer.defaults();
 server.db = router.db;
 
 server.use(middlewares);
-server.use(auth); // Aplica json-server-auth
+server.use(auth); 
 server.use(router);
 
 const PORT = 5000;

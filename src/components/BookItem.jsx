@@ -76,10 +76,10 @@ const modalStyle = {
  * Componente que representa un libro individual en la lista de libros. 
  * Permite editar, eliminar y marcar como leído/no leído un libro, además de mostrar su información.
  */
-const BookItem = ({ id, titulo, autor, anio, genero, leido, puntuacion, url }) => {
+const BookItem = ({ id, titulo, autor, anio, genero, leido, puntuacion, url, userId }) => {
   const { updateBook, deleteBook } = useContext(BooksContext); // funciones updateBook y deleteBook del contexto global
   const [isEditing, setIsEditing] = useState(false); // controla si un libro esta en modo edición
-  const [editedBook, setEditedBook] = useState({ titulo, autor, anio, genero, puntuacion, leido, url }); // almacena los datos editados
+  const [editedBook, setEditedBook] = useState({ titulo, autor, anio, genero, puntuacion, leido, url, userId }); // almacena los datos editados
 
   // Actualiza editedBook con los valores actualizados
   const handleChange = (e) => {
@@ -177,6 +177,7 @@ BookItem.propTypes = {
   leido: PropTypes.bool.isRequired,
   puntuacion: PropTypes.number,
   url: PropTypes.string,
+  userId: PropTypes.string
 };
 
 export default BookItem;

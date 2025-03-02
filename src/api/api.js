@@ -6,15 +6,6 @@
 const API_URL = "http://localhost:5000"; // URL del servidor donde está alojada la API
 
 /**
- * Función que recupera el token almacenado en el localStorage y lo añade a la cabecera
- * @returns la cabecera Authorization con el token almacenado si existe o vacío.
- */
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
-
-/**
  * Función que maneja las respuestas de error de la API.
  * @param {} response 
  * @returns Dependiendo del error muestra un mensaje diferente. Si no hay errores devuelve la respuesta en formato json.
@@ -43,6 +34,15 @@ const handleResponse = async (response) => {
     return response.json();
   };
   
+  /**
+ * Función que recupera el token almacenado en el localStorage y lo añade a la cabecera
+ * @returns la cabecera Authorization con el token almacenado si existe o vacío.
+ */
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 
 /**
  * Obtiene los libros de un usuario específico mediante una petición GET
