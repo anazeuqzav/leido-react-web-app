@@ -1,31 +1,25 @@
-
-import LibrosLeidos from "../components/LibrosLeidos";
-import LibrosPorLeer from "../components/LibrosPorLeer";
-import LibrosFavoritos from "../components/LibrosFavoritos";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-
-
+import { useState } from "react";
+import Header from "../components/Header";
+import Nav from "../components/Nav";
+import ReadBooks from "../components/ReadBooks";
+import UnreadBooks from "../components/UnreadBooks";
+import FavoriteBooks from "../components/FavoriteBooks"
 
 const Home = () => {
-  const { logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login"); // Redirige a la página de login
-  };
+  const [listaActual, setListaActual] = useState("leidos"); // Estado para cambiar lista
 
   return (
     <div>
-      <h2>Mi Biblioteca</h2>
-      <button onClick={handleLogout}>Cerrar Sesión</button>
-      <LibrosLeidos />
-      <LibrosPorLeer />
-      <LibrosFavoritos />
+      <Header />
+      <Nav setListaActual={setListaActual} />
+      <div>
+        {listaActual === "leidos" && <ReadBooks />}
+        {listaActual === "porLeer" && <UnreadBooks />}
+        {listaActual === "favoritos" && <FavoriteBooks />}
+      </div>
     </div>
   );
 };
 
 export default Home;
+

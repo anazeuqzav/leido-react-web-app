@@ -2,13 +2,13 @@ import jsonServer from "json-server";
 import auth from "json-server-auth";
 
 const server = jsonServer.create();
-const router = jsonServer.router("src/assets/db.json"); // Tu base de datos
+const router = jsonServer.router("src/assets/db.json");
 const middlewares = jsonServer.defaults();
 
-server.db = router.db; // Importante para manejar autenticación
+server.db = router.db;
 
 server.use(middlewares);
-server.use(auth);
+server.use(auth); // Aplica json-server-auth
 server.use(router);
 
 const PORT = 5000;

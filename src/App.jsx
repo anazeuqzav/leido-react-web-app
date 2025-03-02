@@ -6,6 +6,24 @@ import PropTypes from "prop-types";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
+import GlobalStyles from "./styles/GlobalStyles";
+
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0d4341', // Color principal
+    },
+    secondary: {
+      main: 'rgb(252, 98, 168)', // Color secundario (botón cancelar, por ejemplo)
+    },
+    background: {
+      paper: '#ffffff', // Fondo del modal
+    },
+  },
+});
+
 
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
@@ -18,8 +36,11 @@ PrivateRoute.propTypes = {
 
 const App = () => {
   return (
+   
     <AuthProvider>
       <BooksProvider>
+      <ThemeProvider theme={theme}>
+      <GlobalStyles/>
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -27,8 +48,10 @@ const App = () => {
             <Route path="/" element={<PrivateRoute><Home /></PrivateRoute>} />
           </Routes>
         </Router>
+        </ThemeProvider>
       </BooksProvider>
     </AuthProvider>
+   
   );
 };
 

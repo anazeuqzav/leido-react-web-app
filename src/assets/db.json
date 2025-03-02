@@ -5,18 +5,19 @@
       "autor": "Kazuo Ishiguro",
       "anio": 1989,
       "genero": "Ficción",
-      "leido": false,
-      "id": "1",
-      "userId": 1
+      "leido": true,
+      "url": "https://covers.openlibrary.org/b/id/12335651-L.jpg",
+      "id": "1"
     },
     {
       "titulo": "La mala costumbre",
       "autor": "Alana S. Portero",
       "anio": 2023,
       "genero": "Ficción",
-      "leido": false,
-      "id": "2",
-      "userId": 1
+      "puntuacion": 4.5,
+      "leido": true,
+      "url": "https://covers.openlibrary.org/b/id/14271575-L.jpg",
+      "id": "2"
     },
     {
       "titulo": "1984",
@@ -25,27 +26,26 @@
       "genero": "Ciencia Ficción",
       "leido": false,
       "id": "3",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/12054715-L.jpg"
     },
     {
       "titulo": "Cien años de soledad",
       "autor": "Gabriel García Márquez",
       "anio": 1967,
       "genero": "Realismo Mágico",
-      "leido": true,
-      "puntuacion": 5,
-      "id": "4",
-      "userId": 1
+      "leido": false,
+      "url": "https://covers.openlibrary.org/b/id/12808734-L.jpg",
+      "id": "4"
     },
     {
       "titulo": "El cuento de la criada",
       "autor": "Margaret Atwood",
       "anio": 1985,
       "genero": "Distopía",
-      "leido": true,
-      "puntuacion": 4,
-      "id": "5",
-      "userId": 1
+      "leido": false,
+      "url": "https://covers.openlibrary.org/b/id/12511365-L.jpg",
+      "id": "5"
     },
     {
       "titulo": "Orgullo y prejuicio",
@@ -54,27 +54,28 @@
       "genero": "Romance",
       "leido": false,
       "id": "6",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/13775960-L.jpg"
     },
     {
-      "titulo": "Fahrenheit 451",
-      "autor": "Ray Bradbury",
-      "anio": 1953,
-      "genero": "Ciencia Ficción",
+      "titulo": "Fahrenheit 452",
+      "autor": "Ray Bradbur",
+      "anio": "1952",
+      "genero": "Ciencia Ficción2",
+      "puntuacion": 5,
       "leido": true,
-      "puntuacion": 4,
-      "id": "7",
-      "userId": 1
+      "url": "https://covers.openlibrary.org/b/id/14414405-L.jpg",
+      "id": "7"
     },
     {
       "titulo": "Don Quijote de la Mancha",
       "autor": "Miguel de Cervantes",
       "anio": 1605,
       "genero": "Clásico",
-      "leido": true,
       "puntuacion": 5,
-      "id": "8",
-      "userId": 1
+      "leido": true,
+      "url": "https://covers.openlibrary.org/b/id/13990987-L.jpg",
+      "id": "8"
     },
     {
       "titulo": "Las uvas de la ira",
@@ -83,46 +84,37 @@
       "genero": "Ficción",
       "leido": false,
       "id": "9",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/7368021-L.jpg"
     },
     {
       "titulo": "Matar a un ruiseñor",
       "autor": "Harper Lee",
       "anio": 1960,
       "genero": "Ficción",
+      "puntuacion": 3,
       "leido": true,
-      "puntuacion": 5,
-      "id": "10",
-      "userId": 1
+      "url": "https://covers.openlibrary.org/b/id/8353076-L.jpg",
+      "id": "10"
     },
     {
       "titulo": "Crimen y castigo",
       "autor": "Fiódor Dostoyevski",
       "anio": 1866,
       "genero": "Novela Psicológica",
-      "leido": true,
-      "puntuacion": 4,
-      "id": "11",
-      "userId": 1
+      "leido": false,
+      "url": "https://covers.openlibrary.org/b/id/10095295-L.jpg",
+      "id": "11"
     },
     {
       "titulo": "El principito",
       "autor": "Antoine de Saint-Exupéry",
       "anio": 1943,
       "genero": "Fábula",
-      "leido": false,
-      "id": "12",
-      "userId": 1
-    },
-    {
-      "titulo": "Ensayo sobre la ceguera",
-      "autor": "José Saramago",
-      "anio": 1995,
-      "genero": "Ficción",
+      "puntuacion": 3.5,
       "leido": true,
-      "puntuacion": 5,
-      "id": "13",
-      "userId": 1
+      "url": "https://covers.openlibrary.org/b/id/2295636-L.jpg",
+      "id": "12"
     },
     {
       "titulo": "Drácula",
@@ -131,7 +123,8 @@
       "genero": "Terror",
       "leido": false,
       "id": "14",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/10114404-L.jpg"
     },
     {
       "titulo": "El nombre del viento",
@@ -141,7 +134,8 @@
       "leido": true,
       "puntuacion": 5,
       "id": "15",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/7386674-L.jpg"
     },
     {
       "titulo": "Los juegos del hambre",
@@ -150,7 +144,8 @@
       "genero": "Distopía",
       "leido": false,
       "id": "16",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/13941103-L.jpg"
     },
     {
       "titulo": "Fundación",
@@ -160,7 +155,8 @@
       "leido": true,
       "puntuacion": 4,
       "id": "17",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/14560069-L.jpg"
     },
     {
       "titulo": "La sombra del viento",
@@ -170,7 +166,8 @@
       "leido": true,
       "puntuacion": 5,
       "id": "18",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/10522126-L.jpg"
     },
     {
       "titulo": "Los pilares de la Tierra",
@@ -179,19 +176,23 @@
       "genero": "Histórica",
       "leido": false,
       "id": "19",
-      "userId": 1
+      "userId": 1,
+      "url": "https://covers.openlibrary.org/b/id/1048728-L.jpg"
     },
     {
-      "titulo": "Prueba",
-      "autor": "prueba",
-      "anio": "2000",
-      "genero": "Prueba",
-      "leido": false,
-      "id": "4p1pmMO"
+      "titulo": "El descontento",
+      "autor": "Beatriz Serrano",
+      "anio": "2023",
+      "genero": "Novela literaria",
+      "puntuacion": 5,
+      "leido": true,
+      "url": "https://www.planetadelibros.com/usuaris/libros/fotos/382/original/portada_el-descontento_beatriz-serrano_202308311542.jpg",
+      "id": "cmdS83t"
     }
   ],
   "users": [
     {
+      "username": "anavazquez",
       "email": "prueba@gmail.com",
       "password": "$2a$10$ug4fZM4NcduStGvgIWPciuK/Iz/ijtqOEj3FWgSdVp/7fl/EmdvPi",
       "id": 1
@@ -200,6 +201,17 @@
       "email": "anavazquez@gmail.com",
       "password": "$2a$10$i1V48ZgxH.QO/kNLd8VCoe300KSOCORJLdX/hqMHl/AY/VqE5dSkW",
       "id": 2
+    },
+    {
+      "email": "usuario@gmail.com",
+      "password": "$2a$10$lIrfE/yqJ7XJmlTXLmT6wugQAs6ORiuScAwBFAeIrrzcH4ONFis4S",
+      "id": 3
+    },
+    {
+      "email": "martavalero@gmail.com",
+      "password": "$2a$10$xRRxEPetJyCgpVla9r6l1u.5lK7gqSw19oxF0wVyv8zw3jjXWYwC.",
+      "username": "martavalero",
+      "id": 4
     }
   ]
 }
