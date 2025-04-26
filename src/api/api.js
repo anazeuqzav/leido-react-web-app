@@ -3,7 +3,7 @@
  * incluyendo la autenticación con token JTW
  */
 
-const API_URL = "http://localhost:5000"; // URL del servidor donde está alojada la API
+const API_URL = "http://localhost:3000"; // URL del servidor donde está alojada la API
 
 /**
  * Función que maneja las respuestas de error de la API.
@@ -51,7 +51,7 @@ const getAuthHeaders = () => {
  */
 export const getBooks = async (userId) => {
     try {
-      const response = await fetch(`${API_URL}/libros?userId=${userId}`, {
+      const response = await fetch(`${API_URL}/api/books?userId=${userId}`, {
         headers: {
           "Content-Type": "application/json",
           ...getAuthHeaders(),
@@ -71,7 +71,7 @@ export const getBooks = async (userId) => {
  */
 export const addBook = async (newBook) => {
     try {
-      const response = await fetch(`${API_URL}/libros`, {
+      const response = await fetch(`${API_URL}/api/books`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export const addBook = async (newBook) => {
  */
 export const updateBook = async (id, updatedBook) => {
     try {
-      const response = await fetch(`${API_URL}/libros/${id}`, {
+      const response = await fetch(`${API_URL}/api/books/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export const updateBook = async (id, updatedBook) => {
  */
 export const deleteBook = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/libros/${id}`, {
+      const response = await fetch(`${API_URL}/api/books/${id}`, {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
@@ -127,3 +127,6 @@ export const deleteBook = async (id) => {
       throw error;
     }
   };
+
+
+  

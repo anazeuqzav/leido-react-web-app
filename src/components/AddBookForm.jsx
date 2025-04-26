@@ -35,13 +35,13 @@ const AddBookForm = ({ defaultLeido }) => {
   const { addBook } = useContext(BooksContext); // función para añadir los libros
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBook, setNewBook] = useState({
-    titulo: "",
-    autor: "",
-    anio: null,
-    genero: "",
-    leido: defaultLeido, // dependiendo de si se añade a la lista de libros leídos o no leídos
-    puntuacion: defaultLeido ? 1 : undefined,
-    url: "",
+    title: "",
+    author: "",
+    year: null,
+    genre: "",
+    status: defaultLeido, // depending on whether the book is added to the read or unread list
+    rating: defaultLeido ? 1 : undefined,
+    cover: "",
   });
 
   // Captura los valores del formulario y los actualiza
@@ -54,14 +54,15 @@ const AddBookForm = ({ defaultLeido }) => {
     e.preventDefault();
     addBook(newBook);
     setNewBook({
-      titulo: "",
-      autor: "",
-      anio: "",
-      genero: "",
-      leido: defaultLeido,
-      puntuacion: 1
+      title: "",
+      author: "",
+      year: "",
+      genre: "",
+      status: defaultLeido,
+      rating: 1,
+      cover: ""
     });
-    setIsModalOpen(false);// Oculta el formulario después de añadir
+    setIsModalOpen(false); // Hide the form after adding
   };
 
   return (
@@ -75,19 +76,19 @@ const AddBookForm = ({ defaultLeido }) => {
         <Box sx={modalStyle}>
           <h3>Añadir Nuevo Libro</h3>
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <TextField label="Título" name="titulo" value={newBook.titulo} onChange={handleChange} required />
-            <TextField label="Autor" name="autor" value={newBook.autor} onChange={handleChange} required />
-            <TextField label="Año" name="anio" type="number" value={newBook.anio} onChange={handleChange} required />
-            <TextField label="Género" name="genero" value={newBook.genero} onChange={handleChange} required />
-            <TextField label="URL de la portada" name="url" value={newBook.url} onChange={handleChange} required />
+            <TextField label="Title" name="title" value={newBook.title} onChange={handleChange} required />
+            <TextField label="Author" name="author" value={newBook.author} onChange={handleChange} required />
+            <TextField label="Year" name="year" type="number" value={newBook.year} onChange={handleChange} required />
+            <TextField label="Genre" name="genre" value={newBook.genre} onChange={handleChange} required />
+            <TextField label="Cover URL" name="cover" value={newBook.cover} onChange={handleChange} required />
 
             {defaultLeido && (
               <TextField
-                label="Puntuación"
-                name="puntuacion"
+                label="Rating"
+                name="rating"
                 type="number"
                 inputProps={{ min: 1, max: 5 }}
-                value={newBook.puntuacion}
+                value={newBook.rating}
                 onChange={handleChange}
                 required
               />

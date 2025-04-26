@@ -27,7 +27,7 @@ const theme = createTheme({
 // Protege las rutas si el usuario no esta autenticado
 const PrivateRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/login" replace />; // Asegúrate de usar `replace` para evitar problemas de navegación
 };
 
 

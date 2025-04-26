@@ -31,6 +31,7 @@ const NavButton = styled.button`
  * Barra de navegación con las diferentes listas (libros leídos, no leídos y favoritos)
  */
 const Nav = ({ setListaActual }) => {
+  
   return (
     <NavBar>
       <NavButton onClick={() => setListaActual("leidos")}>Libros Leídos</NavButton>

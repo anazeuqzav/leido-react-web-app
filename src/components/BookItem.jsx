@@ -76,58 +76,58 @@ const modalStyle = {
  * Componente que representa un libro individual en la lista de libros. 
  * Permite editar, eliminar y marcar como leído/no leído un libro, además de mostrar su información.
  */
-const BookItem = ({ id, titulo, autor, anio, genero, leido, puntuacion, url, userId }) => {
+const BookItem = ({ _id, title, author, year, genre, status, rating, cover, userId }) => {
   const { updateBook, deleteBook } = useContext(BooksContext); // funciones updateBook y deleteBook del contexto global
   const [isEditing, setIsEditing] = useState(false); // controla si un libro esta en modo edición
-  const [editedBook, setEditedBook] = useState({ titulo, autor, anio, genero, puntuacion, leido, url, userId }); // almacena los datos editados
+  const [editedBook, setEditedBook] = useState({ title, author, year, genre, rating, status, cover, userId }); // almacena los datos editados
 
   // Actualiza editedBook con los valores actualizados
   const handleChange = (e) => {
     setEditedBook({
       ...editedBook,
-      [e.target.name]: e.target.name === "puntuacion" ? Number(e.target.value) : e.target.value,
+      [e.target.name]: e.target.name === "rating" ? Number(e.target.value) : e.target.value,
     });
   };
 
   // Actualiza el libro editado y sale del modo edición
   const handleSave = () => {
-    updateBook(id, editedBook);
+    updateBook(_id, editedBook);
     setIsEditing(false);
   };
 
   // Maneja la eliminación de un libro, muestra una ventana de confirmación
   const handleDelete = () => {
-    if (window.confirm(`¿Seguro que quieres eliminar "${titulo}"?`)) {
-      deleteBook(id);
+    if (window.confirm(`¿Seguro que quieres eliminar "${title}"?`)) {
+      deleteBook(_id);
     }
   };
 
   // Función para marcar un libro como leído o no leído
-  const handleToggleLeido = () => {
-    const nuevoEstadoLeido = !editedBook.leido;
-  
-    updateBook(id, {
+  const handleToggleStatus = () => {
+    const newStatus = !editedBook.status;
+
+    updateBook(_id, {
       ...editedBook,
-      leido: nuevoEstadoLeido,
-      puntuacion: nuevoEstadoLeido ? editedBook.puntuacion : undefined, // Si no está leído, borra la puntuación
+      status: newStatus,
+      rating: newStatus ? editedBook.rating : undefined, // Si no está leído, borra la puntuación
     });
   };
 
   return (
     <BookContainer>
-      {url && <BookImage src={url} alt={`Portada de ${titulo}`} />}
+      {cover && <BookImage src={cover} alt={`Portada de ${title}`} />}
       <BookDetails>
-        <BookTitle>{titulo}</BookTitle>
-        <BookInfo>{autor} ({anio})</BookInfo>
-        <BookInfo>{genero}</BookInfo>
-        {leido && (
+        <BookTitle>{title}</BookTitle>
+        <BookInfo>{author} ({year})</BookInfo>
+        <BookInfo>{genre}</BookInfo>
+        {status && (
           <Rating
-            name={`rating-${id}`}
-            value={editedBook.puntuacion || 0}
+            name={`rating-${_id}`}
+            value={editedBook.rating || 0}
             precision={0.5}
             onChange={(event, newValue) => {
-              setEditedBook({ ...editedBook, puntuacion: newValue });
-              updateBook(id, { ...editedBook, puntuacion: newValue });
+              setEditedBook({ ...editedBook, rating: newValue });
+              updateBook(_id, { ...editedBook, rating: newValue });
             }}
           />
         )}
@@ -136,8 +136,8 @@ const BookItem = ({ id, titulo, autor, anio, genero, leido, puntuacion, url, use
             <Button variant="outlined" color="primary" size="small" sx={{ marginRight: '10px' }} onClick={() => setIsEditing(true)}>
               Editar
             </Button>
-            <Button variant="contained" color= "primary"  size="small" onClick={handleToggleLeido}>
-              {leido ? "No leído" : "Leído"}
+            <Button variant="contained" color="primary" size="small" onClick={handleToggleStatus}>
+              {status ? "No leído" : "Leído"}
             </Button>
           </div>
           <IconButton color="secondary" aria-label="delete" onClick={handleDelete}>
@@ -151,14 +151,14 @@ const BookItem = ({ id, titulo, autor, anio, genero, leido, puntuacion, url, use
         <Box sx={modalStyle}>
           <h3>Editar libro</h3>
           <form onSubmit={handleSave}>
-            <TextField fullWidth label="Título" name="titulo" value={editedBook.titulo} onChange={handleChange} margin="normal" />
-            <TextField fullWidth label="Autor" name="autor" value={editedBook.autor} onChange={handleChange} margin="normal" />
-            <TextField fullWidth label="Año" name="anio" type="number" value={editedBook.anio} onChange={handleChange} margin="normal" />
-            <TextField fullWidth label="Género" name="genero" value={editedBook.genero} onChange={handleChange} margin="normal" />
-            <TextField fullWidth label="URL de la portada" name="url" value={editedBook.url} onChange={handleChange} margin="normal" />
+            <TextField fullWidth label="Título" name="title" value={editedBook.title} onChange={handleChange} margin="normal" />
+            <TextField fullWidth label="Autor" name="author" value={editedBook.author} onChange={handleChange} margin="normal" />
+            <TextField fullWidth label="Año" name="year" type="number" value={editedBook.year} onChange={handleChange} margin="normal" />
+            <TextField fullWidth label="Género" name="genre" value={editedBook.genre} onChange={handleChange} margin="normal" />
+            <TextField fullWidth label="URL de la portada" name="cover" value={editedBook.cover} onChange={handleChange} margin="normal" />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>Guardar</Button>
-            <Button onClick={() => setIsEditing(false)} variant="outlined" color="secondary" sx={{ mt: 2, ml: 2 }}>Cancelar</Button>
+              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>Guardar</Button>
+              <Button onClick={() => setIsEditing(false)} variant="outlined" color="secondary" sx={{ mt: 2, ml: 2 }}>Cancelar</Button>
             </Box>
           </form>
         </Box>
@@ -169,14 +169,14 @@ const BookItem = ({ id, titulo, autor, anio, genero, leido, puntuacion, url, use
 
 // Validación de PropTypes
 BookItem.propTypes = {
-  id: PropTypes.string.isRequired,
-  titulo: PropTypes.string.isRequired,
-  autor: PropTypes.string.isRequired,
-  anio: PropTypes.number.isRequired,
-  genero: PropTypes.string.isRequired,
-  leido: PropTypes.bool.isRequired,
-  puntuacion: PropTypes.number,
-  url: PropTypes.string,
+  _id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  year: PropTypes.number.isRequired,
+  genre: PropTypes.string.isRequired,
+  status: PropTypes.bool.isRequired,
+  rating: PropTypes.number,
+  cover: PropTypes.string,
   userId: PropTypes.string
 };
 

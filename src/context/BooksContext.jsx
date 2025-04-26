@@ -16,7 +16,7 @@ export const BooksProvider = ({ children }) => {
   // Carga los libros desde la API
   useEffect(() => {
     if (user && token) {
-      getBooks(user.id)
+      getBooks(user._id)
       .then(setBooks)
       .catch((error) => {
         console.error("Error cargando libros:", error);
@@ -29,7 +29,7 @@ export const BooksProvider = ({ children }) => {
   const addBookHandler = async (newBook) => {
     if (!user || !token) return;
     try {
-      const addedBook = await addBook({ ...newBook, userId: user.id });
+      const addedBook = await addBook({ ...newBook, userId: user._id });
       if (addedBook) setBooks([...books, addedBook]);
     } catch (error) {
       console.error("Error al añadir libro:", error);
@@ -70,9 +70,9 @@ export const BooksProvider = ({ children }) => {
   };
 
   // Filtra los libros para organizarlos por listas
-  const readBooks = books.filter((book) => book.leido === true);
-  const unreadBooks = books.filter((book) => book.leido === false);
-  const favoriteBooks = books.filter((book) => book.puntuacion === 5);
+  const readBooks = books.filter((book) => book.status === 'read');
+  const unreadBooks = books.filter((book) => book.status === 'to-read');
+  const favoriteBooks = books.filter((book) => book.rating === 5);
 
   // Borra el error cuando pasan 5 segundos 
   useEffect(() => {

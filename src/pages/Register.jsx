@@ -108,7 +108,7 @@ const Register = () => {
     e.preventDefault();
     const newUser = { username, email, password };
 
-    const response = await fetch("http://localhost:5000/register", {
+    const response = await fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newUser),

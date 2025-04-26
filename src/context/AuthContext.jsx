@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
    * @returns Si la respuesta es válida devuevel true, sino false.
    */
   const login = async (email, password) => {
-    const response = await fetch("http://localhost:5000/login", {
+    const response = await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -36,11 +36,11 @@ export const AuthProvider = ({ children }) => {
 
     if (response.ok) {
       const data = await response.json();
-      setUser({ id: data.user.id, username: data.user.username, email: data.user.email });
-      setToken(data.accessToken);
+      setUser({ id: data.user._id, username: data.user.username, email: data.user.email });
+      setToken(data.token); // Asegúrate de almacenar el token correctamente
 
-      localStorage.setItem("user", JSON.stringify({ id: data.user.id, email: data.user.email }));
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("user", JSON.stringify({ id: data.user._id, username: data.user.username, email: data.user.email }));
+      localStorage.setItem("token", data.token); // Guarda el token en el localStorage
       return true;
     }
     return false;

@@ -124,7 +124,7 @@ const Login = () => {
     e.preventDefault();
     const success = await login(email, password);
     if (success) {
-      navigate("/");
+      navigate("/"); // Redirige al home después de un login exitoso
     } else {
       alert("Email o contraseña incorrectos");
     }
@@ -132,7 +132,6 @@ const Login = () => {
 
   return (
     <Wrapper>
-
     <TitleContainer>
        <AppTitle>LEÍDO</AppTitle>
         <Subtitle>Tu biblioteca, siempre contigo</Subtitle>

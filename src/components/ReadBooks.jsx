@@ -46,15 +46,15 @@ const ReadBooks = () => {
   // Filtrar por búsqueda y por género
   const searchFilteredBooks = filteredBooks.filter(
     (book) =>
-      book.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.autor.toLowerCase().includes(searchTerm.toLowerCase())
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <BooksContainer>
       <Title>Libros leídos</Title>
       <Searcher onSearch={setSearchTerm} />
-      <AddBookForm defaultLeido={true} />
+      <AddBookForm defaultLeido={'read'} />
       <Filter books={readBooks} setFilteredBooks={setFilteredBooks} />
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
