@@ -1,0 +1,84 @@
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
+// Context Providers
+import { AuthProvider, AuthContext } from './infrastructure/ui/context/AuthContext';
+import { BooksProvider } from './infrastructure/ui/context/BooksContext';
+import { SearchProvider } from './infrastructure/ui/context/SearchContext';
+
+// Pages
+import Login from './infrastructure/ui/pages/Login';
+import Register from './infrastructure/ui/pages/Register';
+import DashboardLayout from './infrastructure/ui/pages/DashboardLayout';
+
+// Components
+import ReadBooks from './infrastructure/ui/components/ReadBooks';
+import UnreadBooks from './infrastructure/ui/components/UnreadBooks';
+import FavoriteBooks from './infrastructure/ui/components/FavoriteBooks';
+import BookDetail from './infrastructure/ui/components/BookDetail';
+
+// Configure colors for Material UI components
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0d4341', // Main color
+    },
+    secondary: {
+      main: 'rgb(252, 98, 168)', // Secondary color (cancel button, for example)
+    },
+    background: {
+      paper: '#ffffff', // Modal background
+    },
+  },
+});
+
+// Protect routes if the user is not authenticated
+interface PrivateRouteProps {
+  children: React.ReactNode;
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
+  const { user } = useContext(AuthContext);
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <BooksProvider>
+        <SearchProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <ThemeProvider theme={theme}>
+              <Router>
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+
+                  <Route
+                    path="/"
+                    element={
+                      <PrivateRoute>
+                        <DashboardLayout />
+                      </PrivateRoute>
+                    }
+                  >
+                    <Route index element={<Navigate to="/leidos" />} />
+                    <Route path="/leidos" element={<ReadBooks />} />
+                    <Route path="/por-leer" element={<UnreadBooks />} />
+                    <Route path="/favoritos" element={<FavoriteBooks />} />
+                    <Route path="/book/:bookId" element={<BookDetail />} />
+                  </Route>
+                </Routes>
+              </Router>
+            </ThemeProvider>
+          </LocalizationProvider>
+        </SearchProvider>
+      </BooksProvider>
+    </AuthProvider>
+  );
+};
+
+export default App;

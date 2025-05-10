@@ -1,0 +1,128 @@
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { Book, BookDTO } from '../../../domain/entities/Book';
+import { BookService } from '../../../application/services/BookService';
+import { BookUseCases } from '../../../domain/useCases/BookUseCases';
+import { BookRepositoryImpl } from '../../adapters/BookRepositoryImpl';
+import { AuthContext } from './AuthContext';
+
+// Create the repository, use cases, and service
+const bookRepository = new BookRepositoryImpl();
+const bookUseCases = new BookUseCases(bookRepository);
+const bookService = new BookService(bookUseCases);
+
+// Define the context type
+interface BooksContextType {
+  books: Book[];
+  readBooks: Book[];
+  unreadBooks: Book[];
+  favoriteBooks: Book[];
+  addBook: (book: BookDTO) => Promise<void>;
+  updateBook: (id: string, book: Partial<Book>) => Promise<void>;
+  deleteBook: (id: string) => Promise<void>;
+  error: string | null;
+}
+
+// Create the context with a default value
+export const BooksContext = createContext<BooksContextType>({
+  books: [],
+  readBooks: [],
+  unreadBooks: [],
+  favoriteBooks: [],
+  addBook: async () => {},
+  updateBook: async () => {},
+  deleteBook: async () => {},
+  error: null,
+});
+
+interface BooksProviderProps {
+  children: ReactNode;
+}
+
+export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const { user, token } = useContext(AuthContext);
+
+  // Load books from API when user or token changes
+  useEffect(() => {
+    if (user && token) {
+      bookService.getBooks(user.id)
+        .then(setBooks)
+        .catch((error) => {
+          console.error('Error loading books:', error);
+          setError(error.message);
+        });
+    }
+  }, [user, token]);
+
+  // Add a new book
+  const addBookHandler = async (newBook: BookDTO) => {
+    if (!user || !token) return;
+    
+    try {
+      const addedBook = await bookService.addBook({ ...newBook, userId: user.id });
+      setBooks([...books, addedBook]);
+    } catch (error: any) {
+      console.error('Error adding book:', error);
+      setError(error.message);
+    }
+  };
+
+  // Update a book
+  const updateBookHandler = async (id: string, updatedBook: Partial<Book>) => {
+    if (!user || !token) return;
+    
+    try {
+      const updatedData = await bookService.updateBook(id, updatedBook);
+      setBooks((prevBooks) =>
+        prevBooks.map((book) => (book.id === id ? updatedData : book))
+      );
+    } catch (error: any) {
+      console.error('Error updating book:', error);
+      setError(error.message);
+    }
+  };
+
+  // Delete a book
+  const deleteBookHandler = async (id: string) => {
+    if (!user || !token) return;
+    
+    try {
+      await bookService.deleteBook(id);
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+    } catch (error: any) {
+      console.error('Error deleting book:', error);
+      setError(error.message);
+    }
+  };
+
+  // Filter books by status
+  const readBooks = bookService.getReadBooks(books);
+  const unreadBooks = bookService.getUnreadBooks(books);
+  const favoriteBooks = bookService.getFavoriteBooks(books);
+
+  // Clear error after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  return (
+    <BooksContext.Provider
+      value={{
+        books,
+        readBooks,
+        unreadBooks,
+        favoriteBooks,
+        addBook: addBookHandler,
+        updateBook: updateBookHandler,
+        deleteBook: deleteBookHandler,
+        error,
+      }}
+    >
+      {children}
+    </BooksContext.Provider>
+  );
+};
