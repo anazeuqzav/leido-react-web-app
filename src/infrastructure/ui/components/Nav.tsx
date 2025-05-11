@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import BookSearch from './BookSearch';
 import SearchBar from './SearchBar';
 import SearchResultsList from './SearchResultsList';
@@ -11,7 +12,7 @@ import logo from '../../../assets/logo.png';
 /**
  * Navigation component for the application
  */
-const Nav: React.FC<{ setListaActual?: (listName: string) => void }> = ({ setListaActual }) => {
+const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCurrentList }) => {
   const [results, setResults] = useState<any[]>([]);
   const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -22,7 +23,7 @@ const Nav: React.FC<{ setListaActual?: (listName: string) => void }> = ({ setLis
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (resultsRef.current && !resultsRef.current.contains(event.target as Node)) {
-        setResults([]); // Vacía los resultados de búsqueda
+        setResults([]); // Clear search results
       }
     };
     // Agrega el evento al montar el componente
@@ -34,14 +35,14 @@ const Nav: React.FC<{ setListaActual?: (listName: string) => void }> = ({ setLis
   }, []);
 
   const handleListChange = (listName: string) => {
-    if (setListaActual) {
-      setListaActual(listName);
+    if (setCurrentList) {
+      setCurrentList(listName);
     }
   };
 
   const handleLogout = () => {
-    logout(); // Llama a la función de logout del contexto
-    navigate('/login'); // Redirige a la página de inicio de sesión
+    logout(); // Call the logout function from context
+    navigate('/login'); // Redirect to login page
   };
 
   return (
@@ -62,22 +63,28 @@ const Nav: React.FC<{ setListaActual?: (listName: string) => void }> = ({ setLis
         {/* Contenido para pantallas grandes */}
         <div className="hidden md:flex md:items-center md:space-x-8">
           {/* Botones para cambiar entre listas */}
-          <div className="flex space-x-20">
-            <Link to="/leidos"
+          <div className="flex space-x-16">
+            <Link to="/read"
               className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors">
-              Libros Leídos
+              Read Books
             </Link>
-            <Link to="/por-leer"
-              onClick={() => handleListChange("porLeer")}
+            <Link to="/want-to-read"
+              onClick={() => handleListChange("wantToRead")}
               className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors"
             >
-              Libros por Leer
+              Want to Read
             </Link>
-            <Link to="/favoritos"
-              onClick={() => handleListChange("favoritos")}
+            <Link to="/favorites"
+              onClick={() => handleListChange("favorites")}
               className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors"
             >
-              Libros Favoritos
+              Favorite Books
+            </Link>
+            <Link to="/statistics"
+              className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors flex items-center"
+            >
+              <BarChartIcon className="mr-1" />
+              Estadísticas
             </Link>
           </div>
 
@@ -91,11 +98,11 @@ const Nav: React.FC<{ setListaActual?: (listName: string) => void }> = ({ setLis
           {/* Botón para cerrar sesión */}
           <button
             onClick={handleLogout}
-            aria-label="Cerrar sesión"
+            aria-label="Log out"
             className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 focus:outline-white flex items-center"
           >
             <ExitToAppIcon className="mr-1" />
-            Cerrar Sesión
+            Log Out
           </button>
         </div>
 
@@ -106,37 +113,43 @@ const Nav: React.FC<{ setListaActual?: (listName: string) => void }> = ({ setLis
         </div>
         <button
           onClick={handleLogout}
-          aria-label="Cerrar sesión"
+          aria-label="Log out"
           className="ml-4 px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 focus:outline-white md:hidden flex items-center"
         >
           <ExitToAppIcon className="mr-1" />
-          Cerrar Sesión
+          Log Out
         </button>
       </div>
 
-      {/* Menú hamburguesa desplegable */}
+      {/* Hamburger menu dropdown */}
       <div
         className={`md:hidden ${menuOpen ? "block" : "hidden"} absolute top-16 left-0 w-full bg-pink-50 z-10`}
       >
         <div className="flex flex-col space-y-2 px-4 py-2">
-          {/* Botones para cambiar entre listas en el menú hamburguesa */}
-          <Link to="/leidos"
-            onClick={() => handleListChange("leidos")}
+          {/* Buttons to switch between lists in hamburger menu */}
+          <Link to="/read"
+            onClick={() => handleListChange("read")}
             className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors"
           >
-            Libros Leídos
+            Read Books
           </Link>
-          <Link to="/por-leer"
-            onClick={() => handleListChange("porLeer")}
+          <Link to="/want-to-read"
+            onClick={() => handleListChange("wantToRead")}
             className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors"
           >
-            Libros por Leer
+            Want to Read
           </Link>
-          <Link to="/favoritos"
-            onClick={() => handleListChange("favoritos")}
+          <Link to="/favorites"
+            onClick={() => handleListChange("favorites")}
             className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors"
           >
-            Libros Favoritos
+            Favorite Books
+          </Link>
+          <Link to="/statistics"
+            className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors flex items-center"
+          >
+            <BarChartIcon className="mr-1" />
+            Estadísticas
           </Link>
         </div>
       </div>

@@ -78,7 +78,7 @@ const Register: React.FC = () => {
     >
       <Paper elevation={3} className="p-8 w-full max-w-md">
         <Typography variant="h4" component="h1" className="text-center mb-6 text-teal-800 font-bold">
-          Leído
+          READ
         </Typography>
         <Typography variant="h5" component="h2" className="text-center mb-6">
           Create an Account

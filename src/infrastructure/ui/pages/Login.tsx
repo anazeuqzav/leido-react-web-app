@@ -18,18 +18,18 @@ const Login: React.FC = () => {
     e.preventDefault();
     const success = await login(email, password);
     if (success) {
-      navigate('/leidos');
+      navigate('/read');
     } else {
-      alert('Email o contraseña incorrectos');
+      alert('Incorrect email or password');
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-white">
       <div className="flex flex-col items-center mb-6">
-        <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">LEÍDO</h1>
+        <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">READ</h1>
         <h2 className="font-[Poppins] text-[20px] font-normal text-gray-700 mt-1 text-center">
-          Tu biblioteca, siempre contigo
+          Your library, always with you
         </h2>
       </div>
 
@@ -39,12 +39,12 @@ const Login: React.FC = () => {
           className="bg-white p-5 rounded-lg shadow-lg flex flex-col w-[300px] gap-3"
         >
           <h2 className="mb-3 text-[#0d4341] text-lg font-semibold text-center">
-            Iniciar Sesión
+            Log In
           </h2>
 
           <input
             type="email"
-            placeholder="Correo electrónico"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
           <div className="relative w-full">
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Contraseña"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -73,16 +73,16 @@ const Login: React.FC = () => {
             type="submit"
             className="bg-[#0d4341] text-white font-bold border-2 border-[#0d4341] py-2 rounded-md text-base hover:bg-pink-400 transition-colors"
           >
-            Entrar
+            Login
           </button>
 
           <p className="text-sm text-center mt-2">
-            ¿No tienes cuenta?{' '}
+            Don't have an account?{' '}
             <Link
               to="/register"
               className="text-[#0d4341] font-bold hover:underline"
             >
-              Regístrate aquí
+              Register here
             </Link>
           </p>
         </form>

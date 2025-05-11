@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
 import Rating from '@mui/material/Rating';
@@ -25,6 +26,7 @@ const BookItem: React.FC<BookItemProps> = ({
   userId, 
   readDate 
 }) => {
+  const navigate = useNavigate();
   const { updateBook, deleteBook } = useContext(BooksContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editedBook, setEditedBook] = useState<Book>({ 
@@ -66,8 +68,20 @@ const BookItem: React.FC<BookItemProps> = ({
     });
   };
 
+  // Navegar a la página de detalles del libro
+  const handleViewDetails = (event: React.MouseEvent) => {
+    // Evitar que el clic se propague a los botones internos
+    if ((event.target as HTMLElement).closest('button, .MuiRating-root')) {
+      return;
+    }
+    navigate(`/library-book/${id}`);
+  };
+
   return (
-    <li className="flex items-center border border-teal-800 p-4 rounded-lg bg-white shadow-md w-full">
+    <li 
+      className="flex items-center border border-teal-800 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={handleViewDetails}
+    >
       {cover && (
         <img
           src={cover}
@@ -96,7 +110,10 @@ const BookItem: React.FC<BookItemProps> = ({
         <div className="flex items-center gap-2 mt-2">
           <button
             className="text-teal-600 text-xs font-medium hover:underline"
-            onClick={() => setIsEditing(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditing(true);
+            }}
           >
             Edit read date
           </button>
@@ -104,7 +121,10 @@ const BookItem: React.FC<BookItemProps> = ({
             variant="contained"
             color="primary"
             size="small"
-            onClick={handleToggleStatus}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleStatus();
+            }}
             className="bg-teal-600 text-white hover:bg-teal-700"
           >
             {status === 'read' ? 'Want to read' : 'Mark as read'}
@@ -114,7 +134,10 @@ const BookItem: React.FC<BookItemProps> = ({
       <IconButton
         color="secondary"
         aria-label="delete"
-        onClick={handleDelete}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDelete();
+        }}
         className="self-end"
         style={{ alignSelf: 'flex-end' }}
       >

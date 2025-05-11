@@ -19,6 +19,7 @@ interface BooksContextType {
   addBook: (book: BookDTO) => Promise<void>;
   updateBook: (id: string, book: Partial<Book>) => Promise<void>;
   deleteBook: (id: string) => Promise<void>;
+  getBookById: (id: string) => Book | undefined;
   error: string | null;
 }
 
@@ -31,6 +32,7 @@ export const BooksContext = createContext<BooksContextType>({
   addBook: async () => {},
   updateBook: async () => {},
   deleteBook: async () => {},
+  getBookById: () => undefined,
   error: null,
 });
 
@@ -100,6 +102,11 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   const readBooks = bookService.getReadBooks(books);
   const unreadBooks = bookService.getUnreadBooks(books);
   const favoriteBooks = bookService.getFavoriteBooks(books);
+  
+  // Get a book by its ID
+  const getBookByIdHandler = (id: string): Book | undefined => {
+    return books.find(book => book.id === id);
+  };
 
   // Clear error after 5 seconds
   useEffect(() => {
@@ -119,6 +126,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
         addBook: addBookHandler,
         updateBook: updateBookHandler,
         deleteBook: deleteBookHandler,
+        getBookById: getBookByIdHandler,
         error,
       }}
     >

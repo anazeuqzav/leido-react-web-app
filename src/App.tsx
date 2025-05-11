@@ -13,6 +13,7 @@ import { SearchProvider } from './infrastructure/ui/context/SearchContext';
 import Login from './infrastructure/ui/pages/Login';
 import Register from './infrastructure/ui/pages/Register';
 import DashboardLayout from './infrastructure/ui/pages/DashboardLayout';
+import StatisticsPage from './infrastructure/ui/pages/Statistics';
 
 // Components
 import ReadBooks from './infrastructure/ui/components/ReadBooks';
@@ -65,11 +66,13 @@ const App: React.FC = () => {
                       </PrivateRoute>
                     }
                   >
-                    <Route index element={<Navigate to="/leidos" />} />
-                    <Route path="/leidos" element={<ReadBooks />} />
-                    <Route path="/por-leer" element={<UnreadBooks />} />
-                    <Route path="/favoritos" element={<FavoriteBooks />} />
+                    <Route index element={<Navigate to="/read" />} />
+                    <Route path="/read" element={<ReadBooks />} />
+                    <Route path="/want-to-read" element={<UnreadBooks />} />
+                    <Route path="/favorites" element={<FavoriteBooks />} />
+                    <Route path="/statistics" element={<StatisticsPage />} />
                     <Route path="/book/:bookId" element={<BookDetail />} />
+                    <Route path="/library-book/:bookId" element={<BookDetail />} />
                   </Route>
                 </Routes>
               </Router>

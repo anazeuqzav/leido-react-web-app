@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { SearchContext } from '../context/SearchContext';
 import { BooksContext } from '../context/BooksContext';
 import { AuthContext } from '../context/AuthContext';
 import { BookDetails } from '../../../domain/entities/SearchBook';
 import { Book } from '../../../domain/entities/Book';
 import Button from '@mui/material/Button';
+import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import MarkAsReadBtn from './MarkAsReadBtn';
 
 /**
  * Component that displays detailed information about a book
+ * Can display details for both search results and library books
  */
 const BookDetail: React.FC = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { getBookDetails } = useContext(SearchContext);
-  const { addBook } = useContext(BooksContext);
+  const { addBook, getBookById, updateBook } = useContext(BooksContext);
   const { user } = useContext(AuthContext);
   
   const [book, setBook] = useState<BookDetails | null>(null);
@@ -25,6 +28,10 @@ const BookDetail: React.FC = () => {
   const [authorNames, setAuthorNames] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [libraryBook, setLibraryBook] = useState<Book | null>(null);
+  
+  // Determinar si estamos viendo un libro de la biblioteca o un libro de búsqueda
+  const isLibraryBook = location.pathname.includes('/library-book/');
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -32,24 +39,72 @@ const BookDetail: React.FC = () => {
       
       setLoading(true);
       try {
-        const bookDetails = await getBookDetails(bookId);
-        setBook(bookDetails);
-        
-        // Cover image
-        if (bookDetails.covers && bookDetails.covers.length > 0) {
-          setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-L.jpg`);
-        }
-        
-        // Fetch author names
-        if (bookDetails.authors && bookDetails.authors.length > 0) {
-          const fetchedNames = await Promise.all(
-            bookDetails.authors.map(async (author) => {
-              const response = await fetch(`https://openlibrary.org${author.author.key}.json`);
-              const data = await response.json();
-              return data.name;
-            })
-          );
-          setAuthorNames(fetchedNames);
+        if (isLibraryBook) {
+          // Si es un libro de la biblioteca, obtener los detalles del libro de la biblioteca
+          const userBook = getBookById(bookId);
+          if (userBook) {
+            setLibraryBook(userBook);
+            
+            // Buscar el libro en Open Library por título y autor
+            const query = `${userBook.title} ${userBook.author}`;
+            const searchResponse = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`);
+            const searchData = await searchResponse.json();
+            
+            if (searchData.docs && searchData.docs.length > 0) {
+              // Usar el primer resultado que coincida mejor
+              const olid = searchData.docs[0].key.split('/').pop();
+              if (olid) {
+                // Obtener los detalles completos del libro
+                const bookDetails = await getBookDetails(olid);
+                setBook(bookDetails);
+                
+                // Cover image
+                if (userBook.cover) {
+                  setCoverUrl(userBook.cover);
+                } else if (bookDetails.covers && bookDetails.covers.length > 0) {
+                  setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-L.jpg`);
+                }
+                
+                // Autor
+                setAuthorNames([userBook.author]);
+              }
+            } else {
+              // Si no se encuentra en Open Library, usar los datos de la biblioteca
+              setCoverUrl(userBook.cover || '');
+              setAuthorNames([userBook.author]);
+              
+              // Crear un objeto BookDetails con los datos disponibles
+              setBook({
+                key: userBook.id,
+                title: userBook.title,
+                first_publish_date: userBook.year ? userBook.year.toString() : undefined,
+                subjects: userBook.genre ? [userBook.genre] : undefined
+              });
+            }
+          } else {
+            setError('Libro no encontrado en tu biblioteca');
+          }
+        } else {
+          // Si es un libro de búsqueda, obtener los detalles normalmente
+          const bookDetails = await getBookDetails(bookId);
+          setBook(bookDetails);
+          
+          // Cover image
+          if (bookDetails.covers && bookDetails.covers.length > 0) {
+            setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-L.jpg`);
+          }
+          
+          // Fetch author names
+          if (bookDetails.authors && bookDetails.authors.length > 0) {
+            const fetchedNames = await Promise.all(
+              bookDetails.authors.map(async (author) => {
+                const response = await fetch(`https://openlibrary.org${author.author.key}.json`);
+                const data = await response.json();
+                return data.name;
+              })
+            );
+            setAuthorNames(fetchedNames);
+          }
         }
       } catch (err: any) {
         console.error('Error fetching book details:', err);
@@ -60,7 +115,7 @@ const BookDetail: React.FC = () => {
     };
 
     fetchBookDetails();
-  }, [bookId, getBookDetails]);
+  }, [bookId, getBookDetails, isLibraryBook, getBookById]);
 
   const handleAddToLibrary = async (status: 'read' | 'to-read') => {
     if (!book || !user) return;
@@ -175,20 +230,67 @@ const BookDetail: React.FC = () => {
             )}
             
             <div className="flex flex-wrap gap-3 mt-6">
-              <MarkAsReadBtn 
-                book={book}
-                authorNames={authorNames}
-                coverUrl={coverUrl}
-                onSuccess={() => navigate('/')}
-              />
-              <Button 
-                variant="outlined" 
-                color="primary"
-                onClick={() => handleAddToLibrary('to-read')}
-                className="border-teal-600 text-teal-600 hover:bg-teal-50"
-              >
-                Add to Want to Read
-              </Button>
+              {isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
+                <div className="flex flex-col gap-3">
+                  <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-teal-800">
+                    <p className="font-medium">You have already read this book</p>
+                    {libraryBook.readDate && (
+                      <p className="text-sm mt-1">
+                        Read date: {new Date(libraryBook.readDate).toLocaleDateString()}
+                      </p>
+                    )}
+                    {libraryBook.rating && libraryBook.rating > 0 && (
+                      <div className="mt-2 flex items-center">
+                        <span className="text-sm mr-2">Your rating:</span>
+                        <Rating 
+                          value={libraryBook.rating} 
+                          readOnly 
+                          precision={0.5} 
+                          size="small"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <Button 
+                    variant="outlined" 
+                    color="primary"
+                    onClick={() => {
+                      if (libraryBook && libraryBook.id) {
+                        // Update the book status to 'to-read' and remove read date and rating
+                        updateBook(libraryBook.id, {
+                          status: 'to-read',
+                          readDate: undefined,
+                          rating: undefined
+                        }).then(() => {
+                          // Redirigir a la página principal después de actualizar
+                          navigate('/');
+                        });
+                      }
+                    }}
+                    className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                  >
+                    Mark as "Want to Read"
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <MarkAsReadBtn 
+                    book={book}
+                    authorNames={authorNames}
+                    coverUrl={coverUrl}
+                    onSuccess={() => navigate('/')}
+                  />
+                  <Button 
+                    variant="outlined" 
+                    color="primary"
+                    onClick={() => handleAddToLibrary('to-read')}
+                    className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                  >
+                    Add to Want to Read
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

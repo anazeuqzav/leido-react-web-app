@@ -14,7 +14,7 @@ const UnreadBooks: React.FC = () => {
       {unreadBooks.length === 0 ? (
         <p className="text-gray-600">You don't have any books in your reading list yet.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {unreadBooks.map((book) => (
             <BookItem key={book.id} {...book} />
           ))}

@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 
-interface SearchBarProps {
-  setResults: (results: any[]) => void;
+export interface SearchBarProps {
+  onSearch?: (term: string) => void;
+  setResults?: (results: any[]) => void;
 }
 
 /**
  * Component for inputting search queries
  */
-const SearchBar = ({ setResults }: SearchBarProps) => {
+const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
   const [input, setInput] = useState("");
 
   const fetchData = async (value: string) => {
-    if (!value) {
-      setResults([]);
+    if (!value || !setResults) {
+      setResults?.([]);
       return;
     }
 
@@ -35,7 +36,14 @@ const SearchBar = ({ setResults }: SearchBarProps) => {
 
   const handleChange = (value: string) => {
     setInput(value);
-    fetchData(value);
+    
+    if (onSearch) {
+      onSearch(value);
+    }
+    
+    if (setResults) {
+      fetchData(value);
+    }
   };
 
   return (
