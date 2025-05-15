@@ -33,6 +33,10 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
     if (!book || !user) return;
     
     try {
+      // Extraer el OLID (Open Library ID) de la clave del libro
+      // La clave suele tener el formato '/works/OL123456W'
+      const olid = book.key.split('/').pop() || '';
+      
       const newBook: BookDTO = {
         title: book.title,
         author: authorNames.join(', '),
@@ -44,6 +48,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
         userId: user.id,
         readDate,
         startDate: startDate || readDate, // Si no hay fecha de inicio, usar la fecha de lectura
+        externalId: olid, // Guardar el identificador único de OpenLibrary
       };
       
       await addBook(newBook);

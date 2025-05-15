@@ -13,6 +13,7 @@ export interface Book {
   userId: string;
   readDate?: Date;
   startDate?: Date;
+  externalId?: string; // Identificador único de OpenLibrary (OLID) u otra API
 }
 
 /**
@@ -29,4 +30,5 @@ export interface BookDTO {
   userId: string;
   readDate?: Date;
   startDate?: Date;
+  externalId?: string; // Identificador único de OpenLibrary (OLID) u otra API
 }

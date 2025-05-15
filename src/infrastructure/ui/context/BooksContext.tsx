@@ -57,11 +57,29 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
     }
   }, [user, token]);
 
+  // Verificar si un libro ya existe por su externalId
+  const bookExistsByExternalId = (externalId: string | undefined): Book | undefined => {
+    if (!externalId) return undefined;
+    return books.find(book => book.externalId === externalId);
+  };
+
   // Add a new book
   const addBookHandler = async (newBook: BookDTO) => {
     if (!user || !token) return;
     
     try {
+      // Verificar si el libro ya existe por su externalId
+      if (newBook.externalId) {
+        const existingBook = bookExistsByExternalId(newBook.externalId);
+        
+        if (existingBook) {
+          // El libro ya existe, mostrar un error
+          setError(`Este libro ya está en tu biblioteca como "${existingBook.title}". No se puede añadir de nuevo.`);
+          throw new Error(`Libro duplicado: ${existingBook.title}`);
+        }
+      }
+      
+      // Si no existe, añadir el libro
       const addedBook = await bookService.addBook({ ...newBook, userId: user.id });
       setBooks([...books, addedBook]);
     } catch (error: any) {

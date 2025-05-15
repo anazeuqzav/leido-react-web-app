@@ -20,7 +20,7 @@ const BookDetail: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { getBookDetails } = useContext(SearchContext);
-  const { addBook, getBookById, updateBook } = useContext(BooksContext);
+  const { addBook, getBookById, updateBook, books } = useContext(BooksContext);
   const { user } = useContext(AuthContext);
   
   const [book, setBook] = useState<BookDetails | null>(null);
@@ -29,9 +29,17 @@ const BookDetail: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [libraryBook, setLibraryBook] = useState<Book | null>(null);
+  const [isDuplicate, setIsDuplicate] = useState<boolean>(false);
+  const [existingBook, setExistingBook] = useState<Book | null>(null);
   
   // Determinar si estamos viendo un libro de la biblioteca o un libro de búsqueda
   const isLibraryBook = location.pathname.includes('/library-book/');
+
+  // Función para verificar si un libro ya existe por su externalId
+  const checkIfBookExists = (externalId: string): Book | undefined => {
+    if (!externalId) return undefined;
+    return books.find(book => book.externalId === externalId);
+  };
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -92,6 +100,15 @@ const BookDetail: React.FC = () => {
           // Cover image
           if (bookDetails.covers && bookDetails.covers.length > 0) {
             setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-L.jpg`);
+          }
+          
+          // Verificar si el libro ya existe en la biblioteca por su externalId
+          const olid = bookDetails.key.split('/').pop() || '';
+          const existingBookInLibrary = checkIfBookExists(olid);
+          
+          if (existingBookInLibrary) {
+            setIsDuplicate(true);
+            setExistingBook(existingBookInLibrary);
           }
           
           // Fetch author names
@@ -230,7 +247,22 @@ const BookDetail: React.FC = () => {
             )}
             
             <div className="flex flex-wrap gap-3 mt-6">
-              {isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
+              {isDuplicate && existingBook && !isLibraryBook ? (
+                <div className="flex flex-col gap-3">
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-yellow-800">
+                    <p className="font-medium">¡Este libro ya está en tu biblioteca!</p>
+                    <p className="text-sm mt-1">
+                      Ya tienes guardado "{existingBook.title}" en tu biblioteca como "{existingBook.status === 'read' ? 'leído' : 'por leer'}".                      
+                    </p>
+                    <button 
+                      onClick={() => navigate(`/library-book/${existingBook.id}`)}
+                      className="mt-3 text-sm text-yellow-700 underline hover:text-yellow-800"
+                    >
+                      Ver libro en mi biblioteca
+                    </button>
+                  </div>
+                </div>
+              ) : isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
                 <div className="flex flex-col gap-3">
                   <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-teal-800">
                     <p className="font-medium">You have already read this book</p>
