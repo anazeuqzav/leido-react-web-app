@@ -234,11 +234,22 @@ const BookDetail: React.FC = () => {
                 <div className="flex flex-col gap-3">
                   <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-teal-800">
                     <p className="font-medium">You have already read this book</p>
-                    {libraryBook.readDate && (
-                      <p className="text-sm mt-1">
-                        Read date: {new Date(libraryBook.readDate).toLocaleDateString()}
-                      </p>
-                    )}
+                    
+                    {/* Fechas de lectura */}
+                    <div className="mt-2 space-y-1">
+                      {libraryBook.startDate && (
+                        <p className="text-sm">
+                          <span className="font-medium">Fecha de inicio:</span> {new Date(libraryBook.startDate).toLocaleDateString()}
+                        </p>
+                      )}
+                      {libraryBook.readDate && (
+                        <p className="text-sm">
+                          <span className="font-medium">Fecha de finalización:</span> {new Date(libraryBook.readDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                    
+                    {/* Rating */}
                     {libraryBook.rating && libraryBook.rating > 0 && (
                       <div className="mt-2 flex items-center">
                         <span className="text-sm mr-2">Your rating:</span>
@@ -250,6 +261,17 @@ const BookDetail: React.FC = () => {
                         />
                       </div>
                     )}
+                    
+                    {/* Botón para editar fechas */}
+                    <button 
+                      onClick={() => {
+                        // Aquí puedes abrir un modal o navegar a una página de edición
+                        navigate(`/edit-book/${libraryBook.id}`);
+                      }}
+                      className="mt-3 text-xs text-teal-700 underline hover:text-teal-800"
+                    >
+                      Editar fechas de lectura
+                    </button>
                   </div>
                   
                   <Button 

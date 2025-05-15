@@ -12,6 +12,7 @@ export interface Book {
   cover?: string;
   userId: string;
   readDate?: Date;
+  startDate?: Date;
 }
 
 /**
@@ -27,4 +28,5 @@ export interface BookDTO {
   cover?: string;
   userId: string;
   readDate?: Date;
+  startDate?: Date;
 }

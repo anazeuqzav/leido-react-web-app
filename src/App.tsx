@@ -20,6 +20,7 @@ import ReadBooks from './infrastructure/ui/components/ReadBooks';
 import UnreadBooks from './infrastructure/ui/components/UnreadBooks';
 import FavoriteBooks from './infrastructure/ui/components/FavoriteBooks';
 import BookDetail from './infrastructure/ui/components/BookDetail';
+import EditBookDates from './infrastructure/ui/components/EditBookDates';
 
 // Configure colors for Material UI components
 const theme = createTheme({
@@ -73,6 +74,7 @@ const App: React.FC = () => {
                     <Route path="/statistics" element={<StatisticsPage />} />
                     <Route path="/book/:bookId" element={<BookDetail />} />
                     <Route path="/library-book/:bookId" element={<BookDetail />} />
+                    <Route path="/edit-book/:bookId" element={<EditBookDates />} />
                   </Route>
                 </Routes>
               </Router>

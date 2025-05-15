@@ -24,7 +24,8 @@ const BookItem: React.FC<BookItemProps> = ({
   rating, 
   cover, 
   userId, 
-  readDate 
+  readDate,
+  startDate
 }) => {
   const navigate = useNavigate();
   const { updateBook, deleteBook } = useContext(BooksContext);
@@ -39,10 +40,12 @@ const BookItem: React.FC<BookItemProps> = ({
     rating, 
     cover, 
     userId, 
-    readDate 
+    readDate,
+    startDate
   });
 
-  const localDate = readDate ? new Date(readDate).toLocaleDateString() : 'Not read yet';
+  const localReadDate = readDate ? new Date(readDate).toLocaleDateString() : 'No finalizado';
+  const localStartDate = startDate ? new Date(startDate).toLocaleDateString() : 'No iniciado';
 
   // Update the edited book and exit edit mode
   const handleSave = () => {
@@ -93,7 +96,14 @@ const BookItem: React.FC<BookItemProps> = ({
         <p className="text-base font-bold text-gray-800">{title}</p>
         <p className="text-sm text-gray-600">{author} ({year})</p>
         <p className="text-sm text-gray-600">{genre}</p>
-        <p className="text-sm text-gray-600">Read date: {localDate}</p>
+        <div className="text-sm text-gray-600">
+          {status === 'read' && (
+            <>
+              <p>Inicio: {localStartDate}</p>
+              <p>Finalización: {localReadDate}</p>
+            </>
+          )}
+        </div>
         {status === 'read' && (
           <div className="mt-1">
             <Rating
@@ -115,7 +125,7 @@ const BookItem: React.FC<BookItemProps> = ({
               setIsEditing(true);
             }}
           >
-            Edit read date
+            Editar fechas de lectura
           </button>
           <Button
             variant="contained"
@@ -144,12 +154,26 @@ const BookItem: React.FC<BookItemProps> = ({
         <DeleteIcon />
       </IconButton>
 
-      {/* Material-UI Modal */}
+      {/* Modal para editar fechas de lectura */}
       <ReadDateModal
         open={isEditing}
         onClose={() => setIsEditing(false)}
         readDate={editedBook.readDate}
-        onChange={(newDate) => setEditedBook({ ...editedBook, readDate: newDate })}
+        startDate={editedBook.startDate}
+        onChangeReadDate={(newDate) => {
+          // Convertir null a undefined para que coincida con el tipo esperado
+          setEditedBook({ 
+            ...editedBook, 
+            readDate: newDate === null ? undefined : newDate 
+          });
+        }}
+        onChangeStartDate={(newDate) => {
+          // Convertir null a undefined para que coincida con el tipo esperado
+          setEditedBook({ 
+            ...editedBook, 
+            startDate: newDate === null ? undefined : newDate 
+          });
+        }}
         onSave={handleSave}
       />
     </li>

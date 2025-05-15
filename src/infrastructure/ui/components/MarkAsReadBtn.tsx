@@ -25,6 +25,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
   const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [readDate, setReadDate] = useState(new Date()); // default to today
+  const [startDate, setStartDate] = useState<Date | null>(null); // fecha de inicio de lectura
   const [isRating, setIsRating] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -42,6 +43,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
         cover: coverUrl,
         userId: user.id,
         readDate,
+        startDate: startDate || readDate, // Si no hay fecha de inicio, usar la fecha de lectura
       };
       
       await addBook(newBook);
@@ -76,14 +78,33 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
             precision={0.5}
             onChange={(event, newValue) => setRating(newValue || 0)}
           />
-          <label className="text-sm text-gray-600 mt-2">Date read:</label>
-          <DatePicker
-            selected={readDate}
-            onChange={(date) => setReadDate(date || new Date())}
-            dateFormat="yyyy-MM-dd"
-            className="border border-gray-300 rounded px-2 py-1 w-full"
-            maxDate={new Date()}
-          />
+          <div className="space-y-3 w-full">
+            <div>
+              <label className="text-sm text-gray-600 block mb-1">Fecha de inicio de lectura:</label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                dateFormat="dd/MM/yyyy"
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                maxDate={readDate || new Date()}
+                placeholderText="Selecciona fecha de inicio"
+                isClearable
+              />
+              <p className="text-xs text-gray-500 mt-1">Si se deja en blanco, se usará la fecha de finalización</p>
+            </div>
+            
+            <div>
+              <label className="text-sm text-gray-600 block mb-1">Fecha de finalización:</label>
+              <DatePicker
+                selected={readDate}
+                onChange={(date) => setReadDate(date || new Date())}
+                dateFormat="dd/MM/yyyy"
+                className="border border-gray-300 rounded px-2 py-1 w-full"
+                maxDate={new Date()}
+                minDate={startDate || undefined}
+              />
+            </div>
+          </div>
           <div className="flex gap-2 mt-2">
             <Button
               variant="contained"
