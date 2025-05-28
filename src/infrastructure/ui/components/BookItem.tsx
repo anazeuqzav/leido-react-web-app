@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
@@ -15,43 +15,95 @@ interface BookItemProps extends Book {}
  * Allows editing, deleting, and marking a book as read/unread, as well as displaying its information.
  */
 const BookItem: React.FC<BookItemProps> = ({ 
-  id, 
-  title, 
-  author, 
-  year, 
-  genre, 
-  status, 
-  rating, 
-  cover, 
-  userId, 
-  readDate,
-  startDate
+  id: initialId, 
+  title: initialTitle, 
+  author: initialAuthor, 
+  year: initialYear, 
+  genre: initialGenre, 
+  status: initialStatus, 
+  rating: initialRating, 
+  cover: initialCover, 
+  userId: initialUserId, 
+  readDate: initialReadDate,
+  startDate: initialStartDate
 }) => {
   const navigate = useNavigate();
-  const { updateBook, deleteBook } = useContext(BooksContext);
+  const { updateBook, deleteBook, getBookById, books } = useContext(BooksContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [editedBook, setEditedBook] = useState<Book>({ 
-    id, 
-    title, 
-    author, 
-    year, 
-    genre, 
-    status, 
-    rating, 
-    cover, 
-    userId, 
+  const [showDateModal, setShowDateModal] = useState<boolean>(false);
+  
+  // Usar un estado para mantener el ID actualizado del libro
+  const [currentBookId, setCurrentBookId] = useState<string>(initialId);
+  
+  // Estado para manejar las ediciones del libro
+  const [editedBook, setEditedBook] = useState<Book>({
+    id: initialId,
+    title: initialTitle,
+    author: initialAuthor,
+    year: initialYear,
+    genre: initialGenre,
+    status: initialStatus,
+    rating: initialRating,
+    cover: initialCover,
+    userId: initialUserId,
+    readDate: initialReadDate,
+    startDate: initialStartDate,
+    externalId: undefined
+  });
+  
+  // Obtener siempre la versión más actualizada del libro desde el contexto
+  const currentBook = getBookById(currentBookId) || {
+    id: initialId,
+    title: initialTitle,
+    author: initialAuthor,
+    year: initialYear,
+    genre: initialGenre,
+    status: initialStatus,
+    rating: initialRating,
+    cover: initialCover,
+    userId: initialUserId,
+    readDate: initialReadDate,
+    startDate: initialStartDate,
+    externalId: undefined
+  };
+  
+  // Actualizar el ID si el libro ha cambiado en el contexto
+  useEffect(() => {
+    // Buscar el libro por su título y autor para encontrarlo incluso si el ID cambió
+    const matchingBook = books.find(book => 
+      book.title === initialTitle && 
+      book.author === initialAuthor &&
+      book.id !== currentBookId
+    );
+    
+    if (matchingBook) {
+      console.log(`Libro encontrado con nuevo ID: ${matchingBook.id} (anterior: ${currentBookId})`);
+      setCurrentBookId(matchingBook.id);
+    }
+  }, [books, initialTitle, initialAuthor, currentBookId]);
+  
+  // Actualizar editedBook cuando currentBook cambia
+  useEffect(() => {
+    setEditedBook(currentBook);
+  }, [currentBook]);
+  
+  // Extraer propiedades del libro actual para usar en el componente
+  const {
+    id,
+    title,
+    author,
+    year,
+    genre,
+    status,
+    rating,
+    cover,
+    userId,
     readDate,
     startDate
-  });
-
+  } = currentBook;
+  
   const localReadDate = readDate ? new Date(readDate).toLocaleDateString() : 'No finalizado';
   const localStartDate = startDate ? new Date(startDate).toLocaleDateString() : 'No iniciado';
-
-  // Update the edited book and exit edit mode
-  const handleSave = () => {
-    updateBook(id, editedBook);
-    setIsEditing(false);
-  };
 
   // Handle book deletion, showing a confirmation window
   const handleDelete = () => {
@@ -65,9 +117,9 @@ const BookItem: React.FC<BookItemProps> = ({
     const newStatus = status === 'read' ? 'to-read' : 'read';
 
     updateBook(id, {
-      ...editedBook,
+      ...currentBook,
       status: newStatus,
-      rating: newStatus === 'read' ? editedBook.rating : undefined,
+      rating: newStatus === 'read' ? currentBook.rating : undefined,
     });
   };
 
@@ -80,7 +132,7 @@ const BookItem: React.FC<BookItemProps> = ({
     navigate(`/library-book/${id}`);
   };
 
-  return (
+  const renderBookItem = () => (
     <li 
       className="flex items-center border border-teal-800 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer hover:shadow-lg transition-shadow"
       onClick={handleViewDetails}
@@ -122,7 +174,7 @@ const BookItem: React.FC<BookItemProps> = ({
             className="text-teal-600 text-xs font-medium hover:underline"
             onClick={(e) => {
               e.stopPropagation();
-              setIsEditing(true);
+              setShowDateModal(true);
             }}
           >
             Editar fechas de lectura
@@ -153,30 +205,26 @@ const BookItem: React.FC<BookItemProps> = ({
       >
         <DeleteIcon />
       </IconButton>
-
-      {/* Modal para editar fechas de lectura */}
-      <ReadDateModal
-        open={isEditing}
-        onClose={() => setIsEditing(false)}
-        readDate={editedBook.readDate}
-        startDate={editedBook.startDate}
-        onChangeReadDate={(newDate) => {
-          // Convertir null a undefined para que coincida con el tipo esperado
-          setEditedBook({ 
-            ...editedBook, 
-            readDate: newDate === null ? undefined : newDate 
-          });
-        }}
-        onChangeStartDate={(newDate) => {
-          // Convertir null a undefined para que coincida con el tipo esperado
-          setEditedBook({ 
-            ...editedBook, 
-            startDate: newDate === null ? undefined : newDate 
-          });
-        }}
-        onSave={handleSave}
-      />
     </li>
+  );
+
+  return (
+    <>
+      {showDateModal && (
+        <ReadDateModal
+          book={currentBook}
+          onClose={() => setShowDateModal(false)}
+          onBookUpdated={(updatedBookId) => {
+            // Actualizar el ID del libro si ha cambiado después de la actualización
+            if (updatedBookId && updatedBookId !== currentBookId) {
+              console.log(`Actualizando ID del libro después de editar fechas: ${currentBookId} -> ${updatedBookId}`);
+              setCurrentBookId(updatedBookId);
+            }
+          }}
+        />
+      )}
+      {renderBookItem()}
+    </>
   );
 };
 

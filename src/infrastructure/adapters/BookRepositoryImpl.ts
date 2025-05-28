@@ -66,7 +66,7 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async updateBook(id: string, book: Partial<Book>): Promise<Book> {
     try {
-      const response = await axios.put(`${this.API_URL}/api/books/${id}`, book, {
+      const response = await axios.patch(`${this.API_URL}/api/books/${id}`, book, {
         headers: this.getAuthHeaders(),
       });
       return response.data;

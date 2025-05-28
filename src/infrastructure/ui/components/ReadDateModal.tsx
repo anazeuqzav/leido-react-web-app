@@ -1,137 +1,139 @@
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, Divider } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { TextField } from '@mui/material';
+import React, { useState, useContext } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Button from '@mui/material/Button';
+import { Book } from '../../../domain/entities/Book';
+import { BooksContext } from '../context/BooksContext';
 
 interface ReadDateModalProps {
-  open: boolean;
+  book: Book;
   onClose: () => void;
-  readDate?: Date;
-  startDate?: Date;
-  onChangeReadDate: (date: Date | null) => void;
-  onChangeStartDate: (date: Date | null) => void;
-  onSave: () => void;
+  onBookUpdated?: (updatedBookId: string) => void;
 }
 
 /**
- * Modal component for editing both start and end reading dates of a book
+ * Component for editing the reading dates of a book
  */
-const ReadDateModal: React.FC<ReadDateModalProps> = ({
-  open,
-  onClose,
-  readDate,
-  startDate,
-  onChangeReadDate,
-  onChangeStartDate,
-  onSave,
-}) => {
-  // Estado local para manejar las fechas durante la edición
-  const [localStartDate, setLocalStartDate] = useState<Date | null>(startDate || null);
-  const [localReadDate, setLocalReadDate] = useState<Date | null>(readDate || null);
-  const [error, setError] = useState<string>('');
+const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpdated }) => {
+  // Initialize state with current book dates
+  const [startDate, setStartDate] = useState<Date | null>(
+    book.startDate ? new Date(book.startDate) : null
+  );
+  const [readDate, setReadDate] = useState<Date | null>(
+    book.readDate ? new Date(book.readDate) : null
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  const { updateBook } = useContext(BooksContext);
 
-  // Actualizar el estado local cuando cambian las props
-  useEffect(() => {
-    setLocalStartDate(startDate || null);
-    setLocalReadDate(readDate || null);
-    setError('');
-  }, [startDate, readDate, open]);
-
-  // Validar y guardar los cambios
-  const handleSave = () => {
-    // Validar que la fecha de inicio no sea posterior a la fecha de finalización
-    if (localStartDate && localReadDate && localStartDate > localReadDate) {
-      setError('La fecha de inicio no puede ser posterior a la fecha de finalización');
-      return;
+  const handleSave = async () => {
+    try {
+      setIsSubmitting(true);
+      setError(null);
+      
+      // Prepare the update data
+      const updateData: Partial<Book> = {};
+      
+      // Only include dates if they've changed
+      if (startDate !== (book.startDate ? new Date(book.startDate) : null)) {
+        // Convert null to undefined for the Book type
+        updateData.startDate = startDate === null ? undefined : startDate;
+      }
+      
+      if (readDate !== (book.readDate ? new Date(book.readDate) : null)) {
+        // Convert null to undefined for the Book type
+        updateData.readDate = readDate === null ? undefined : readDate;
+      }
+      
+      // Only update if there are changes
+      if (Object.keys(updateData).length > 0) {
+        console.log('Updating book dates:', updateData);
+        try {
+          // La función updateBook devuelve Promise<void>
+          await updateBook(book.id, updateData);
+          
+          // Notificar al componente padre con el ID actual del libro
+          if (onBookUpdated) {
+            console.log('Libro actualizado con ID:', book.id);
+            onBookUpdated(book.id);
+          }
+        } catch (error) {
+          console.error('Error al actualizar fechas del libro:', error);
+          throw error; // Re-lanzar el error para que sea capturado por el bloque catch externo
+        }
+      }
+      
+      onClose();
+    } catch (err: any) {
+      console.error('Error updating book dates:', err);
+      setError(err.message || 'Error al actualizar las fechas');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Aplicar los cambios
-    onChangeStartDate(localStartDate);
-    onChangeReadDate(localReadDate);
-    onSave();
-    onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Editar fechas de lectura</DialogTitle>
-      <DialogContent>
-        <Box sx={{ mt: 2, mb: 3 }}>
-          <Typography variant="body2" color="text.secondary" gutterBottom>
-            Puedes editar tanto la fecha de inicio como la fecha de finalización de lectura.
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Si no recuerdas la fecha exacta de inicio, puedes dejarla en blanco.
-          </Typography>
-        </Box>
-
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          {/* Fecha de inicio de lectura */}
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="subtitle2" color="primary" gutterBottom>
-              Fecha de inicio de lectura
-            </Typography>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Editar fechas de lectura</h2>
+        <p className="text-sm text-gray-600 mb-4">"{book.title}" por {book.author}</p>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm text-gray-600 block mb-1">Fecha de inicio de lectura:</label>
             <DatePicker
-              label="Fecha de inicio"
-              value={localStartDate}
-              onChange={(newDate) => {
-                setLocalStartDate(newDate);
-                setError('');
-              }}
-              slotProps={{ 
-                textField: { 
-                  margin: "normal", 
-                  fullWidth: true,
-                  helperText: "Cuándo empezaste a leer este libro"
-                } 
-              }}
-              maxDate={localReadDate || undefined}
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              dateFormat="dd/MM/yyyy"
+              className="border border-gray-300 rounded px-2 py-1 w-full"
+              maxDate={readDate || new Date()}
+              placeholderText="Selecciona fecha de inicio"
+              isClearable
             />
-          </Box>
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Fecha de finalización de lectura */}
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle2" color="primary" gutterBottom>
-              Fecha de finalización de lectura
-            </Typography>
+          </div>
+          
+          <div>
+            <label className="text-sm text-gray-600 block mb-1">Fecha de finalización:</label>
             <DatePicker
-              label="Fecha de finalización"
-              value={localReadDate}
-              onChange={(newDate) => {
-                setLocalReadDate(newDate);
-                setError('');
-              }}
-              slotProps={{ 
-                textField: { 
-                  margin: "normal", 
-                  fullWidth: true,
-                  helperText: "Cuándo terminaste de leer este libro"
-                } 
-              }}
-              minDate={localStartDate || undefined}
+              selected={readDate}
+              onChange={(date) => setReadDate(date)}
+              dateFormat="dd/MM/yyyy"
+              className="border border-gray-300 rounded px-2 py-1 w-full"
+              maxDate={new Date()}
+              minDate={startDate || undefined}
+              placeholderText="Selecciona fecha de finalización"
+              isClearable
             />
-          </Box>
-        </LocalizationProvider>
-
+          </div>
+        </div>
+        
         {error && (
-          <Typography color="error" variant="body2" sx={{ mt: 2 }}>
-            {error}
-          </Typography>
+          <p className="text-red-500 text-sm mt-2">{error}</p>
         )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancel
-        </Button>
-        <Button onClick={handleSave} color="primary">
-          Save
-        </Button>
-      </DialogActions>
-    </Dialog>
+        
+        <div className="flex justify-end gap-2 mt-6">
+          <Button
+            variant="outlined"
+            onClick={onClose}
+            size="small"
+            disabled={isSubmitting}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
+            className="bg-teal-600 hover:bg-teal-700"
+            size="small"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Guardando...' : 'Guardar'}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

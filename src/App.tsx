@@ -14,13 +14,13 @@ import Login from './infrastructure/ui/pages/Login';
 import Register from './infrastructure/ui/pages/Register';
 import DashboardLayout from './infrastructure/ui/pages/DashboardLayout';
 import StatisticsPage from './infrastructure/ui/pages/Statistics';
+import RecommendationsPage from './infrastructure/ui/pages/Recommendations';
 
 // Components
 import ReadBooks from './infrastructure/ui/components/ReadBooks';
 import UnreadBooks from './infrastructure/ui/components/UnreadBooks';
 import FavoriteBooks from './infrastructure/ui/components/FavoriteBooks';
 import BookDetail from './infrastructure/ui/components/BookDetail';
-import EditBookDates from './infrastructure/ui/components/EditBookDates';
 
 // Configure colors for Material UI components
 const theme = createTheme({
@@ -71,10 +71,10 @@ const App: React.FC = () => {
                     <Route path="/read" element={<ReadBooks />} />
                     <Route path="/want-to-read" element={<UnreadBooks />} />
                     <Route path="/favorites" element={<FavoriteBooks />} />
+                    <Route path="/recommendations" element={<RecommendationsPage />} />
                     <Route path="/statistics" element={<StatisticsPage />} />
                     <Route path="/book/:bookId" element={<BookDetail />} />
                     <Route path="/library-book/:bookId" element={<BookDetail />} />
-                    <Route path="/edit-book/:bookId" element={<EditBookDates />} />
                   </Route>
                 </Routes>
               </Router>

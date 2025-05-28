@@ -293,17 +293,6 @@ const BookDetail: React.FC = () => {
                         />
                       </div>
                     )}
-                    
-                    {/* Botón para editar fechas */}
-                    <button 
-                      onClick={() => {
-                        // Aquí puedes abrir un modal o navegar a una página de edición
-                        navigate(`/edit-book/${libraryBook.id}`);
-                      }}
-                      className="mt-3 text-xs text-teal-700 underline hover:text-teal-800"
-                    >
-                      Editar fechas de lectura
-                    </button>
                   </div>
                   
                   <Button 

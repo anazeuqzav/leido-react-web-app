@@ -14,6 +14,8 @@ export interface Book {
   readDate?: Date;
   startDate?: Date;
   externalId?: string; // Identificador único de OpenLibrary (OLID) u otra API
+  recommendationScore?: number; // Puntuación de recomendación para el usuario
+  _id?: string; // ID de MongoDB (para compatibilidad con el backend)
 }
 
 /**

@@ -4,10 +4,12 @@ import { AuthContext } from '../context/AuthContext';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import ExploreIcon from '@mui/icons-material/Explore';
 import BookSearch from './BookSearch';
 import SearchBar from './SearchBar';
 import SearchResultsList from './SearchResultsList';
-import logo from '../../../assets/logo.png';
+// Usar una URL relativa para el logo
+const logoPath = '/src/assets/logo.png';
 
 /**
  * Navigation component for the application
@@ -26,10 +28,10 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
         setResults([]); // Clear search results
       }
     };
-    // Agrega el evento al montar el componente
+    // Add the event when mounting the component
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      // Limpia el evento al desmontar el componente
+      // Clean up the event when unmounting the component
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
@@ -48,7 +50,7 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
   return (
     <nav className="bg-pink-50 shadow-md border-b border-gray-200 px-4 font-poppins">
       <div className="flex items-center justify-between h-16">
-        {/* Botón del menú hamburguesa para pantallas pequeñas */}
+        {/* Hamburger menu button for small screens */}
         <button
           className="text-gray-700 text-2xl md:hidden"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -57,12 +59,12 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        {/* Logotipo de la aplicación */}
-        <img src={logo} alt="Logo" className="h-10 w-10 ml-4" />
+        {/* Application logo */}
+        <img src={logoPath} alt="Logo" className="h-10 w-10 ml-4" />
 
-        {/* Contenido para pantallas grandes */}
+        {/* Content for large screens */}
         <div className="hidden md:flex md:items-center md:space-x-8">
-          {/* Botones para cambiar entre listas */}
+          {/* Buttons to switch between lists */}
           <div className="flex space-x-16">
             <Link to="/read"
               className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors">
@@ -80,22 +82,27 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
             >
               Favorite Books
             </Link>
+
+            <Link to="/recommendations"
+              className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors flex items-center"
+            >
+              Recommendations
+            </Link>
             <Link to="/statistics"
               className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors flex items-center"
             >
-              <BarChartIcon className="mr-1" />
-              Estadísticas
+              Statistics
             </Link>
           </div>
 
-          {/* Barra de búsqueda */}
+          {/* Search bar */}
           <div className="relative flex-1 max-w-md mx-4" ref={resultsRef}>
             <SearchBar setResults={setResults} />
-            {/* Muestra los resultados de búsqueda si existen */}
+            {/* Show search results if they exist */}
             {results.length > 0 && <SearchResultsList results={results} />}
           </div>
 
-          {/* Botón para cerrar sesión */}
+          {/* Logout button */}
           <button
             onClick={handleLogout}
             aria-label="Log out"
@@ -106,7 +113,7 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
           </button>
         </div>
 
-        {/* Barra de búsqueda y botón de cerrar sesión para pantallas pequeñas */}
+        {/* Search bar and logout button for small screens */}
         <div className="relative flex-1 max-w-md mx-4 md:hidden">
           <SearchBar setResults={setResults} />
           {results.length > 0 && <SearchResultsList results={results} />}
@@ -145,11 +152,18 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
           >
             Favorite Books
           </Link>
+
+          <Link to="/recommendations"
+            className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors flex items-center"
+          >
+            <ExploreIcon className="mr-1" />
+            Recommendations
+          </Link>
           <Link to="/statistics"
             className="text-gray-700 text-base font-medium hover:text-teal-600 hover:underline transition-colors flex items-center"
           >
             <BarChartIcon className="mr-1" />
-            Estadísticas
+            Statistics
           </Link>
         </div>
       </div>

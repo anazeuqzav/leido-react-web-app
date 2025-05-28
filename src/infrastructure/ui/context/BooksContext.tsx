@@ -20,6 +20,7 @@ interface BooksContextType {
   updateBook: (id: string, book: Partial<Book>) => Promise<void>;
   deleteBook: (id: string) => Promise<void>;
   getBookById: (id: string) => Book | undefined;
+  fetchBooks: () => Promise<void>;
   error: string | null;
 }
 
@@ -33,6 +34,7 @@ export const BooksContext = createContext<BooksContextType>({
   updateBook: async () => {},
   deleteBook: async () => {},
   getBookById: () => undefined,
+  fetchBooks: async () => {},
   error: null,
 });
 
@@ -45,16 +47,22 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const { user, token } = useContext(AuthContext);
 
+  // Función para cargar libros desde la API
+  const fetchBooksHandler = async (): Promise<void> => {
+    if (user && token) {
+      try {
+        const fetchedBooks = await bookService.getBooks(user.id);
+        setBooks(fetchedBooks);
+      } catch (error: any) {
+        console.error('Error loading books:', error);
+        setError(error.message);
+      }
+    }
+  };
+
   // Load books from API when user or token changes
   useEffect(() => {
-    if (user && token) {
-      bookService.getBooks(user.id)
-        .then(setBooks)
-        .catch((error) => {
-          console.error('Error loading books:', error);
-          setError(error.message);
-        });
-    }
+    fetchBooksHandler();
   }, [user, token]);
 
   // Verificar si un libro ya existe por su externalId
@@ -145,6 +153,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
         updateBook: updateBookHandler,
         deleteBook: deleteBookHandler,
         getBookById: getBookByIdHandler,
+        fetchBooks: fetchBooksHandler,
         error,
       }}
     >

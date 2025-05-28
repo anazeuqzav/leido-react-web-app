@@ -27,7 +27,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-white">
       <div className="flex flex-col items-center mb-6">
-        <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">READ</h1>
+        <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">LEÍDO</h1>
         <h2 className="font-[Poppins] text-[20px] font-normal text-gray-700 mt-1 text-center">
           Your library, always with you
         </h2>
