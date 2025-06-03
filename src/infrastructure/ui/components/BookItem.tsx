@@ -185,15 +185,17 @@ const BookItem: React.FC<BookItemProps> = ({
           </div>
         )}
         <div className="flex items-center gap-2 mt-2">
-          <button
-            className="text-teal-600 text-xs font-medium hover:underline"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowDateModal(true);
-            }}
-          >
-            Editar fechas de lectura
-          </button>
+          {status === 'read' && (
+            <button
+              className="text-teal-600 text-xs font-medium hover:underline"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDateModal(true);
+              }}
+            >
+              Editar fechas de lectura
+            </button>
+          )}
           <Button
             variant="contained"
             color="primary"
