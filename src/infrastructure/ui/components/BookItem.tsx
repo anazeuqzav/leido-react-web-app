@@ -8,7 +8,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import ReadDateModal from './ReadDateModal';
 
-interface BookItemProps extends Book {}
+interface BookItemProps extends Book {
+  viewMode?: 'grid' | 'list' | 'compact';
+}
 
 /**
  * Component that represents an individual book in the list of books.
@@ -25,7 +27,8 @@ const BookItem: React.FC<BookItemProps> = ({
   cover: initialCover, 
   userId: initialUserId, 
   readDate: initialReadDate,
-  startDate: initialStartDate
+  startDate: initialStartDate,
+  viewMode = 'grid'
 }) => {
   const navigate = useNavigate();
   const { updateBook, deleteBook, getBookById, books } = useContext(BooksContext);
@@ -147,11 +150,14 @@ const BookItem: React.FC<BookItemProps> = ({
     navigate(`/library-book/${id}`);
   };
 
-  const renderBookItem = () => (
-    <li 
-      className="relative flex flex-col sm:flex-row items-start sm:items-center border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] hover:border-l-8"
-      onClick={handleViewDetails}
-    >
+  const renderBookItem = () => {
+    // Grid view (default) - Card layout with image and details
+    if (viewMode === 'grid') {
+      return (
+        <li 
+          className="relative flex flex-col sm:flex-row items-start sm:items-center border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] hover:border-l-8"
+          onClick={handleViewDetails}
+        >
       {cover && (
         <div className="mb-3 sm:mb-0 sm:mr-4 flex-shrink-0">
           <img
@@ -245,8 +251,159 @@ const BookItem: React.FC<BookItemProps> = ({
       >
         <DeleteIcon fontSize="small" />
       </button>
-    </li>
-  );
+        </li>
+      );
+    }
+    
+    // List view - Horizontal layout with more details
+    if (viewMode === 'list') {
+      return (
+        <li 
+          className="relative flex items-center border-l-4 border-teal-600 p-3 rounded-lg bg-white shadow-sm w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:border-l-8"
+          onClick={handleViewDetails}
+        >
+          {cover && (
+            <div className="flex-shrink-0 w-16 h-20 mr-4 overflow-hidden rounded">
+              <img 
+                src={cover} 
+                alt={`Cover of ${title}`} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+          
+          <div className="flex-1 flex flex-col gap-1 text-left min-w-0">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-gray-800 truncate">{title}</h3>
+              <div className="ml-2 flex-shrink-0">
+                <Rating
+                  name={`rating-${id}`}
+                  value={editedBook.rating || 0}
+                  precision={0.5}
+                  size="small"
+                  onChange={(_, newValue) => {
+                    setEditedBook({ ...editedBook, rating: newValue || 0 });
+                    updateBook(id, { ...editedBook, rating: newValue || 0 });
+                  }}
+                  readOnly={false}
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center text-sm text-gray-600 font-medium">
+              <span className="truncate">{author}</span>
+              {year && <span className="ml-1">({year})</span>}
+              {genre && <span className="ml-2 text-xs text-teal-800 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100 font-medium">{genre}</span>}
+            </div>
+            
+            <div className="flex items-center mt-1 gap-2">
+              {status === 'read' && (
+                <button
+                  className="text-teal-800 text-xs font-medium hover:bg-pink-50 px-2 py-0.5 rounded transition-colors flex items-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowDateModal(true);
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Edit Reading Dates
+                </button>
+              )}
+              
+              {status === 'read' ? (
+                <button
+                  className="text-gray-600 text-xs font-medium border border-gray-200 px-2 py-0.5 rounded-full transition-colors flex items-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleStatus();
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Want to Read
+                </button>
+              ) : (
+                <button
+                  className="text-teal-800 text-xs font-medium border border-pink-200 bg-pink-50 hover:bg-pink-100 px-2 py-0.5 rounded-full transition-colors flex items-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleToggleStatus();
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Mark as Read
+                </button>
+              )}
+            </div>
+          </div>
+          
+          <button
+            className="ml-2 p-1.5 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+          >
+            <DeleteIcon fontSize="small" />
+          </button>
+        </li>
+      );
+    }
+    
+    // Compact view - Minimal horizontal layout
+    if (viewMode === 'compact') {
+      return (
+        <li 
+          className="relative flex items-center py-2 px-3 w-full cursor-pointer transition-all duration-200 hover:bg-gray-50"
+          onClick={handleViewDetails}
+        >
+          <div className="flex-1 flex items-center min-w-0">
+            <div className="flex-1">
+              <h3 className="text-base font-medium text-gray-800 truncate">{title}</h3>
+              <p className="text-sm text-gray-600 truncate">{author}</p>
+            </div>
+            
+            <div className="flex items-center gap-3 ml-4">
+              {genre && <span className="text-xs text-teal-800 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100 font-medium whitespace-nowrap">{genre}</span>}
+              
+              <Rating
+                name={`rating-${id}`}
+                value={editedBook.rating || 0}
+                precision={0.5}
+                size="small"
+                onChange={(_, newValue) => {
+                  setEditedBook({ ...editedBook, rating: newValue || 0 });
+                  updateBook(id, { ...editedBook, rating: newValue || 0 });
+                }}
+                readOnly={false}
+              />
+              
+              {status === 'read' ? (
+                <span className="text-xs text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full whitespace-nowrap">Read</span>
+              ) : (
+                <span className="text-xs text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full whitespace-nowrap">Want to Read</span>
+              )}
+            </div>
+          </div>
+          
+          <button
+            className="ml-2 p-1 text-gray-400 hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
+          >
+            <DeleteIcon fontSize="small" />
+          </button>
+        </li>
+      );
+    }
+  };
 
   return (
     <>

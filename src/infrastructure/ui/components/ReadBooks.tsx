@@ -5,6 +5,9 @@ import { Book } from '../../../domain/entities/Book';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import SortIcon from '@mui/icons-material/Sort';
 import SearchIcon from '@mui/icons-material/Search';
+import GridViewIcon from '@mui/icons-material/GridView';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 
 /**
  * Component that displays the list of books that have been read
@@ -13,6 +16,7 @@ const ReadBooks: React.FC = () => {
   const { readBooks } = useContext(BooksContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('recent'); // 'recent', 'title', 'author', 'rating'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list', 'compact'
 
   // Filter books based on search term
   const filteredBooks = readBooks.filter(book => 
@@ -57,6 +61,31 @@ const ReadBooks: React.FC = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+          
+          {/* View mode toggle */}
+          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+            <button 
+              className={`p-2 ${viewMode === 'grid' ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+            >
+              <GridViewIcon fontSize="small" />
+            </button>
+            <button 
+              className={`p-2 ${viewMode === 'list' ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+              onClick={() => setViewMode('list')}
+              title="List View"
+            >
+              <ViewListIcon fontSize="small" />
+            </button>
+            <button 
+              className={`p-2 ${viewMode === 'compact' ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
+              onClick={() => setViewMode('compact')}
+              title="Compact View"
+            >
+              <ViewHeadlineIcon fontSize="small" />
+            </button>
           </div>
           
           {/* Sort dropdown */}
@@ -132,11 +161,30 @@ const ReadBooks: React.FC = () => {
       ) : (
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
           <p className="text-sm text-gray-500 mb-4">{sortedBooks.length} {sortedBooks.length === 1 ? 'book' : 'books'} found</p>
-          <ul className="list-none grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            {sortedBooks.map((book) => (
-              <BookItem key={book.id} {...book} />
-            ))}
-          </ul>
+          
+          {viewMode === 'grid' && (
+            <ul className="list-none grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              {sortedBooks.map((book) => (
+                <BookItem key={book.id} {...book} viewMode={viewMode} />
+              ))}
+            </ul>
+          )}
+          
+          {viewMode === 'list' && (
+            <ul className="list-none flex flex-col gap-3">
+              {sortedBooks.map((book) => (
+                <BookItem key={book.id} {...book} viewMode={viewMode} />
+              ))}
+            </ul>
+          )}
+          
+          {viewMode === 'compact' && (
+            <ul className="list-none flex flex-col divide-y divide-gray-100">
+              {sortedBooks.map((book) => (
+                <BookItem key={book.id} {...book} viewMode={viewMode} />
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>
