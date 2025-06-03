@@ -102,8 +102,8 @@ const BookItem: React.FC<BookItemProps> = ({
     startDate
   } = currentBook;
   
-  const localReadDate = readDate ? new Date(readDate).toLocaleDateString() : 'No finalizado';
-  const localStartDate = startDate ? new Date(startDate).toLocaleDateString() : 'No iniciado';
+  const localReadDate = readDate ? new Date(readDate).toLocaleDateString() : 'Not finished';
+  const localStartDate = startDate ? new Date(startDate).toLocaleDateString() : 'Not started';
 
   // Handle book deletion, showing a confirmation window
   const handleDelete = () => {
@@ -149,34 +149,39 @@ const BookItem: React.FC<BookItemProps> = ({
 
   const renderBookItem = () => (
     <li 
-      className="flex items-center border border-teal-800 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer hover:shadow-lg transition-shadow"
+      className="relative flex flex-col sm:flex-row items-start sm:items-center border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer hover:shadow-lg transition-all duration-300 hover:bg-teal-50"
       onClick={handleViewDetails}
     >
       {cover && (
-        <img
-          src={cover}
-          alt={`Cover of ${title}`}
-          className="w-28 h-40 object-cover rounded border border-gray-300 mr-4"
-        />
+        <div className="mb-3 sm:mb-0 sm:mr-4 flex-shrink-0">
+          <img
+            src={cover}
+            alt={`Cover of ${title}`}
+            className="w-full sm:w-28 h-40 object-cover rounded-md shadow-sm"
+          />
+        </div>
       )}
       <div className="flex-1 flex flex-col gap-1 text-left">
-        <p className="text-base font-bold text-gray-800">{title}</p>
-        <p className="text-sm text-gray-600">{author} ({year})</p>
-        <p className="text-sm text-gray-600">{genre}</p>
-        <div className="text-sm text-gray-600">
-          {status === 'read' && (
-            <>
-              <p>Inicio: {localStartDate}</p>
-              <p>Finalización: {localReadDate}</p>
-            </>
-          )}
-        </div>
+        <h3 className="text-lg font-bold text-gray-800 line-clamp-2">{title}</h3>
+        <p className="text-sm text-gray-600 font-medium">{author} {year && `(${year})`}</p>
+        {genre && <p className="text-xs text-teal-600 bg-teal-50 inline-block px-2 py-1 rounded-full">{genre}</p>}
+        
         {status === 'read' && (
-          <div className="mt-1">
+          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-600">
+            <p className="font-medium">Started:</p>
+            <p>{localStartDate}</p>
+            <p className="font-medium">Finished:</p>
+            <p>{localReadDate}</p>
+          </div>
+        )}
+        
+        {status === 'read' && (
+          <div className="mt-2">
             <Rating
               name={`rating-${id}`}
               value={editedBook.rating || 0}
               precision={0.5}
+              size="small"
               onChange={(_, newValue) => {
                 setEditedBook({ ...editedBook, rating: newValue || 0 });
                 updateBook(id, { ...editedBook, rating: newValue || 0 });
@@ -184,44 +189,62 @@ const BookItem: React.FC<BookItemProps> = ({
             />
           </div>
         )}
-        <div className="flex items-center gap-2 mt-2">
+        
+        <div className="flex flex-wrap items-center gap-3 mt-3">
           {status === 'read' && (
             <button
-              className="text-teal-600 text-xs font-medium hover:underline"
+              className="text-teal-600 text-xs font-medium hover:bg-teal-50 px-2 py-1 rounded transition-colors flex items-center"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowDateModal(true);
               }}
             >
-              Editar fechas de lectura
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit Reading Dates
             </button>
           )}
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggleStatus();
-            }}
-            className="bg-teal-600 text-white hover:bg-teal-700"
-          >
-            {status === 'read' ? 'Want to read' : 'Mark as read'}
-          </Button>
+          
+          {status === 'read' ? (
+            <button
+              className="text-gray-600 text-xs font-medium border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded-full transition-colors flex items-center"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleStatus();
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+              </svg>
+              Want to Read
+            </button>
+          ) : (
+            <button
+              className="text-teal-600 text-xs font-medium border border-teal-200 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-full transition-colors flex items-center"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleStatus();
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Mark as Read
+            </button>
+          )}
         </div>
       </div>
-      <IconButton
-        color="secondary"
+      <button
         aria-label="delete"
         onClick={(e) => {
           e.stopPropagation();
           handleDelete();
         }}
-        className="self-end"
-        style={{ alignSelf: 'flex-end' }}
+        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-gray-100"
       >
-        <DeleteIcon />
-      </IconButton>
+        <DeleteIcon fontSize="small" />
+      </button>
     </li>
   );
 
