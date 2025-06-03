@@ -79,7 +79,7 @@ const ReadBooks: React.FC = () => {
       </div>
       
       {/* Stats summary */}
-      <div className="bg-gradient-to-r from-teal-50 to-teal-100 p-4 rounded-lg shadow-sm mb-6">
+      <div className="bg-pink-50 p-4 rounded-lg shadow-sm mb-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div className="bg-white p-3 rounded-md shadow-sm">
             <p className="text-sm text-gray-500">Books Read</p>

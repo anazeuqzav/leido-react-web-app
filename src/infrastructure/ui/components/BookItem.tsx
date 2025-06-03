@@ -149,7 +149,7 @@ const BookItem: React.FC<BookItemProps> = ({
 
   const renderBookItem = () => (
     <li 
-      className="relative flex flex-col sm:flex-row items-start sm:items-center border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer hover:shadow-lg transition-all duration-300 hover:bg-teal-50"
+      className="relative flex flex-col sm:flex-row items-start sm:items-center border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] hover:border-l-8"
       onClick={handleViewDetails}
     >
       {cover && (
@@ -164,7 +164,7 @@ const BookItem: React.FC<BookItemProps> = ({
       <div className="flex-1 flex flex-col gap-1 text-left">
         <h3 className="text-lg font-bold text-gray-800 line-clamp-2">{title}</h3>
         <p className="text-sm text-gray-600 font-medium">{author} {year && `(${year})`}</p>
-        {genre && <p className="text-xs text-teal-600 bg-teal-50 inline-block px-2 py-1 rounded-full">{genre}</p>}
+        {genre && <p className="text-xs text-teal-800 bg-pink-50 inline-block px-2 py-1 rounded-full border border-pink-100 font-medium">{genre}</p>}
         
         {status === 'read' && (
           <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-600">
@@ -181,7 +181,7 @@ const BookItem: React.FC<BookItemProps> = ({
               name={`rating-${id}`}
               value={editedBook.rating || 0}
               precision={0.5}
-              size="small"
+              size="medium"
               onChange={(_, newValue) => {
                 setEditedBook({ ...editedBook, rating: newValue || 0 });
                 updateBook(id, { ...editedBook, rating: newValue || 0 });
@@ -193,7 +193,7 @@ const BookItem: React.FC<BookItemProps> = ({
         <div className="flex flex-wrap items-center gap-3 mt-3">
           {status === 'read' && (
             <button
-              className="text-teal-600 text-xs font-medium hover:bg-teal-50 px-2 py-1 rounded transition-colors flex items-center"
+              className="text-teal-800 text-xs font-medium hover:bg-pink-50 px-2 py-1 rounded transition-colors flex items-center"
               onClick={(e) => {
                 e.stopPropagation();
                 setShowDateModal(true);
@@ -221,7 +221,7 @@ const BookItem: React.FC<BookItemProps> = ({
             </button>
           ) : (
             <button
-              className="text-teal-600 text-xs font-medium border border-teal-200 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-full transition-colors flex items-center"
+              className="text-teal-800 text-xs font-medium border border-pink-200 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-full transition-colors flex items-center"
               onClick={(e) => {
                 e.stopPropagation();
                 handleToggleStatus();

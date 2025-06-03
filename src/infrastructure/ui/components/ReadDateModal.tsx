@@ -76,7 +76,7 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 transition-all duration-300" 
       style={{ backgroundColor: 'rgba(20, 30, 40, 0.75)', backdropFilter: 'blur(3px)' }}>
-      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl transform transition-all duration-300 scale-100 border-l-4 border-teal-600">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl transform transition-all duration-300 scale-100 border-l-4 border-teal-600 bg-gradient-to-br from-white to-pink-50">
         <div className="flex items-center mb-4">
           <div className="bg-teal-100 p-2 rounded-full mr-3">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
