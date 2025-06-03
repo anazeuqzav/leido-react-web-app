@@ -74,8 +74,8 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+    <div className="fixed inset-0 flex items-center justify-center z-50 transition-all duration-300" style={{ backgroundColor: 'rgba(70, 85, 100, 0.15)', backdropFilter: 'blur(1px)' }}>
+      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl transform transition-all duration-300 scale-100 border border-gray-100">
         <h2 className="text-xl font-bold mb-4 text-gray-800">Editar fechas de lectura</h2>
         <p className="text-sm text-gray-600 mb-4">"{book.title}" por {book.author}</p>
         
