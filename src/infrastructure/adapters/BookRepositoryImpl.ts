@@ -53,6 +53,9 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async addBook(book: BookDTO): Promise<Book> {
     try {
+      // Depurar el libro que se está enviando al backend
+      console.log('Enviando libro al backend:', JSON.stringify(book, null, 2));
+      
       const response = await axios.post(`${this.API_URL}/api/books`, book, {
         headers: {
           'Content-Type': 'application/json',
@@ -67,8 +70,17 @@ export class BookRepositoryImpl implements BookRepository {
         console.error('Unexpected API response format:', response.data);
         throw new Error('Failed to add book: Unexpected API response format');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding book:', error);
+      // Mostrar detalles del error si están disponibles
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        // Si hay un mensaje de error específico del backend, mostrarlo
+        if (error.response.data && error.response.data.message) {
+          throw new Error(`Error del servidor: ${error.response.data.message}`);
+        }
+      }
       throw error;
     }
   }

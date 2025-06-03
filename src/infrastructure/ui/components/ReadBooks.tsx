@@ -44,7 +44,6 @@ const ReadBooks: React.FC = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div className="flex items-center mb-4 md:mb-0">
-          <MenuBookIcon className="text-teal-700 mr-2" fontSize="large" />
           <h2 className="text-2xl font-bold text-teal-800">My Reading Journey</h2>
         </div>
         

@@ -24,6 +24,10 @@ export class AuthRepositoryImpl implements AuthRepository {
         const responseData = await response.json();
         
         if (responseData.success && responseData.data) {
+          // Log completo de la respuesta para depuración
+          console.log('Respuesta completa del login:', responseData);
+          console.log('Datos del usuario del backend:', responseData.data.user);
+          
           const userData = responseData.data.user;
           const token = responseData.data.token;
           
@@ -32,15 +36,26 @@ export class AuthRepositoryImpl implements AuthRepository {
             return null;
           }
           
+          // Verificar específicamente si existe _id en userData
+          console.log('userData._id existe?', !!userData.id);
+          console.log('Valor de userData._id:', userData.id);
+          
           const user: User = {
-            id: userData._id,
+            id: userData.id,
             username: userData.username,
             email: userData.email,
           };
 
+          // Log para ver cómo se ve el objeto user antes de guardarlo
+          console.log('Objeto user construido para guardar:', user);
+          
           // Store user and token in localStorage
           localStorage.setItem('user', JSON.stringify(user));
           localStorage.setItem('token', token);
+          
+          // Verificar lo que realmente se guardó
+          const savedUser = localStorage.getItem('user');
+          console.log('Usuario realmente guardado en localStorage:', savedUser);
 
           return { user, token };
         } else {

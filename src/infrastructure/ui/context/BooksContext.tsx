@@ -87,8 +87,77 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
         }
       }
       
+      // Obtener el ID de usuario desde localStorage si no está disponible en el contexto
+      let userId = user?.id;
+      
+      // Si el ID de usuario no está disponible en el contexto, intentar obtenerlo de diferentes fuentes
+      if (!userId) {
+        console.log('Intentando obtener userId desde diferentes fuentes');
+        
+        // 1. Intentar obtener desde localStorage['user']
+        const savedUserString = localStorage.getItem('user');
+        console.log('Valor de localStorage["user"]:', savedUserString);
+        
+        if (savedUserString) {
+          try {
+            const savedUser = JSON.parse(savedUserString);
+            console.log('Usuario parseado de localStorage:', savedUser);
+            userId = savedUser.id;  // Obtener de user.id
+            console.log('ID de usuario obtenido de localStorage["user"].id:', userId);
+          } catch (error) {
+            console.error('Error al parsear el usuario de localStorage:', error);
+          }
+        }
+        
+        // 2. Si aún no tenemos userId, intentar decodificar el token JWT
+        if (!userId) {
+          const token = localStorage.getItem('token');
+          if (token) {
+            try {
+              // Decodificar el token JWT (parte de en medio, codificada en base64)
+              const payload = token.split('.')[1];
+              if (payload) {
+                const decodedPayload = JSON.parse(atob(payload));
+                console.log('Token JWT decodificado:', decodedPayload);
+                userId = decodedPayload.id; // El backend pone el ID de usuario en el campo 'id' del token
+                console.log('ID de usuario obtenido del token JWT:', userId);
+              }
+            } catch (error) {
+              console.error('Error al decodificar el token JWT:', error);
+            }
+          } else {
+            console.log('No se encontró token en localStorage');
+          }
+        }
+        
+        // 3. Intentar obtener el email como último recurso
+        if (!userId) {
+          // Como último recurso, usar el email como identificador (no es lo ideal pero puede funcionar temporalmente)
+          if (user?.email) {
+            userId = user.email;
+            console.log('Usando email como identificador temporal:', userId);
+          } else if (savedUserString) {
+            try {
+              const savedUser = JSON.parse(savedUserString);
+              if (savedUser.email) {
+                userId = savedUser.email;
+                console.log('Usando email de localStorage como identificador temporal:', userId);
+              }
+            } catch {}
+          }
+        }
+      }
+      
+      // Si seguimos sin tener ID de usuario, no podemos continuar
+      if (!userId) {
+        const error = new Error('No se pudo obtener el ID de usuario');
+        console.error(error);
+        setError(error.message);
+        return;
+      }
+      
       // Si no existe, añadir el libro
-      const addedBook = await bookService.addBook({ ...newBook, userId: user.id });
+      const addedBook = await bookService.addBook({ ...newBook, userId });
       setBooks([...books, addedBook]);
     } catch (error: any) {
       console.error('Error adding book:', error);

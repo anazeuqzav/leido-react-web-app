@@ -30,7 +30,7 @@ export interface BookDTO {
   rating?: number;
   cover?: string;
   userId: string;
-  readDate?: Date;
-  startDate?: Date;
+  readDate?: Date | string;  // Permitir formato ISO string para compatibilidad con API
+  startDate?: Date | string; // Permitir formato ISO string para compatibilidad con API
   externalId?: string; // Identificador único de OpenLibrary (OLID) u otra API
 }
