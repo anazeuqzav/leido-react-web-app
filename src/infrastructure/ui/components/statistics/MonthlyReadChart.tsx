@@ -26,29 +26,29 @@ interface MonthlyReadChartProps {
 }
 
 const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
-  // Formatear los nombres de los meses para mostrar
+  // Format month names for display
   const formatMonthLabel = (monthStr: string): string => {
     const [year, month] = monthStr.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1);
-    return date.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   };
   
-  // Obtener el mes actual y el año actual para destacar el mes actual si está presente
+  // Get current month and year to highlight the current month if present
   const currentDate = new Date();
   const currentYearMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
 
-  // Ordenar los datos por fecha (de más antiguo a más reciente)
+  // Sort data by date (from oldest to newest)
   const sortedData = [...data].sort((a, b) => a.month.localeCompare(b.month));
 
   const chartData = {
     labels: sortedData.map(item => formatMonthLabel(item.month)),
     datasets: [
       {
-        label: 'Libros leídos',
+        label: 'Books read',
         data: sortedData.map(item => item.count),
         backgroundColor: sortedData.map(item => 
           item.month === currentYearMonth 
-            ? 'rgba(75, 192, 192, 0.7)' // Destacar mes actual
+            ? 'rgba(75, 192, 192, 0.7)' // Highlight current month
             : 'rgba(54, 162, 235, 0.6)'
         ),
         borderColor: sortedData.map(item => 

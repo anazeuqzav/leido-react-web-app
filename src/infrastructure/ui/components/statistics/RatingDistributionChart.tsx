@@ -11,7 +11,7 @@ import {
   Legend
 } from 'chart.js';
 
-// Registrar componentes de Chart.js
+// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,15 +26,15 @@ interface RatingDistributionChartProps {
 }
 
 const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data }) => {
-  // Ordenar los datos por calificación
+  // Sort data by rating
   const sortedData = [...data].sort((a, b) => a.rating - b.rating);
   
-  // Preparar datos para el gráfico
+  // Prepare data for the chart
   const chartData = {
     labels: sortedData.map(item => `${item.rating} ★`),
     datasets: [
       {
-        label: 'Número de libros',
+        label: 'Number of books',
         data: sortedData.map(item => item.count),
         backgroundColor: [
           'rgba(255, 99, 132, 0.7)',

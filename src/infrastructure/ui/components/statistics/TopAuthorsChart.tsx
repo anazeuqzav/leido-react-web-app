@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import { AuthorStats } from '../../../../domain/entities/Statistics';
 
-// Registrar los componentes de ChartJS
+// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,14 +26,14 @@ interface TopAuthorsChartProps {
 }
 
 const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data }) => {
-  // Ordenar los datos por cantidad (de mayor a menor)
+  // Sort data by count (highest to lowest)
   const sortedData = [...data].sort((a, b) => b.count - a.count);
 
   const chartData = {
     labels: sortedData.map(item => item.author),
     datasets: [
       {
-        label: 'Libros por autor',
+        label: 'Books by author',
         data: sortedData.map(item => item.count),
         backgroundColor: 'rgba(153, 102, 255, 0.6)',
         borderColor: 'rgba(153, 102, 255, 1)',

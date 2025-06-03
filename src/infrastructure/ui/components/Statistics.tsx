@@ -30,7 +30,7 @@ const Statistics: React.FC = () => {
         setError(null);
       } catch (err) {
         console.error('Error fetching statistics:', err);
-        setError('No se pudieron cargar las estadísticas. Por favor, inténtalo de nuevo más tarde.');
+        setError('Could not load statistics. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -68,46 +68,46 @@ const Statistics: React.FC = () => {
   if (!statistics || statistics.totalBooks === 0) {
     return (
       <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
-        <strong className="font-bold">Sin datos:</strong>
-        <span className="block sm:inline"> No hay suficientes libros leídos para generar estadísticas. Marca algunos libros como leídos para ver tus estadísticas.</span>
+        <strong className="font-bold">No data:</strong>
+        <span className="block sm:inline"> Not enough books read to generate statistics. Mark some books as read to see your statistics.</span>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Tus Estadísticas de Lectura</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Your Reading Statistics</h1>
       
       {/* Resumen general */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-          <h2 className="text-lg font-semibold text-gray-700">Total de Libros Leídos</h2>
+          <h2 className="text-lg font-semibold text-gray-700">Total Books Read</h2>
           <p className="text-4xl font-bold text-blue-600 mt-2">{statistics.totalBooks}</p>
         </div>
         
         {statistics.bestMonth ? (
           <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h2 className="text-lg font-semibold text-gray-700">Mejor Mes de Lectura</h2>
+            <h2 className="text-lg font-semibold text-gray-700">Best Reading Month</h2>
             <p className="text-2xl font-bold text-blue-600 mt-2">{statistics.bestMonth.month} {statistics.bestMonth.year}</p>
-            <p className="text-gray-600">{statistics.bestMonth.count} libros</p>
+            <p className="text-gray-600">{statistics.bestMonth.count} books</p>
           </div>
         ) : (
           <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h2 className="text-lg font-semibold text-gray-700">Mejor Mes de Lectura</h2>
-            <p className="text-gray-500">Sin datos</p>
+            <h2 className="text-lg font-semibold text-gray-700">Best Reading Month</h2>
+            <p className="text-gray-500">No data</p>
           </div>
         )}
         
         {statistics.mostReadGenre ? (
           <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h2 className="text-lg font-semibold text-gray-700">Género Más Leído</h2>
+            <h2 className="text-lg font-semibold text-gray-700">Most Read Genre</h2>
             <p className="text-2xl font-bold text-blue-600 mt-2">{statistics.mostReadGenre.genre}</p>
-            <p className="text-gray-600">{statistics.mostReadGenre.count} libros</p>
+            <p className="text-gray-600">{statistics.mostReadGenre.count} books</p>
           </div>
         ) : (
           <div className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-            <h2 className="text-lg font-semibold text-gray-700">Género Más Leído</h2>
-            <p className="text-gray-500">Sin datos</p>
+            <h2 className="text-lg font-semibold text-gray-700">Most Read Genre</h2>
+            <p className="text-gray-500">No data</p>
           </div>
         )}
       </div>
@@ -115,21 +115,21 @@ const Statistics: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Gráfico de lecturas mensuales */}
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Libros Leídos por Mes</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Books Read by Month</h2>
           {statistics.monthlyReads.length > 0 ? (
             <MonthlyReadChart data={statistics.monthlyReads} />
           ) : (
-            <p className="text-gray-500">No hay datos suficientes para mostrar el gráfico.</p>
+            <p className="text-gray-500">Not enough data to display the chart.</p>
           )}
         </div>
 
         {/* Gráfico de géneros más leídos */}
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Géneros Más Leídos</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Most Read Genres</h2>
           {statistics.topGenres.length > 0 ? (
             <TopGenresChart data={statistics.topGenres} />
           ) : (
-            <p className="text-gray-500">No hay datos suficientes para mostrar el gráfico.</p>
+            <p className="text-gray-500">Not enough data to display the chart.</p>
           )}
         </div>
       </div>
@@ -137,32 +137,32 @@ const Statistics: React.FC = () => {
       {/* Distribución de valoraciones */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Distribución de Valoraciones</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Rating Distribution</h2>
           {statistics.ratingDistribution.length > 0 ? (
             <RatingDistributionChart data={statistics.ratingDistribution} />
           ) : (
-            <p className="text-gray-500">No hay valoraciones suficientes para mostrar el gráfico.</p>
+            <p className="text-gray-500">Not enough ratings to display the chart.</p>
           )}
         </div>
         
         {/* Top libros mejor valorados */}
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">Tus Libros Favoritos</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Your Favorite Books</h2>
           {statistics.topRatedBooks.length > 0 ? (
             <TopRatedBooks books={statistics.topRatedBooks} />
           ) : (
-            <p className="text-gray-500">No hay valoraciones suficientes para mostrar tus favoritos.</p>
+            <p className="text-gray-500">Not enough ratings to display your favorites.</p>
           )}
         </div>
       </div>
 
       {/* Gráfico de autores más leídos */}
       <div className="bg-white p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">Top 5 Autores Más Leídos</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-700">Top 5 Most Read Authors</h2>
         {statistics.topFiveAuthors.length > 0 ? (
           <TopAuthorsChart data={statistics.topFiveAuthors} />
         ) : (
-          <p className="text-gray-500">No hay datos suficientes para mostrar el gráfico.</p>
+          <p className="text-gray-500">Not enough data to display the chart.</p>
         )}
       </div>
     </div>

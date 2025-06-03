@@ -1,5 +1,5 @@
 /**
- * Estadísticas de lectura por mes
+ * Monthly reading statistics
  */
 export interface MonthlyReadStats {
   month: string;
@@ -7,7 +7,7 @@ export interface MonthlyReadStats {
 }
 
 /**
- * Estadísticas de géneros
+ * Genre statistics
  */
 export interface GenreStats {
   genre: string;
@@ -15,7 +15,7 @@ export interface GenreStats {
 }
 
 /**
- * Estadísticas de autores
+ * Author statistics
  */
 export interface AuthorStats {
   author: string;
@@ -23,7 +23,7 @@ export interface AuthorStats {
 }
 
 /**
- * Estadísticas de calificaciones
+ * Rating statistics
  */
 export interface RatingStats {
   rating: number;
@@ -31,7 +31,7 @@ export interface RatingStats {
 }
 
 /**
- * Clasificación de libros
+ * Book ranking
  */
 export interface BookRanking {
   id: string;
@@ -42,7 +42,7 @@ export interface BookRanking {
 }
 
 /**
- * Mejor mes de lectura
+ * Best reading month
  */
 export interface BestMonth {
   month: string;
@@ -51,7 +51,7 @@ export interface BestMonth {
 }
 
 /**
- * Estadísticas de usuario
+ * User statistics
  */
 export interface UserStatistics {
   totalBooks: number;

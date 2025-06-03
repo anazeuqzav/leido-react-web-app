@@ -8,7 +8,7 @@ import {
 } from 'chart.js';
 import { GenreStats } from '../../../../domain/entities/Statistics';
 
-// Registrar los componentes de ChartJS
+// Register ChartJS components
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -20,7 +20,7 @@ interface TopGenresChartProps {
 }
 
 const TopGenresChart: React.FC<TopGenresChartProps> = ({ data }) => {
-  // Colores para el gráfico
+  // Colors for the chart
   const backgroundColors = [
     'rgba(255, 99, 132, 0.6)',
     'rgba(54, 162, 235, 0.6)',
@@ -43,7 +43,7 @@ const TopGenresChart: React.FC<TopGenresChartProps> = ({ data }) => {
     labels: data.map(item => item.genre),
     datasets: [
       {
-        label: 'Libros por género',
+        label: 'Books by genre',
         data: data.map(item => item.count),
         backgroundColor: backgroundColors.slice(0, data.length),
         borderColor: borderColors.slice(0, data.length),

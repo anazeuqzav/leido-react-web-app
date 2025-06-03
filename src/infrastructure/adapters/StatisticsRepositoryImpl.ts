@@ -3,14 +3,14 @@ import { UserStatistics } from '../../domain/entities/Statistics';
 import { StatisticsRepository } from '../../domain/ports/StatisticsRepository';
 
 /**
- * Implementación del repositorio de estadísticas
+ * Statistics repository implementation
  */
 export class StatisticsRepositoryImpl implements StatisticsRepository {
   private API_URL = 'http://localhost:5000';
 
   /**
-   * Obtiene los encabezados de autenticación con token
-   * @returns Objeto de encabezados con token de autorización
+   * Gets authentication headers with token
+   * @returns Headers object with authorization token
    */
   private getAuthHeaders() {
     const token = localStorage.getItem('token');
@@ -18,8 +18,8 @@ export class StatisticsRepositoryImpl implements StatisticsRepository {
   }
 
   /**
-   * Obtiene las estadísticas del usuario
-   * @returns Promesa con las estadísticas del usuario
+   * Gets user statistics
+   * @returns Promise with user statistics
    */
   async getUserStatistics(): Promise<UserStatistics> {
     try {

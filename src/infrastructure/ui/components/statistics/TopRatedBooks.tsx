@@ -6,26 +6,26 @@ interface TopRatedBooksProps {
 }
 
 const TopRatedBooks: React.FC<TopRatedBooksProps> = ({ books }) => {
-  // Ordenar libros por calificación (de mayor a menor)
+  // Sort books by rating (highest to lowest)
   const sortedBooks = [...books].sort((a, b) => b.rating - a.rating);
   
-  // Función para mostrar estrellas según la calificación
+  // Function to display stars based on rating
   const renderStars = (rating: number) => {
     const stars: React.ReactNode[] = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     
-    // Estrellas completas
+    // Full stars
     for (let i = 0; i < fullStars; i++) {
       stars.push(<span key={`full-${i}`} className="text-yellow-400">★</span>);
     }
     
-    // Media estrella si es necesario
+    // Half star if needed
     if (hasHalfStar) {
       stars.push(<span key="half" className="text-yellow-400">★</span>);
     }
     
-    // Estrellas vacías
+    // Empty stars
     const emptyStars = 5 - stars.length;
     for (let i = 0; i < emptyStars; i++) {
       stars.push(<span key={`empty-${i}`} className="text-gray-300">★</span>);
