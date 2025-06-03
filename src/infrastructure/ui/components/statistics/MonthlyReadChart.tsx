@@ -1,21 +1,23 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
 import { MonthlyReadStats } from '../../../../domain/entities/Statistics';
 
-// Registrar los componentes de ChartJS
+// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
@@ -26,11 +28,14 @@ interface MonthlyReadChartProps {
 }
 
 const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
-  // Format month names for display
-  const formatMonthLabel = (monthStr: string): string => {
+  // Format month names for display with month and year on separate lines
+  const formatMonthLabel = (monthStr: string): string[] => {
     const [year, month] = monthStr.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1);
-    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    return [
+      date.toLocaleDateString('en-US', { month: 'short' }),
+      date.getFullYear().toString()
+    ];
   };
   
   // Get current month and year to highlight the current month if present
@@ -46,18 +51,18 @@ const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
       {
         label: 'Books read',
         data: sortedData.map(item => item.count),
-        backgroundColor: sortedData.map(item => 
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        pointBackgroundColor: sortedData.map(item => 
           item.month === currentYearMonth 
-            ? 'rgba(75, 192, 192, 0.7)' // Highlight current month
-            : 'rgba(54, 162, 235, 0.6)'
-        ),
-        borderColor: sortedData.map(item => 
-          item.month === currentYearMonth 
-            ? 'rgba(75, 192, 192, 1)' 
+            ? 'rgba(75, 192, 192, 1)' // Highlight current month
             : 'rgba(54, 162, 235, 1)'
         ),
-        borderWidth: 1,
-        borderRadius: 5,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        tension: 0.3,
+        fill: true,
       },
     ],
   };
@@ -71,33 +76,36 @@ const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
         labels: {
           font: {
             size: 12,
-            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+            family: "'Inter', sans-serif"
           },
           usePointStyle: true,
-          padding: 20
+          padding: 15
         }
       },
       title: {
         display: false,
       },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleFont: {
-          size: 14,
-          weight: 'bold' as const
-        },
-        bodyFont: {
-          size: 13
-        },
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        titleColor: '#333',
+        bodyColor: '#666',
+        borderColor: 'rgba(200, 200, 200, 0.75)',
+        borderWidth: 1,
         padding: 10,
-        cornerRadius: 6,
+        boxPadding: 5,
+        cornerRadius: 4,
         callbacks: {
           title: (tooltipItems: any) => {
-            return tooltipItems[0].label;
+            // Get the original month-year data from the index
+            const index = tooltipItems[0].dataIndex;
+            const monthStr = sortedData[index].month;
+            const [year, month] = monthStr.split('-');
+            const date = new Date(parseInt(year), parseInt(month) - 1);
+            return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
           },
           label: (context: any) => {
             const value = context.parsed.y;
-            return `${value} ${value === 1 ? 'libro' : 'libros'}`;
+            return `${value} ${value === 1 ? 'book' : 'books'}`;
           },
         },
       },
@@ -109,33 +117,44 @@ const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
           precision: 0,
           stepSize: 1,
           font: {
-            size: 11
+            size: 10
           }
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.05)'
+          color: 'rgba(200, 200, 200, 0.15)',
         }
       },
       x: {
-        ticks: {
-          font: {
-            size: 11
-          }
-        },
         grid: {
           display: false
+        },
+        ticks: {
+          maxRotation: 0,
+          minRotation: 0,
+          autoSkip: false,
+          font: {
+            size: 10
+          }
         }
       }
     },
+    layout: {
+      padding: {
+        left: 5,
+        right: 5,
+        top: 0,
+        bottom: 0
+      }
+    },
     animation: {
-      duration: 2000,
+      duration: 1000,
       easing: 'easeOutQuart' as const
     }
   };
 
   return (
-    <div style={{ height: '300px' }}>
-      <Bar data={chartData} options={options} />
+    <div style={{ height: '300px', width: '100%', margin: '0', padding: '0' }}>
+      <Line data={chartData} options={options} />
     </div>
   );
 };

@@ -57,7 +57,7 @@ const TopRatedBooks: React.FC<TopRatedBooksProps> = ({ books }) => {
             <div className="flex-shrink-0 ml-4">
               <img 
                 src={book.cover} 
-                alt={`Portada de ${book.title}`} 
+                alt={`Cover of ${book.title}`} 
                 className="w-16 h-24 object-cover rounded shadow-sm"
               />
             </div>

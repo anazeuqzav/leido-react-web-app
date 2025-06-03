@@ -54,23 +54,34 @@ const TopGenresChart: React.FC<TopGenresChartProps> = ({ data }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         position: 'right' as const,
+        labels: {
+          boxWidth: 15,
+          font: {
+            size: 12
+          }
+        }
       },
       tooltip: {
         callbacks: {
           label: (context: any) => {
             const value = context.parsed;
             const label = context.label || '';
-            return `${label}: ${value} ${value === 1 ? 'libro' : 'libros'}`;
+            return `${label}: ${value} ${value === 1 ? 'book' : 'books'}`;
           },
         },
       },
     },
   };
 
-  return <Pie data={chartData} options={options} />;
+  return (
+    <div style={{ height: '400px', width: '100%', margin: '0', padding: '0', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Pie data={chartData} options={options} style={{ maxWidth: '450px' }} />
+    </div>
+  );
 };
 
 export default TopGenresChart;

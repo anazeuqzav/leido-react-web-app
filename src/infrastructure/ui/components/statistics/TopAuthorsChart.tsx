@@ -45,9 +45,10 @@ const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data }) => {
   const options = {
     indexAxis: 'y' as const,
     responsive: true,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        display: false, // Hide legend to save space
       },
       title: {
         display: false,
@@ -56,7 +57,7 @@ const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data }) => {
         callbacks: {
           label: (context: any) => {
             const value = context.parsed.x;
-            return `${value} ${value === 1 ? 'libro' : 'libros'}`;
+            return `${value} ${value === 1 ? 'book' : 'books'}`;
           },
         },
       },
@@ -67,12 +68,32 @@ const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data }) => {
         ticks: {
           precision: 0,
           stepSize: 1,
+          font: {
+            size: 11
+          }
         },
+        grid: {
+          display: false
+        }
       },
+      y: {
+        ticks: {
+          font: {
+            size: 11
+          }
+        },
+        grid: {
+          display: false
+        }
+      }
     },
   };
 
-  return <Bar data={chartData} options={options} />;
+  return (
+    <div style={{ height: '280px', width: '100%', margin: '0', padding: '0' }}>
+      <Bar data={chartData} options={options} />
+    </div>
+  );
 };
 
 export default TopAuthorsChart;

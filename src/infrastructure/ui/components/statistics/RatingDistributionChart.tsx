@@ -55,10 +55,10 @@ const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data 
     ],
   };
 
-  // Opciones del gráfico
+  // Chart options
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false,
@@ -69,7 +69,8 @@ const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data 
       tooltip: {
         callbacks: {
           label: function(context: any) {
-            return `${context.parsed.y} libros`;
+            const value = context.parsed.y;
+            return `${value} ${value === 1 ? 'book' : 'books'}`;
           }
         }
       }
@@ -86,8 +87,8 @@ const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data 
   };
 
   return (
-    <div style={{ height: '300px' }}>
-      <Bar data={chartData} options={options} />
+    <div style={{ height: '270px' }} className="flex justify-center items-center">
+      <Bar options={options} data={chartData} />
     </div>
   );
 };
