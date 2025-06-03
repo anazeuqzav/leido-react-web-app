@@ -250,7 +250,7 @@ const BookDetail: React.FC = () => {
               {isDuplicate && existingBook && !isLibraryBook ? (
                 <div className="flex flex-col gap-3">
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-yellow-800">
-                    <p className="font-medium">¡Este libro ya está en tu biblioteca!</p>
+                    <p className="font-medium">¡This book is already in your LEÍDO library!</p>
                     <p className="text-sm mt-1">
                       Ya tienes guardado "{existingBook.title}" en tu biblioteca como "{existingBook.status === 'read' ? 'leído' : 'por leer'}".                      
                     </p>

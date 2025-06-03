@@ -115,12 +115,27 @@ const BookItem: React.FC<BookItemProps> = ({
   // Function to mark a book as read or unread
   const handleToggleStatus = () => {
     const newStatus = status === 'read' ? 'to-read' : 'read';
-
-    updateBook(id, {
-      ...currentBook,
+    const currentDate = new Date();
+    
+    // Prepare update data based on the new status
+    const updateData: Partial<Book> = {
       status: newStatus,
-      rating: newStatus === 'read' ? currentBook.rating : undefined,
-    });
+    };
+    
+    if (newStatus === 'read') {
+      // When marking as read, set the readDate to now if not already set
+      // and keep or set startDate
+      updateData.readDate = currentDate;
+      updateData.startDate = currentBook.startDate || currentDate;
+    } else {
+      // When marking as want to read, remove the readDate
+      // but keep the startDate if it exists
+      updateData.readDate = undefined;
+    }
+    
+    console.log(`Changing book status from ${status} to ${newStatus}`, updateData);
+    
+    updateBook(id, updateData);
   };
 
   // Navegar a la página de detalles del libro

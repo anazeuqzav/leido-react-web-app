@@ -31,7 +31,15 @@ export class BookRepositoryImpl implements BookRepository {
           ...this.getAuthHeaders(),
         },
       });
-      return response.data;
+      
+      // Check if the response has the expected structure
+      if (response.data && response.data.success && Array.isArray(response.data.data)) {
+        console.log('Books received from API:', response.data.data);
+        return response.data.data;
+      } else {
+        console.error('Unexpected API response format:', response.data);
+        return [];
+      }
     } catch (error) {
       console.error('Error fetching books:', error);
       throw error;
@@ -51,7 +59,14 @@ export class BookRepositoryImpl implements BookRepository {
           ...this.getAuthHeaders(),
         },
       });
-      return response.data;
+      
+      // Check if the response has the expected structure
+      if (response.data && response.data.success && response.data.data) {
+        return response.data.data;
+      } else {
+        console.error('Unexpected API response format:', response.data);
+        throw new Error('Failed to add book: Unexpected API response format');
+      }
     } catch (error) {
       console.error('Error adding book:', error);
       throw error;
@@ -66,10 +81,17 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async updateBook(id: string, book: Partial<Book>): Promise<Book> {
     try {
-      const response = await axios.patch(`${this.API_URL}/api/books/${id}`, book, {
+      const response = await axios.put(`${this.API_URL}/api/books/${id}`, book, {
         headers: this.getAuthHeaders(),
       });
-      return response.data;
+      
+      // Check if the response has the expected structure
+      if (response.data && response.data.success && response.data.data) {
+        return response.data.data;
+      } else {
+        console.error('Unexpected API response format:', response.data);
+        throw new Error('Failed to update book: Unexpected API response format');
+      }
     } catch (error) {
       console.error('Error updating book:', error);
       throw error;
@@ -86,7 +108,14 @@ export class BookRepositoryImpl implements BookRepository {
       const response = await axios.delete(`${this.API_URL}/api/books/${id}`, {
         headers: this.getAuthHeaders(),
       });
-      return response.data;
+      
+      // Check if the response has the expected structure
+      if (response.data && response.data.success) {
+        return true;
+      } else {
+        console.error('Unexpected API response format:', response.data);
+        return false;
+      }
     } catch (error) {
       console.error('Error deleting book:', error);
       throw error;

@@ -21,18 +21,32 @@ export class AuthRepositoryImpl implements AuthRepository {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        const user: User = {
-          id: data.user._id,
-          username: data.user.username,
-          email: data.user.email,
-        };
+        const responseData = await response.json();
+        
+        if (responseData.success && responseData.data) {
+          const userData = responseData.data.user;
+          const token = responseData.data.token;
+          
+          if (!userData || !token) {
+            console.error('Login response missing user or token data:', responseData);
+            return null;
+          }
+          
+          const user: User = {
+            id: userData._id,
+            username: userData.username,
+            email: userData.email,
+          };
 
-        // Store user and token in localStorage
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('token', data.token);
+          // Store user and token in localStorage
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('token', token);
 
-        return { user, token: data.token };
+          return { user, token };
+        } else {
+          console.error('Login response format unexpected:', responseData);
+          return null;
+        }
       }
       return null;
     } catch (error) {

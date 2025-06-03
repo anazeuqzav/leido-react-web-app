@@ -82,7 +82,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
         
         if (existingBook) {
           // El libro ya existe, mostrar un error
-          setError(`Este libro ya está en tu biblioteca como "${existingBook.title}". No se puede añadir de nuevo.`);
+          setError(`This book is already in your LEÍDO library"${existingBook.title}".`);
           throw new Error(`Libro duplicado: ${existingBook.title}`);
         }
       }
@@ -125,9 +125,9 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   };
 
   // Filter books by status
-  const readBooks = bookService.getReadBooks(books);
-  const unreadBooks = bookService.getUnreadBooks(books);
-  const favoriteBooks = bookService.getFavoriteBooks(books);
+  const readBooks = Array.isArray(books) ? bookService.getReadBooks(books) : [];
+  const unreadBooks = Array.isArray(books) ? bookService.getUnreadBooks(books) : [];
+  const favoriteBooks = Array.isArray(books) ? bookService.getFavoriteBooks(books) : [];
   
   // Get a book by its ID
   const getBookByIdHandler = (id: string): Book | undefined => {
