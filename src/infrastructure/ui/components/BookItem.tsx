@@ -118,34 +118,26 @@ const BookItem: React.FC<BookItemProps> = ({
 
   // Function to mark a book as read or unread
   const handleToggleStatus = () => {
-    const newStatus = status === 'read' ? 'to-read' : 'read';
-    const currentDate = new Date();
+    // Si el libro está en estado 'to-read' y se va a marcar como leído,
+    // mostrar el modal para añadir fechas y puntuación
+    if (status === 'to-read') {
+      setShowDateModal(true);
+      return;
+    }
+    
+    // Si el libro está en estado 'read' y se va a marcar como 'to-read'
+    const newStatus = 'to-read';
     
     // Prepare update data based on the new status
     const updateData: Partial<Book> = {
       status: newStatus,
+      readDate: undefined // Eliminar la fecha de lectura
     };
-    
-    if (newStatus === 'read') {
-      // When marking as read, set the readDate to now if not already set
-      // and keep or set startDate
-      updateData.readDate = currentDate;
-      updateData.startDate = currentBook.startDate || currentDate;
-    } else {
-      // When marking as want to read, remove the readDate
-      // but keep the startDate if it exists
-      updateData.readDate = undefined;
-    }
     
     console.log(`Changing book status from ${status} to ${newStatus}`, updateData);
     
     updateBook(id, updateData).then(() => {
-      // Show toast notification based on the new status
-      if (newStatus === 'read') {
-        toast.success(`"${title}" has been marked as read!`);
-      } else {
-        toast.success(`"${title}" has been added to your want to read list!`);
-      }
+      toast.success(`"${title}" has been added to your want to read list!`);
     }).catch(error => {
       console.error('Error updating book status:', error);
       toast.error('Failed to update book status. Please try again.');

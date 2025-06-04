@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Button from '@mui/material/Button';
 import { Book } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
+import { toast } from 'react-toastify';
 
 interface ReadDateModalProps {
   book: Book;
@@ -35,6 +36,11 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
       // Prepare the update data
       const updateData: Partial<Book> = {};
       
+      // Si el libro está en estado 'to-read', actualizarlo a 'read'
+      if (book.status === 'to-read') {
+        updateData.status = 'read';
+      }
+      
       // Only include dates if they've changed
       if (startDate !== (book.startDate ? new Date(book.startDate) : null)) {
         // Convert null to undefined for the Book type
@@ -46,12 +52,27 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
         updateData.readDate = readDate === null ? undefined : readDate;
       }
       
+      // Si estamos marcando como leído, asegurarnos de que hay una fecha de finalización
+      if (updateData.status === 'read' && !updateData.readDate && !book.readDate) {
+        updateData.readDate = new Date();
+      }
+      
+      // Si estamos marcando como leído y no hay fecha de inicio, usar la fecha actual
+      if (updateData.status === 'read' && !updateData.startDate && !book.startDate) {
+        updateData.startDate = new Date();
+      }
+      
       // Only update if there are changes
       if (Object.keys(updateData).length > 0) {
-        console.log('Updating book dates:', updateData);
+        console.log('Updating book dates and status:', updateData);
         try {
           // La función updateBook devuelve Promise<void>
           await updateBook(book.id, updateData);
+          
+          // Mostrar notificación de éxito si cambiamos el estado
+          if (updateData.status === 'read') {
+            toast.success(`"${book.title}" has been marked as read!`);
+          }
           
           // Notificar al componente padre con el ID actual del libro
           if (onBookUpdated) {
