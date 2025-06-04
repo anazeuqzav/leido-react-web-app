@@ -35,8 +35,8 @@ const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data }) => {
       {
         label: 'Books by author',
         data: sortedData.map(item => item.count),
-        backgroundColor: 'rgba(153, 102, 255, 0.6)',
-        borderColor: 'rgba(153, 102, 255, 1)',
+        backgroundColor: 'rgba(236, 72, 153, 0.6)',  // pink-500
+        borderColor: 'rgba(219, 39, 119, 1)',  // pink-600
         borderWidth: 1,
       },
     ],

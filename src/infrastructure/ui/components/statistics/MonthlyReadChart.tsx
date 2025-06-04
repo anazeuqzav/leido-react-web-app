@@ -51,13 +51,13 @@ const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
       {
         label: 'Books read',
         data: sortedData.map(item => item.count),
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(79, 70, 229, 0.2)', // Indigo color (más claro)
+        borderColor: 'rgba(79, 70, 229, 0.8)', // Indigo color
         borderWidth: 2,
         pointBackgroundColor: sortedData.map(item => 
           item.month === currentYearMonth 
-            ? 'rgba(75, 192, 192, 1)' // Highlight current month
-            : 'rgba(54, 162, 235, 1)'
+            ? 'rgba(139, 92, 246, 1)' // Highlight current month with purple
+            : 'rgba(79, 70, 229, 1)'
         ),
         pointRadius: 5,
         pointHoverRadius: 7,

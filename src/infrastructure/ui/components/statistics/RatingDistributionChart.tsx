@@ -37,18 +37,18 @@ const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data 
         label: 'Number of books',
         data: sortedData.map(item => item.count),
         backgroundColor: [
-          'rgba(255, 99, 132, 0.7)',
-          'rgba(255, 159, 64, 0.7)',
-          'rgba(255, 205, 86, 0.7)',
-          'rgba(75, 192, 192, 0.7)',
-          'rgba(54, 162, 235, 0.7)',
+          'rgba(236, 72, 153, 0.6)',  // pink-500
+          'rgba(219, 39, 119, 0.6)',   // pink-600
+          'rgba(20, 184, 166, 0.6)',   // teal-500
+          'rgba(13, 148, 136, 0.6)',   // teal-600
+          'rgba(14, 116, 144, 0.6)',   // cyan-700
         ],
         borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
-          'rgb(75, 192, 192)',
-          'rgb(54, 162, 235)',
+          'rgb(236, 72, 153)',   // pink-500
+          'rgb(219, 39, 119)',   // pink-600
+          'rgb(20, 184, 166)',   // teal-500
+          'rgb(13, 148, 136)',   // teal-600
+          'rgb(14, 116, 144)',   // cyan-700
         ],
         borderWidth: 1,
       },
