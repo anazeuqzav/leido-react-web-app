@@ -7,7 +7,8 @@ import Rating from '@mui/material/Rating';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
-import ReadDateModal from './ReadDateModal';
+import UpdateReadDateModal from './UpdateReadDateModal';
+import AddBookDetailsModal from './AddBookDetailsModal';
 
 interface BookItemProps extends Book {
   viewMode?: 'grid' | 'list' | 'compact';
@@ -34,7 +35,8 @@ const BookItem: React.FC<BookItemProps> = ({
   const navigate = useNavigate();
   const { updateBook, deleteBook, getBookById, books } = useContext(BooksContext);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [showDateModal, setShowDateModal] = useState<boolean>(false);
+  const [showUpdateDateModal, setShowUpdateDateModal] = useState<boolean>(false);
+  const [showAddDetailsModal, setShowAddDetailsModal] = useState<boolean>(false);
   
   // Usar un estado para mantener el ID actualizado del libro
   const [currentBookId, setCurrentBookId] = useState<string>(initialId);
@@ -121,7 +123,7 @@ const BookItem: React.FC<BookItemProps> = ({
     // Si el libro está en estado 'to-read' y se va a marcar como leído,
     // mostrar el modal para añadir fechas y puntuación
     if (status === 'to-read') {
-      setShowDateModal(true);
+      setShowAddDetailsModal(true);
       return;
     }
     
@@ -205,7 +207,7 @@ const BookItem: React.FC<BookItemProps> = ({
               className="text-teal-800 text-xs font-medium hover:bg-pink-50 px-2 py-1 rounded transition-colors flex items-center"
               onClick={(e) => {
                 e.stopPropagation();
-                setShowDateModal(true);
+                setShowUpdateDateModal(true);
               }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -279,19 +281,21 @@ const BookItem: React.FC<BookItemProps> = ({
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-gray-800 truncate">{title}</h3>
               <div className="ml-2 flex-shrink-0">
-                <Rating
-                  name={`rating-${id}`}
-                  value={editedBook.rating || 0}
-                  precision={0.5}
-                  size="small"
-                  onChange={(_, newValue) => {
-                    // Solo actualizar el rating localmente
-                    setEditedBook({ ...editedBook, rating: newValue || 0 });
-                    // Solo enviar el rating al backend, no todo el objeto libro
-                    updateBook(id, { rating: newValue || 0 });
-                  }}
-                  readOnly={false}
-                />
+                {status === 'read' && (
+                  <Rating
+                    name={`rating-${id}`}
+                    value={editedBook.rating || 0}
+                    precision={0.5}
+                    size="small"
+                    onChange={(_, newValue) => {
+                      // Solo actualizar el rating localmente
+                      setEditedBook({ ...editedBook, rating: newValue || 0 });
+                      // Solo enviar el rating al backend, no todo el objeto libro
+                      updateBook(id, { rating: newValue || 0 });
+                    }}
+                    readOnly={false}
+                  />
+                )}
               </div>
             </div>
             
@@ -307,7 +311,7 @@ const BookItem: React.FC<BookItemProps> = ({
                   className="text-teal-800 text-xs font-medium hover:bg-pink-50 px-2 py-0.5 rounded transition-colors flex items-center"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setShowDateModal(true);
+                    setShowUpdateDateModal(true);
                   }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -376,17 +380,19 @@ const BookItem: React.FC<BookItemProps> = ({
             <div className="flex items-center gap-3 ml-4">
               {genre && <span className="text-xs text-teal-800 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100 font-medium whitespace-nowrap">{genre}</span>}
               
-              <Rating
-                name={`rating-${id}`}
-                value={editedBook.rating || 0}
-                precision={0.5}
-                size="small"
-                onChange={(_, newValue) => {
-                  setEditedBook({ ...editedBook, rating: newValue || 0 });
-                  updateBook(id, { ...editedBook, rating: newValue || 0 });
-                }}
-                readOnly={false}
-              />
+              {status === 'read' && (
+                <Rating
+                  name={`rating-${id}`}
+                  value={editedBook.rating || 0}
+                  precision={0.5}
+                  size="small"
+                  onChange={(_, newValue) => {
+                    setEditedBook({ ...editedBook, rating: newValue || 0 });
+                    updateBook(id, { ...editedBook, rating: newValue || 0 });
+                  }}
+                  readOnly={false}
+                />
+              )}
               
               {status === 'read' ? (
                 <span className="text-xs text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full whitespace-nowrap">Read</span>
@@ -410,12 +416,34 @@ const BookItem: React.FC<BookItemProps> = ({
     }
   };
 
+  // Función para manejar la confirmación del modal de detalles al añadir un libro como leído
+  const handleAddDetailsConfirm = (startDate: Date | null, readDate: Date | null, rating: number | null) => {
+    // Preparar los datos para actualizar el libro
+    const updateData: Partial<Book> = {
+      status: 'read',
+      startDate: startDate || undefined,
+      readDate: readDate || undefined,
+      rating: rating || undefined
+    };
+    
+    console.log(`Marcando libro como leído con detalles:`, updateData);
+    
+    updateBook(id, updateData).then(() => {
+      toast.success(`"${title}" has been marked as read!`);
+    }).catch(error => {
+      console.error('Error updating book status:', error);
+      toast.error('Failed to update book status. Please try again.');
+    });
+    
+    setShowAddDetailsModal(false);
+  };
+
   return (
     <>
-      {showDateModal && (
-        <ReadDateModal
+      {showUpdateDateModal && (
+        <UpdateReadDateModal
           book={currentBook}
-          onClose={() => setShowDateModal(false)}
+          onClose={() => setShowUpdateDateModal(false)}
           onBookUpdated={(updatedBookId) => {
             // Actualizar el ID del libro si ha cambiado después de la actualización
             if (updatedBookId && updatedBookId !== currentBookId) {
@@ -425,8 +453,20 @@ const BookItem: React.FC<BookItemProps> = ({
           }}
         />
       )}
+      
+      {showAddDetailsModal && (
+        <AddBookDetailsModal
+          isOpen={showAddDetailsModal}
+          onClose={() => setShowAddDetailsModal(false)}
+          onConfirm={handleAddDetailsConfirm}
+          initialStartDate={currentBook.startDate ? new Date(currentBook.startDate) : new Date()}
+          initialReadDate={currentBook.readDate ? new Date(currentBook.readDate) : new Date()}
+          initialRating={currentBook.rating || 0}
+        />
+      )}
+      
       {renderBookItem()}
-    </>
+    </>  
   );
 };
 

@@ -6,7 +6,7 @@ import { Book } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
 import { toast } from 'react-toastify';
 
-interface ReadDateModalProps {
+interface UpdateReadDateModalProps {
   book: Book;
   onClose: () => void;
   onBookUpdated?: (bookId: string) => void;
@@ -15,7 +15,7 @@ interface ReadDateModalProps {
 /**
  * Component for editing the reading dates of a book
  */
-const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpdated }) => {
+const UpdateReadDateModal: React.FC<UpdateReadDateModalProps> = ({ book, onClose, onBookUpdated }) => {
   // Initialize state with current book dates
   const [startDate, setStartDate] = useState<Date | null>(
     book.startDate ? new Date(book.startDate) : null
@@ -173,4 +173,4 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
   );
 };
 
-export default ReadDateModal;
+export default UpdateReadDateModal;

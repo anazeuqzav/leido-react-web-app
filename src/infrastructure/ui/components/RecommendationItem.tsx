@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RecommendationItem as RecommendationItemType } from '../../../domain/entities/Recommendation';
 import { Book, BookDTO } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import AddBookDetailsModal from './AddBookDetailsModal';
 import BookIcon from '@mui/icons-material/Book';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
@@ -18,6 +19,15 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
   const navigate = useNavigate();
   const { addBook } = useContext(BooksContext);
   const { user } = useContext(AuthContext);
+  
+  // Estado para rastrear si el libro ya ha sido añadido a la lista de lectura
+  const [isAddedToWantToRead, setIsAddedToWantToRead] = useState(false);
+  const [isAddedToRead, setIsAddedToRead] = useState(false);
+  
+  // Estado para controlar el modal de fechas
+  const [showDateModal, setShowDateModal] = useState(false);
+  // Estado para almacenar el libro que se está añadiendo
+  const [bookToAdd, setBookToAdd] = useState<BookDTO | null>(null);
   
   // Create a book from the recommendation
   const createBookFromRecommendation = (status: 'read' | 'to-read') => {
@@ -68,17 +78,72 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
   
   const handleAddToRead = (e: React.MouseEvent) => {
     e.stopPropagation();
-    createBookFromRecommendation('read');
+    
+    // En lugar de añadir directamente, preparamos el libro y mostramos el modal
+    if (!user) {
+      console.error('No authenticated user');
+      return;
+    }
+    
+    // Crear un objeto que cumpla con BookDTO
+    const newBook: BookDTO = {
+      title: recommendation.title,
+      author: recommendation.author,
+      year: recommendation.year || undefined,
+      genre: recommendation.genre || undefined,
+      status: 'read',
+      rating: 1, // Valor por defecto, se puede cambiar en el modal
+      cover: recommendation.cover || undefined,
+      externalId: recommendation.externalId || undefined,
+      userId: '',  // Requerido por TypeScript, pero será reemplazado en BooksContext
+      readDate: new Date().toISOString(),
+      startDate: new Date().toISOString()
+    };
+    
+    // Guardar el libro y mostrar el modal
+    setBookToAdd(newBook);
+    setShowDateModal(true);
+  };
+  
+  // Función para manejar la confirmación del modal de fechas
+  const handleDateModalConfirm = (startDate: Date | null, readDate: Date | null, rating: number | null) => {
+    if (!bookToAdd) return;
+    
+    // Actualizar las fechas y el rating con los valores del modal
+    const updatedBook: BookDTO = {
+      ...bookToAdd,
+      startDate: startDate ? startDate.toISOString() : undefined,
+      readDate: readDate ? readDate.toISOString() : undefined,
+      rating: rating || undefined
+    };
+    
+    // Añadir el libro con las fechas actualizadas
+    addBook(updatedBook)
+      .then(() => {
+        toast.success(`"${recommendation.title}" has been added to your read books!`);
+        setIsAddedToRead(true);
+      })
+      .catch(error => {
+        console.error('Error adding book from recommendation:', error);
+        toast.error('Failed to add book to your library. Please try again.');
+      });
+    
+    // Cerrar el modal
+    setShowDateModal(false);
   };
   
   const handleAddToWantToRead = (e: React.MouseEvent) => {
     e.stopPropagation();
     createBookFromRecommendation('to-read');
+    // Marcar el libro como añadido para deshabilitar el botón
+    setIsAddedToWantToRead(true);
   };
   
   const handleClick = () => {
+    // Si tenemos un externalId, navegamos a la página de detalles del libro
     if (recommendation.externalId) {
-      navigate(`/library-book/${recommendation.externalId}`);
+      // Navegamos a la página de detalles del libro usando la ruta /book/ para libros de OpenLibrary
+      navigate(`/book/${recommendation.externalId}`);
     }
   };
 
@@ -128,19 +193,21 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
             {/* Buttons to add to lists */}
             <div className="flex flex-wrap gap-2 mt-4">
               <button
-                className="text-white text-xs font-medium bg-teal-600 hover:bg-teal-700 px-3 py-1.5 rounded-full transition-colors flex items-center"
+                className={`text-white text-xs font-medium ${isAddedToRead ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700'} px-3 py-1.5 rounded-full transition-colors flex items-center`}
                 onClick={handleAddToRead}
+                disabled={isAddedToRead}
               >
                 <AutoStoriesIcon className="mr-1" style={{ fontSize: 16 }} />
-                Mark as read
+                {isAddedToRead ? 'Added to read' : 'Mark as read'}
               </button>
               
               <button
-                className="text-teal-800 text-xs font-medium border border-pink-200 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-full transition-colors flex items-center"
+                className={`text-teal-800 text-xs font-medium border border-pink-200 ${isAddedToWantToRead ? 'bg-gray-100 cursor-not-allowed' : 'bg-pink-50 hover:bg-pink-100'} px-3 py-1.5 rounded-full transition-colors flex items-center`}
                 onClick={handleAddToWantToRead}
+                disabled={isAddedToWantToRead}
               >
                 <BookmarkAddIcon className="mr-1" style={{ fontSize: 16 }} />
-                Want to read
+                {isAddedToWantToRead ? 'Added to list' : 'Want to read'}
               </button>
             </div>
           </div>
@@ -184,26 +251,44 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
         
         <div className="flex items-center mt-1 gap-2">
           <button
-            className="text-white text-xs font-medium bg-teal-600 hover:bg-teal-700 px-2 py-0.5 rounded-full transition-colors flex items-center"
+            className={`text-white text-xs font-medium ${isAddedToRead ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700'} px-2 py-0.5 rounded-full transition-colors flex items-center`}
             onClick={handleAddToRead}
+            disabled={isAddedToRead}
           >
             <AutoStoriesIcon className="mr-1" style={{ fontSize: 14 }} />
-            Mark as read
+            {isAddedToRead ? 'Added to read' : 'Mark as read'}
           </button>
           
           <button
-            className="text-teal-800 text-xs font-medium border border-pink-200 bg-pink-50 hover:bg-pink-100 px-2 py-0.5 rounded-full transition-colors flex items-center"
+            className={`text-teal-800 text-xs font-medium border border-pink-200 ${isAddedToWantToRead ? 'bg-gray-100 cursor-not-allowed' : 'bg-pink-50 hover:bg-pink-100'} px-2 py-0.5 rounded-full transition-colors flex items-center`}
             onClick={handleAddToWantToRead}
+            disabled={isAddedToWantToRead}
           >
             <BookmarkAddIcon className="mr-1" style={{ fontSize: 14 }} />
-            Want to read
+            {isAddedToWantToRead ? 'Added to list' : 'Want to read'}
           </button>
         </div>
       </div>
     </div>
   );
 
-  return viewMode === 'grid' ? renderGridView() : renderListView();
+  return (
+    <>
+      {viewMode === 'grid' ? renderGridView() : renderListView()}
+      
+      {/* Modal para seleccionar fechas */}
+      {showDateModal && (
+        <AddBookDetailsModal
+          isOpen={showDateModal}
+          onClose={() => setShowDateModal(false)}
+          onConfirm={handleDateModalConfirm}
+          initialStartDate={bookToAdd?.startDate ? new Date(bookToAdd.startDate) : new Date()}
+          initialReadDate={bookToAdd?.readDate ? new Date(bookToAdd.readDate) : new Date()}
+          initialRating={bookToAdd?.rating || 0}
+        />
+      )}
+    </>
+  );
 };
 
 export default RecommendationItem;
