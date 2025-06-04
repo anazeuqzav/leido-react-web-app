@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './infrastructure/ui/styles/toast.css';
 
 // Context Providers
 import { AuthProvider, AuthContext } from './infrastructure/ui/context/AuthContext';
@@ -77,6 +80,20 @@ const App: React.FC = () => {
                     <Route path="/library-book/:bookId" element={<BookDetail />} />
                   </Route>
                 </Routes>
+                <ToastContainer
+                  position="bottom-right"
+                  autoClose={4000}
+                  hideProgressBar={false}
+                  newestOnTop
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                  className="toast-container"
+                  toastClassName="toast-item"
+                />
               </Router>
             </ThemeProvider>
           </LocalizationProvider>

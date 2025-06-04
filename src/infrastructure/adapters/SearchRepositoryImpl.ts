@@ -16,7 +16,7 @@ export class SearchRepositoryImpl implements SearchRepository {
   async searchBooks(query: string): Promise<SearchBook[]> {
     try {
       const response = await axios.get(
-        `${this.BASE_URL_OPENLIBRARY}/search.json?q=${encodeURIComponent(query)}`
+        `${this.BASE_URL_OPENLIBRARY}/search.json?q=${encodeURIComponent(query + " language:eng")}`
       );
       
       const books: SearchBook[] = response.data.docs.map((doc: any) => ({

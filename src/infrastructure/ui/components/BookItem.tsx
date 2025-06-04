@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
+import { toast } from 'react-toastify';
 import Rating from '@mui/material/Rating';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -138,7 +139,17 @@ const BookItem: React.FC<BookItemProps> = ({
     
     console.log(`Changing book status from ${status} to ${newStatus}`, updateData);
     
-    updateBook(id, updateData);
+    updateBook(id, updateData).then(() => {
+      // Show toast notification based on the new status
+      if (newStatus === 'read') {
+        toast.success(`"${title}" has been marked as read!`);
+      } else {
+        toast.success(`"${title}" has been added to your want to read list!`);
+      }
+    }).catch(error => {
+      console.error('Error updating book status:', error);
+      toast.error('Failed to update book status. Please try again.');
+    });
   };
 
   // Navegar a la página de detalles del libro

@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BooksContext } from '../context/BooksContext';
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 import { BookDetails } from '../../../domain/entities/SearchBook';
 import { BookDTO } from '../../../domain/entities/Book';
 import Button from '@mui/material/Button';
@@ -52,6 +53,10 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
       };
       
       await addBook(newBook);
+      
+      // Show toast notification
+      toast.success(`"${book.title}" has been marked as read!`);
+      
       setSuccessMessage("Book added successfully!");
       setTimeout(() => {
         setSuccessMessage("");

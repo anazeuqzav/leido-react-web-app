@@ -1,0 +1,72 @@
+/* Estilos personalizados para las notificaciones toast */
+.toast-container {
+  width: auto;
+  max-width: 400px;
+}
+
+.toast-item {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 0.95rem !important;
+  padding: 12px 16px !important;
+  opacity: 0.95 !important;
+  transition: transform 0.3s ease !important;
+}
+
+.toast-item:hover {
+  transform: translateY(-3px) !important;
+  opacity: 1 !important;
+}
+
+/* Estilos para los diferentes tipos de toast */
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #0d4341 0%, #0f5753 100%) !important;
+  border-left: 4px solid #0a322f !important;
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #e53935 0%, #d32f2f 100%) !important;
+  border-left: 4px solid #b71c1c !important;
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+  border-left: 4px solid #0d47a1 !important;
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+  border-left: 4px solid #e65100 !important;
+}
+
+/* Animación para la entrada y salida de los toast */
+.Toastify__toast--enter {
+  transform: translateY(20px);
+}
+
+.Toastify__toast--exit {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Estilo para el botón de cerrar */
+.Toastify__close-button {
+  opacity: 0.7;
+  color: white !important;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* Estilo para el icono del toast */
+.Toastify__toast-icon {
+  margin-right: 12px !important;
+}
+
+/* Estilo para el texto del toast */
+.Toastify__toast-body {
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}

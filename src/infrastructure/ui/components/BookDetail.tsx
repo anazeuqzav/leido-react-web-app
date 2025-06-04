@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { SearchContext } from '../context/SearchContext';
 import { BooksContext } from '../context/BooksContext';
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 import { BookDetails } from '../../../domain/entities/SearchBook';
 import { Book } from '../../../domain/entities/Book';
 import Button from '@mui/material/Button';
@@ -53,9 +54,9 @@ const BookDetail: React.FC = () => {
           if (userBook) {
             setLibraryBook(userBook);
             
-            // Buscar el libro en Open Library por título y autor
+            // Buscar el libro en Open Library por título y autor (solo en inglés)
             const query = `${userBook.title} ${userBook.author}`;
-            const searchResponse = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`);
+            const searchResponse = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query + " language:eng")}`);
             const searchData = await searchResponse.json();
             
             if (searchData.docs && searchData.docs.length > 0) {
@@ -151,9 +152,18 @@ const BookDetail: React.FC = () => {
       };
       
       await addBook(newBook);
+      
+      // Show toast notification
+      if (status === 'read') {
+        toast.success(`"${book.title}" has been added to your read books!`);
+      } else {
+        toast.success(`"${book.title}" has been added to your want to read list!`);
+      }
+      
       navigate('/');
     } catch (err) {
       console.error('Error adding book to library:', err);
+      toast.error('Failed to add book to your library. Please try again.');
     }
   };
 
@@ -306,6 +316,8 @@ const BookDetail: React.FC = () => {
                           readDate: undefined,
                           rating: undefined
                         }).then(() => {
+                          // Show toast notification
+                          toast.success(`"${libraryBook.title}" has been moved to your want to read list!`);
                           // Redirigir a la página principal después de actualizar
                           navigate('/');
                         });

@@ -4,6 +4,7 @@ import { RecommendationItem as RecommendationItemType } from '../../../domain/en
 import { Book, BookDTO } from '../../../domain/entities/Book';
 import { BooksContext } from '../context/BooksContext';
 import { AuthContext } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 import BookIcon from '@mui/icons-material/Book';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
@@ -51,7 +52,18 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
     };
     
     console.log('Adding book from recommendation:', newBook);
-    addBook(newBook);
+    addBook(newBook)
+      .then(() => {
+        if (status === 'read') {
+          toast.success(`"${recommendation.title}" has been added to your read books!`);
+        } else {
+          toast.success(`"${recommendation.title}" has been added to your want to read list!`);
+        }
+      })
+      .catch(error => {
+        console.error('Error adding book from recommendation:', error);
+        toast.error('Failed to add book to your library. Please try again.');
+      });
   };
   
   const handleAddToRead = (e: React.MouseEvent) => {

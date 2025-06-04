@@ -20,7 +20,7 @@ const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
     }
 
     try {
-      const response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(value)}`);
+      const response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(value + " language:eng")}`);
       const books = response.data.docs.map((doc: any) => ({
         title: doc.title,
         author: doc.author_name ? doc.author_name[0] : "Unknown Author",
