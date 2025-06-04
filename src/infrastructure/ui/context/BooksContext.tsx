@@ -17,7 +17,7 @@ interface BooksContextType {
   unreadBooks: Book[];
   favoriteBooks: Book[];
   addBook: (book: BookDTO) => Promise<void>;
-  updateBook: (id: string, book: Partial<Book>) => Promise<void>;
+  updateBook: (id: string, book: Partial<Book>) => Promise<Book | undefined>;
   deleteBook: (id: string) => Promise<void>;
   getBookById: (id: string) => Book | undefined;
   fetchBooks: () => Promise<void>;
@@ -31,7 +31,7 @@ export const BooksContext = createContext<BooksContextType>({
   unreadBooks: [],
   favoriteBooks: [],
   addBook: async () => {},
-  updateBook: async () => {},
+  updateBook: async () => undefined,
   deleteBook: async () => {},
   getBookById: () => undefined,
   fetchBooks: async () => {},
@@ -171,12 +171,22 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
     
     try {
       const updatedData = await bookService.updateBook(id, updatedBook);
-      setBooks((prevBooks) =>
-        prevBooks.map((book) => (book.id === id ? updatedData : book))
-      );
+      
+      // Actualizar la lista de libros, reemplazando el libro con el ID original
+      // con el libro actualizado que puede tener un nuevo ID
+      setBooks((prevBooks) => {
+        // Primero eliminamos el libro con el ID original
+        const filteredBooks = prevBooks.filter((book) => book.id !== id);
+        // Luego añadimos el libro actualizado (que puede tener un nuevo ID)
+        return [...filteredBooks, updatedData];
+      });
+      
+      // Devolver el libro actualizado para que los componentes puedan acceder al nuevo ID
+      return updatedData;
     } catch (error: any) {
       console.error('Error updating book:', error);
       setError(error.message);
+      throw error; // Re-lanzar el error para que los componentes puedan manejarlo
     }
   };
 

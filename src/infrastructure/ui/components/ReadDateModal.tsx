@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 interface ReadDateModalProps {
   book: Book;
   onClose: () => void;
-  onBookUpdated?: (updatedBookId: string) => void;
+  onBookUpdated?: (bookId: string) => void;
 }
 
 /**
@@ -26,6 +26,8 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
+  // Extraer la función updateBook del contexto
+  // Esta función devuelve un objeto Book actualizado
   const { updateBook } = useContext(BooksContext);
 
   const handleSave = async () => {
@@ -66,7 +68,8 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
       if (Object.keys(updateData).length > 0) {
         console.log('Updating book dates and status:', updateData);
         try {
-          // La función updateBook devuelve Promise<void>
+          // La función updateBook devuelve Promise<void> según la definición del contexto
+          // pero el backend actualiza el libro y puede cambiar su ID
           await updateBook(book.id, updateData);
           
           // Mostrar notificación de éxito si cambiamos el estado
@@ -75,6 +78,7 @@ const ReadDateModal: React.FC<ReadDateModalProps> = ({ book, onClose, onBookUpda
           }
           
           // Notificar al componente padre con el ID actual del libro
+          // El componente padre debe actualizar el libro desde el contexto
           if (onBookUpdated) {
             console.log('Libro actualizado con ID:', book.id);
             onBookUpdated(book.id);
