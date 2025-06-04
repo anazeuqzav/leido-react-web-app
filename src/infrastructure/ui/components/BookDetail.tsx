@@ -262,7 +262,39 @@ const BookDetail: React.FC = () => {
             
             {/* Sección de botones y acciones */}
             <div className="mt-8 border-t border-gray-100 pt-6">
-              {isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
+              {isLibraryBook && libraryBook && libraryBook.status === 'to-read' ? (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800 shadow-sm">
+                    <p className="font-medium text-base">This book is in your "Want to Read" list</p>
+                    <p className="text-sm mt-2">You can mark it as read when you finish it.</p>
+                  </div>
+                  
+                  <button
+                    className="text-teal-800 text-xs font-medium border border-pink-200 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-full transition-colors flex items-center"
+                    onClick={() => setShowMarkAsRead(!showMarkAsRead)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Mark as Read
+                  </button>
+                  
+                  {showMarkAsRead && (
+                    <div className="bg-white border border-teal-200 rounded-lg shadow-md p-4 mt-2 max-w-md">
+                      <h3 className="font-medium text-teal-800 text-base mb-3">Add details for read book</h3>
+                      <MarkAsReadBtn 
+                        book={book}
+                        authorNames={authorNames}
+                        coverUrl={coverUrl}
+                        onSuccess={() => {
+                          setShowMarkAsRead(false);
+                          navigate('/');
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ) : isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
                 <div className="space-y-4">
                   <div className="bg-teal-50 border border-teal-200 rounded-lg p-4 text-teal-800 shadow-sm">
                     <p className="font-medium text-base">You have already read this book</p>
@@ -297,9 +329,7 @@ const BookDetail: React.FC = () => {
                     )}
                   </div>
                   
-                  <Button 
-                    variant="outlined" 
-                    color="primary"
+                  <button
                     onClick={() => {
                       if (libraryBook && libraryBook.id) {
                         // Update the book status to 'to-read' and remove read date and rating
@@ -315,10 +345,13 @@ const BookDetail: React.FC = () => {
                         });
                       }
                     }}
-                    className="border-teal-600 text-teal-600 hover:bg-teal-50 px-5 py-2"
+                    className="text-gray-600 text-xs font-medium border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded-full transition-colors flex items-center"
                   >
-                    Mark as "Want to Read"
-                  </Button>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                    </svg>
+                    Want to Read
+                  </button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
