@@ -93,7 +93,20 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async updateBook(id: string, book: Partial<Book>): Promise<Book> {
     try {
-      const response = await axios.put(`${this.API_URL}/api/books/${id}`, book, {
+      // Filtrar campos nulos para evitar errores de validación
+      const filteredBook: Partial<Book> = {};
+      
+      // Solo incluir campos que no sean null o undefined
+      Object.entries(book).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          // Usar una aserción de tipo para evitar errores de TypeScript
+          filteredBook[key as keyof Book] = value as any;
+        }
+      });
+      
+      console.log('Enviando al backend:', filteredBook);
+      
+      const response = await axios.put(`${this.API_URL}/api/books/${id}`, filteredBook, {
         headers: this.getAuthHeaders(),
       });
       

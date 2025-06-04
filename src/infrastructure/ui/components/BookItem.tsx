@@ -285,8 +285,10 @@ const BookItem: React.FC<BookItemProps> = ({
                   precision={0.5}
                   size="small"
                   onChange={(_, newValue) => {
+                    // Solo actualizar el rating localmente
                     setEditedBook({ ...editedBook, rating: newValue || 0 });
-                    updateBook(id, { ...editedBook, rating: newValue || 0 });
+                    // Solo enviar el rating al backend, no todo el objeto libro
+                    updateBook(id, { rating: newValue || 0 });
                   }}
                   readOnly={false}
                 />
