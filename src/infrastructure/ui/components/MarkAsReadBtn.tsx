@@ -1,11 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { BooksContext } from '../context/BooksContext';
 import { AuthContext } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import { BookDetails } from '../../../domain/entities/SearchBook';
 import { BookDTO } from '../../../domain/entities/Book';
-import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -23,11 +21,9 @@ interface MarkAsReadBtnProps {
 const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverUrl, onSuccess }) => {
   const { addBook } = useContext(BooksContext);
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [readDate, setReadDate] = useState(new Date()); // default to today
   const [startDate, setStartDate] = useState<Date | null>(null); // fecha de inicio de lectura
-  const [isRating, setIsRating] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleAddToRead = async () => {
@@ -35,7 +31,6 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
     
     try {
       // Extraer el OLID (Open Library ID) de la clave del libro
-      // La clave suele tener el formato '/works/OL123456W'
       const olid = book.key.split('/').pop() || '';
       
       const newBook: BookDTO = {
@@ -61,82 +56,77 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
       setTimeout(() => {
         setSuccessMessage("");
         onSuccess();
-      }, 2000);
-      setIsRating(false);
+      }, 1500);
     } catch (err) {
       console.error('Error adding book to library:', err);
+      toast.error('Error adding book to library. Please try again.');
     }
   };
 
   return (
-    <div className="flex flex-col items-start gap-2">
-      {!isRating ? (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsRating(true)}
-          className="bg-teal-600 hover:bg-teal-700"
-        >
-          Mark as Read
-        </Button>
-      ) : (
-        <div className="flex flex-col items-start gap-3 p-3 border border-gray-200 rounded-md bg-gray-50">
-          <h3 className="font-medium text-gray-700">Rate this book:</h3>
+    <div className="w-full">
+      <div className="flex flex-col space-y-3">
+        <div>
+          <p className="text-sm text-gray-700 font-medium mb-1">Your Rating:</p>
           <Rating
             name="book-rating"
             value={rating}
             precision={0.5}
             onChange={(event, newValue) => setRating(newValue || 0)}
+            size="medium"
+            className="ml-1"
           />
-          <div className="space-y-3 w-full">
-            <div>
-              <label className="text-sm text-gray-600 block mb-1">Fecha de inicio de lectura:</label>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                dateFormat="dd/MM/yyyy"
-                className="border border-gray-300 rounded px-2 py-1 w-full"
-                maxDate={readDate || new Date()}
-                placeholderText="Selecciona fecha de inicio"
-                isClearable
-              />
-              <p className="text-xs text-gray-500 mt-1">Si se deja en blanco, se usará la fecha de finalización</p>
-            </div>
-            
-            <div>
-              <label className="text-sm text-gray-600 block mb-1">Fecha de finalización:</label>
-              <DatePicker
-                selected={readDate}
-                onChange={(date) => setReadDate(date || new Date())}
-                dateFormat="dd/MM/yyyy"
-                className="border border-gray-300 rounded px-2 py-1 w-full"
-                maxDate={new Date()}
-                minDate={startDate || undefined}
-              />
-            </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-sm text-gray-700 font-medium block mb-1">Start Date:</label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              dateFormat="dd/MM/yyyy"
+              className="border border-gray-300 hover:border-teal-500 rounded px-2 py-1.5 w-full text-sm focus:outline-none focus:ring-1 focus:ring-teal-500"
+              maxDate={readDate || new Date()}
+              placeholderText="Select start date"
+              isClearable
+            />
           </div>
-          <div className="flex gap-2 mt-2">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAddToRead}
-              className="bg-teal-600 hover:bg-teal-700"
-              size="small"
-            >
-              Confirm
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => setIsRating(false)}
-              size="small"
-            >
-              Cancel
-            </Button>
+          
+          <div>
+            <label className="text-sm text-gray-700 font-medium block mb-1">Finish Date:</label>
+            <DatePicker
+              selected={readDate}
+              onChange={(date) => setReadDate(date || new Date())}
+              dateFormat="dd/MM/yyyy"
+              className="border border-gray-300 hover:border-teal-500 rounded px-2 py-1.5 w-full text-sm focus:outline-none focus:ring-1 focus:ring-teal-500"
+              maxDate={new Date()}
+              minDate={startDate || undefined}
+            />
           </div>
         </div>
-      )}
+        
+        <div className="flex gap-2 mt-2 justify-end">
+          <button
+            onClick={handleAddToRead}
+            className="text-white text-sm font-medium bg-teal-600 hover:bg-teal-700 px-4 py-1.5 rounded-full transition-colors flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Save & Add to Read
+          </button>
+        </div>
+      </div>
+      
       {successMessage && (
-        <p className="text-green-600 text-sm mt-2">{successMessage}</p>
+        <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg z-10">
+          <div className="text-teal-600 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <p className="font-medium">{successMessage}</p>
+          </div>
+        </div>
       )}
     </div>
   );

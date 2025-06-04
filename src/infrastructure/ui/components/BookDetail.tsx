@@ -30,8 +30,7 @@ const BookDetail: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [libraryBook, setLibraryBook] = useState<Book | null>(null);
-  const [isDuplicate, setIsDuplicate] = useState<boolean>(false);
-  const [existingBook, setExistingBook] = useState<Book | null>(null);
+  const [showMarkAsRead, setShowMarkAsRead] = useState<boolean>(false);
   
   // Determinar si estamos viendo un libro de la biblioteca o un libro de búsqueda
   const isLibraryBook = location.pathname.includes('/library-book/');
@@ -108,8 +107,10 @@ const BookDetail: React.FC = () => {
           const existingBookInLibrary = checkIfBookExists(olid);
           
           if (existingBookInLibrary) {
-            setIsDuplicate(true);
-            setExistingBook(existingBookInLibrary);
+            // En lugar de mostrar el panel amarillo, redirigir automáticamente
+            // a la vista de detalle del libro en la biblioteca
+            navigate(`/library-book/${existingBookInLibrary.id}`);
+            return; // Detener la ejecución del resto del useEffect
           }
           
           // Fetch author names
@@ -193,50 +194,53 @@ const BookDetail: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 max-w-6xl">
       <Button 
         startIcon={<ArrowBackIcon />} 
         onClick={() => navigate(-1)}
-        className="mb-4"
+        className="mb-4 text-teal-700 hover:text-teal-800 hover:bg-teal-50"
+        variant="text"
       >
         Go Back
       </Button>
       
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md border border-teal-100">
         <div className="flex flex-col md:flex-row">
+          {/* Imagen del libro */}
           {coverUrl && (
-            <div className="md:w-1/3 mb-4 md:mb-0 md:mr-6">
+            <div className="md:w-1/3 mb-6 md:mb-0 md:mr-8 flex justify-center items-start">
               <img 
                 src={coverUrl} 
                 alt={`Cover of ${book.title}`} 
-                className="w-full max-w-xs rounded shadow-md"
+                className="w-full max-w-[300px] h-auto max-h-[450px] rounded-lg shadow-lg border border-gray-200 object-cover"
               />
             </div>
           )}
           
+          {/* Información del libro */}
           <div className="md:w-2/3">
-            <h1 className="text-3xl font-bold text-teal-800 mb-2">{book.title}</h1>
+            <h1 className="text-3xl font-bold text-teal-800 mb-3 leading-tight">{book.title}</h1>
             
             {authorNames.length > 0 && (
-              <p className="text-xl text-gray-700 mb-4">
+              <p className="text-xl text-gray-700 mb-4 font-medium">
                 by {authorNames.join(', ')}
               </p>
             )}
             
             {book.first_publish_date && (
-              <p className="text-gray-600 mb-2">
-                First published: {book.first_publish_date}
+              <p className="text-gray-600 mb-3">
+                <span className="font-medium">First published:</span> {book.first_publish_date}
               </p>
             )}
             
             {book.subjects && book.subjects.length > 0 && (
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-gray-800 mb-1">Subjects</h2>
+              <div className="mb-5">
+                <h2 className="text-lg font-semibold text-teal-800 mb-2">Subjects</h2>
                 <div className="flex flex-wrap gap-2">
                   {book.subjects.slice(0, 5).map((subject, index) => (
                     <span 
                       key={index} 
-                      className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded"
+                      className="bg-teal-50 text-teal-700 text-sm px-3 py-1 rounded-full border border-teal-200 shadow-sm"
                     >
                       {subject}
                     </span>
@@ -247,8 +251,8 @@ const BookDetail: React.FC = () => {
             
             {book.description && (
               <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-1">Description</h2>
-                <p className="text-gray-700">
+                <h2 className="text-lg font-semibold text-teal-800 mb-2">Description</h2>
+                <p className="text-gray-700 leading-relaxed">
                   {typeof book.description === 'string' 
                     ? book.description 
                     : book.description.value || 'No description available'}
@@ -256,50 +260,38 @@ const BookDetail: React.FC = () => {
               </div>
             )}
             
-            <div className="flex flex-wrap gap-3 mt-6">
-              {isDuplicate && existingBook && !isLibraryBook ? (
-                <div className="flex flex-col gap-3">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-yellow-800">
-                    <p className="font-medium">¡This book is already in your LEÍDO library!</p>
-                    <p className="text-sm mt-1">
-                      Ya tienes guardado "{existingBook.title}" en tu biblioteca como "{existingBook.status === 'read' ? 'leído' : 'por leer'}".                      
-                    </p>
-                    <button 
-                      onClick={() => navigate(`/library-book/${existingBook.id}`)}
-                      className="mt-3 text-sm text-yellow-700 underline hover:text-yellow-800"
-                    >
-                      Ver libro en mi biblioteca
-                    </button>
-                  </div>
-                </div>
-              ) : isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
-                <div className="flex flex-col gap-3">
-                  <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-teal-800">
-                    <p className="font-medium">You have already read this book</p>
+            {/* Sección de botones y acciones */}
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              {isLibraryBook && libraryBook && libraryBook.status === 'read' ? (
+                <div className="space-y-4">
+                  <div className="bg-teal-50 border border-teal-200 rounded-lg p-4 text-teal-800 shadow-sm">
+                    <p className="font-medium text-base">You have already read this book</p>
                     
                     {/* Fechas de lectura */}
-                    <div className="mt-2 space-y-1">
+                    <div className="mt-3 space-y-2">
                       {libraryBook.startDate && (
-                        <p className="text-sm">
-                          <span className="font-medium">Fecha de inicio:</span> {new Date(libraryBook.startDate).toLocaleDateString()}
+                        <p className="text-sm flex items-center">
+                          <span className="font-medium min-w-[130px]">Fecha de inicio:</span> 
+                          <span>{new Date(libraryBook.startDate).toLocaleDateString()}</span>
                         </p>
                       )}
                       {libraryBook.readDate && (
-                        <p className="text-sm">
-                          <span className="font-medium">Fecha de finalización:</span> {new Date(libraryBook.readDate).toLocaleDateString()}
+                        <p className="text-sm flex items-center">
+                          <span className="font-medium min-w-[130px]">Fecha de finalización:</span> 
+                          <span>{new Date(libraryBook.readDate).toLocaleDateString()}</span>
                         </p>
                       )}
                     </div>
                     
                     {/* Rating */}
                     {libraryBook.rating && libraryBook.rating > 0 && (
-                      <div className="mt-2 flex items-center">
-                        <span className="text-sm mr-2">Your rating:</span>
+                      <div className="mt-3 flex items-center">
+                        <span className="font-medium text-sm min-w-[130px]">Your rating:</span>
                         <Rating 
                           value={libraryBook.rating} 
                           readOnly 
                           precision={0.5} 
-                          size="small"
+                          size="medium"
                         />
                       </div>
                     )}
@@ -323,28 +315,49 @@ const BookDetail: React.FC = () => {
                         });
                       }
                     }}
-                    className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                    className="border-teal-600 text-teal-600 hover:bg-teal-50 px-5 py-2"
                   >
                     Mark as "Want to Read"
                   </Button>
                 </div>
               ) : (
-                <>
-                  <MarkAsReadBtn 
-                    book={book}
-                    authorNames={authorNames}
-                    coverUrl={coverUrl}
-                    onSuccess={() => navigate('/')}
-                  />
-                  <Button 
-                    variant="outlined" 
-                    color="primary"
-                    onClick={() => handleAddToLibrary('to-read')}
-                    className="border-teal-600 text-teal-600 hover:bg-teal-50"
-                  >
-                    Add to Want to Read
-                  </Button>
-                </>
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      className="text-teal-800 text-xs font-medium border border-pink-200 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-full transition-colors flex items-center"
+                      onClick={() => setShowMarkAsRead(!showMarkAsRead)}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Mark as Read
+                    </button>
+                    <button
+                      className="text-gray-600 text-xs font-medium border border-gray-300 hover:bg-gray-50 px-3 py-1.5 rounded-full transition-colors flex items-center"
+                      onClick={() => handleAddToLibrary('to-read')}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                      </svg>
+                      Want to Read
+                    </button>
+                  </div>
+                  
+                  {showMarkAsRead && (
+                    <div className="bg-white border border-teal-200 rounded-lg shadow-md p-4 mt-2 max-w-md">
+                      <h3 className="font-medium text-teal-800 text-base mb-3">Add details for read book</h3>
+                      <MarkAsReadBtn 
+                        book={book}
+                        authorNames={authorNames}
+                        coverUrl={coverUrl}
+                        onSuccess={() => {
+                          setShowMarkAsRead(false);
+                          navigate('/');
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
