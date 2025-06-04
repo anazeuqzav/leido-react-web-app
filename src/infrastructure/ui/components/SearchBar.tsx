@@ -52,7 +52,7 @@ const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
         <FaSearch className="text-gray-500" />
         <input
           className="bg-transparent border-none text-sm text-gray-700 w-full ml-2 focus:outline-none"
-          placeholder="Buscar libros..."
+          placeholder="Search books by title or author..."
           value={input}
           onChange={(e) => handleChange(e.target.value)}
         />
