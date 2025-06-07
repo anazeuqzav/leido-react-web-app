@@ -5,7 +5,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  _id?: string; // ID de MongoDB (para compatibilidad con el backend)
+  _id?: string; // ID from MongoDB
 }
 
 /**

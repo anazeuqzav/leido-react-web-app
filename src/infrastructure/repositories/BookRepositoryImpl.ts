@@ -23,11 +23,11 @@ export class BookRepositoryImpl implements BookRepository {
           ...getAuthHeaders()
         }
       });
-      
+
       // Check if the response has the expected structure
       if (response.data && response.data.success && Array.isArray(response.data.data)) {
         console.log('Books received from API:', response.data.data);
-        return response.data.data;
+        return response.data.data as Book[];
       } else {
         console.error('Unexpected API response format:', response.data);
         return [];
@@ -46,34 +46,33 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async addBook(book: BookDTO): Promise<Book> {
     try {
-      // Depurar el libro que se está enviando al backend
-      console.log('Enviando libro al backend:', JSON.stringify(book, null, 2));
-      
+      console.log('Adding book to API:', JSON.stringify(book, null, 2));
+
       const response = await axios.post(`${this.API_URL}/books`, book, {
         headers: {
           'Content-Type': 'application/json',
           ...getAuthHeaders()
         }
       });
-      
+
+      // Check if the response has the expected structure
       if (response.data && response.data.success && response.data.data) {
-        return response.data.data;
+        return response.data.data as Book;
       } else {
         console.error('Unexpected API response format:', response.data);
         throw new Error('Failed to add book: Unexpected API response format');
       }
     } catch (error: any) {
       console.error('Error adding book:', error);
-      // Mostrar detalles del error si están disponibles
-      if (error.response) {
-        console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-        // Si hay un mensaje de error específico del backend, mostrarlo
-        if (error.response.data && error.response.data.message) {
-          throw new Error(`Error del servidor: ${error.response.data.message}`);
-        }
+
+      if (error.response?.data?.message) {
+        console.error('Error response:', {
+          status: error.response.status,
+          data: error.response.data
+        });
+        throw new Error(`Server error: ${error.response.data.message}`);
       }
-      handleAuthError(error);
+
       throw error;
     }
   }
@@ -88,7 +87,7 @@ export class BookRepositoryImpl implements BookRepository {
     try {
       // Filtrar campos nulos para evitar errores de validación
       const filteredBook: Partial<Book> = {};
-      
+
       // Solo incluir campos que no sean null o undefined
       Object.entries(book).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
@@ -96,16 +95,16 @@ export class BookRepositoryImpl implements BookRepository {
           filteredBook[key as keyof Book] = value as any;
         }
       });
-      
-      console.log('Enviando al backend:', filteredBook);
-      
+
+      console.log('Updating book in API:', filteredBook);
+
       const response = await axios.put(`${this.API_URL}/books/${id}`, filteredBook, {
         headers: {
           'Content-Type': 'application/json',
           ...getAuthHeaders()
         }
       });
-      
+
       if (response.data && response.data.success && response.data.data) {
         return response.data.data;
       } else {
@@ -132,7 +131,7 @@ export class BookRepositoryImpl implements BookRepository {
           ...getAuthHeaders()
         }
       });
-      
+
       if (response.data && response.data.success) {
         return true;
       } else {

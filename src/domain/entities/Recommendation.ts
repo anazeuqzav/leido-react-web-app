@@ -1,3 +1,7 @@
+/**
+ * RecommendationItem interface
+ * Represents a recommendation item
+ */
 export interface RecommendationItem {
   bookId?: string;
   title: string;
@@ -7,9 +11,12 @@ export interface RecommendationItem {
   year?: number | null;
   genre?: string | null;
   reason: string;
-  score: number;
 }
 
+/**
+ * Recommendation interface
+ * Represents a recommendation
+ */
 export interface Recommendation {
   id?: string;
   userId: string;

@@ -21,7 +21,7 @@ export class StatisticsRepositoryImpl implements StatisticsRepository {
           ...getAuthHeaders()
         }
       });
-      return response.data;
+      return response.data as UserStatistics;
     } catch (error) {
       console.error('Error fetching statistics:', error);
       handleAuthError(error);

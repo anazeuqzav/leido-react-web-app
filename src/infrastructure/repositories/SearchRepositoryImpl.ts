@@ -17,13 +17,13 @@ export class SearchRepositoryImpl implements SearchRepository {
     try {
       // Encode the query to handle special characters
       const encodedQuery = encodeURIComponent(query + " language:eng");
-      
+
       const response = await axios.get(`${this.API_URL}/search.json?q=${encodedQuery}`, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (response.data && response.data.docs) {
         // Map the OpenLibrary response to our SearchBook model
         return response.data.docs
@@ -33,12 +33,12 @@ export class SearchRepositoryImpl implements SearchRepository {
             key: doc.key,
             title: doc.title,
             author_name: doc.author_name ? doc.author_name.join(', ') : 'Unknown',
-            cover_i: doc.cover_i 
+            cover_i: doc.cover_i
               ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
               : '/placeholder-cover.jpg',
           }));
       }
-      
+
       return [];
     } catch (error) {
       console.error('Error searching books:', error);
