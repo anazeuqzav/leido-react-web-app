@@ -6,7 +6,7 @@ import { SearchRepository } from '../../domain/ports/SearchRepository';
  * Implementation of the SearchRepository interface
  */
 export class SearchRepositoryImpl implements SearchRepository {
-  private BASE_URL_OPENLIBRARY = 'https://openlibrary.org';
+  private API_URL = 'https://openlibrary.org';
 
   /**
    * Search for books
@@ -15,18 +15,31 @@ export class SearchRepositoryImpl implements SearchRepository {
    */
   async searchBooks(query: string): Promise<SearchBook[]> {
     try {
-      const response = await axios.get(
-        `${this.BASE_URL_OPENLIBRARY}/search.json?q=${encodeURIComponent(query + " language:eng")}`
-      );
+      // Encode the query to handle special characters
+      const encodedQuery = encodeURIComponent(query + " language:eng");
       
-      const books: SearchBook[] = response.data.docs.map((doc: any) => ({
-        key: doc.key,
-        title: doc.title,
-        author_name: doc.author_name,
-        cover_i: doc.cover_i,
-      }));
+      const response = await axios.get(`${this.API_URL}/search.json?q=${encodedQuery}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       
-      return books;
+      if (response.data && response.data.docs) {
+        // Map the OpenLibrary response to our SearchBook model
+        return response.data.docs
+          .filter((doc: any) => doc.title && doc.author_name) // Filter out items without title or author
+          .slice(0, 10) // Limit to 10 results
+          .map((doc: any) => ({
+            key: doc.key,
+            title: doc.title,
+            author_name: doc.author_name ? doc.author_name.join(', ') : 'Unknown',
+            cover_i: doc.cover_i 
+              ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+              : '/placeholder-cover.jpg',
+          }));
+      }
+      
+      return [];
     } catch (error) {
       console.error('Error searching books:', error);
       return [];
@@ -40,7 +53,11 @@ export class SearchRepositoryImpl implements SearchRepository {
    */
   async getBookDetails(bookId: string): Promise<BookDetails> {
     try {
-      const response = await axios.get(`${this.BASE_URL_OPENLIBRARY}/works/${bookId}.json`);
+      const response = await axios.get(`${this.API_URL}/works/${bookId}.json`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       return response.data as BookDetails;
     } catch (error) {
       console.error('Error fetching book details:', error);

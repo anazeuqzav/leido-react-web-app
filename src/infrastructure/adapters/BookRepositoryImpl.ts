@@ -1,21 +1,13 @@
 import axios from 'axios';
 import { Book, BookDTO } from '../../domain/entities/Book';
 import { BookRepository } from '../../domain/ports/BookRepository';
+import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
 
 /**
  * Implementation of the BookRepository interface
  */
 export class BookRepositoryImpl implements BookRepository {
-  private API_URL = 'http://localhost:5000';
-
-  /**
-   * Get auth headers with token
-   * @returns Headers object with authorization token
-   */
-  private getAuthHeaders() {
-    const token = localStorage.getItem('token');
-    return token ? { Authorization: `Bearer ${token}` } : { Authorization: '' };
-  }
+  private API_URL = 'http://localhost:5000/api';
 
   /**
    * Get all books for a user
@@ -24,12 +16,12 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async getBooks(userId: string): Promise<Book[]> {
     try {
-      const response = await axios.get(`${this.API_URL}/api/books`, {
+      const response = await axios.get(`${this.API_URL}/books`, {
         params: { userId },
         headers: {
           'Content-Type': 'application/json',
-          ...this.getAuthHeaders(),
-        },
+          ...getAuthHeaders()
+        }
       });
       
       // Check if the response has the expected structure
@@ -42,6 +34,7 @@ export class BookRepositoryImpl implements BookRepository {
       }
     } catch (error) {
       console.error('Error fetching books:', error);
+      handleAuthError(error);
       throw error;
     }
   }
@@ -56,14 +49,13 @@ export class BookRepositoryImpl implements BookRepository {
       // Depurar el libro que se está enviando al backend
       console.log('Enviando libro al backend:', JSON.stringify(book, null, 2));
       
-      const response = await axios.post(`${this.API_URL}/api/books`, book, {
+      const response = await axios.post(`${this.API_URL}/books`, book, {
         headers: {
           'Content-Type': 'application/json',
-          ...this.getAuthHeaders(),
-        },
+          ...getAuthHeaders()
+        }
       });
       
-      // Check if the response has the expected structure
       if (response.data && response.data.success && response.data.data) {
         return response.data.data;
       } else {
@@ -81,6 +73,7 @@ export class BookRepositoryImpl implements BookRepository {
           throw new Error(`Error del servidor: ${error.response.data.message}`);
         }
       }
+      handleAuthError(error);
       throw error;
     }
   }
@@ -106,11 +99,13 @@ export class BookRepositoryImpl implements BookRepository {
       
       console.log('Enviando al backend:', filteredBook);
       
-      const response = await axios.put(`${this.API_URL}/api/books/${id}`, filteredBook, {
-        headers: this.getAuthHeaders(),
+      const response = await axios.put(`${this.API_URL}/books/${id}`, filteredBook, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        }
       });
       
-      // Check if the response has the expected structure
       if (response.data && response.data.success && response.data.data) {
         return response.data.data;
       } else {
@@ -119,6 +114,7 @@ export class BookRepositoryImpl implements BookRepository {
       }
     } catch (error) {
       console.error('Error updating book:', error);
+      handleAuthError(error);
       throw error;
     }
   }
@@ -130,11 +126,13 @@ export class BookRepositoryImpl implements BookRepository {
    */
   async deleteBook(id: string): Promise<boolean> {
     try {
-      const response = await axios.delete(`${this.API_URL}/api/books/${id}`, {
-        headers: this.getAuthHeaders(),
+      const response = await axios.delete(`${this.API_URL}/books/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders()
+        }
       });
       
-      // Check if the response has the expected structure
       if (response.data && response.data.success) {
         return true;
       } else {
@@ -143,6 +141,7 @@ export class BookRepositoryImpl implements BookRepository {
       }
     } catch (error) {
       console.error('Error deleting book:', error);
+      handleAuthError(error);
       throw error;
     }
   }
