@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import { Eye, EyeOff } from 'lucide-react';
 
 /**
  * Register page component
@@ -16,6 +10,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -72,90 +67,99 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Box
-      className="min-h-screen flex items-center justify-center bg-gray-100 p-4"
-      sx={{ backgroundImage: 'linear-gradient(135deg, #e6f7f5 0%, #ffffff 100%)' }}
-    >
-      <Paper elevation={3} className="p-8 w-full max-w-md">
-        <Typography variant="h4" component="h1" className="text-center mb-6 text-teal-800 font-bold">
-          READ
-        </Typography>
-        <Typography variant="h5" component="h2" className="text-center mb-6">
-          Create an Account
-        </Typography>
+    <div className="flex flex-col items-center justify-center h-screen bg-white">
+      <div className="flex flex-col items-center mb-6">
+        <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">LEÍDO</h1>
+        <h2 className="font-[Poppins] text-[20px] font-normal text-gray-700 mt-1 text-center">
+          Your library, always with you
+        </h2>
+      </div>
 
-        {error && (
-          <Alert severity="error" className="mb-4">
-            {error}
-          </Alert>
-        )}
+      <div className="flex flex-col items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-5 rounded-lg shadow-lg flex flex-col w-[300px] gap-3"
+        >
+          <h2 className="mb-3 text-[#0d4341] text-lg font-semibold text-center">
+            Create an Account
+          </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <TextField
-            label="Username"
-            fullWidth
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+              {error}
+            </div>
+          )}
+
+          <input
+            type="text"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            variant="outlined"
+            className="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"
           />
 
-          <TextField
-            label="Email"
+          <input
             type="email"
-            fullWidth
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            variant="outlined"
+            className="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"
           />
 
-          <TextField
-            label="Password"
-            type="password"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            variant="outlined"
-          />
+          <div className="relative w-full">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-2 py-2 border border-gray-300 rounded-md text-sm"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
-          <TextField
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            variant="outlined"
-            error={password !== confirmPassword && confirmPassword !== ''}
-            helperText={
-              password !== confirmPassword && confirmPassword !== ''
-                ? 'Passwords do not match'
-                : ''
-            }
-          />
+          <div className="relative w-full">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className={`w-full px-2 py-2 border rounded-md text-sm ${password !== confirmPassword && confirmPassword !== '' ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {password !== confirmPassword && confirmPassword !== '' && (
+              <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
+            )}
+          </div>
 
-          <Button
+          <button
             type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
             disabled={loading}
-            className="bg-teal-700 hover:bg-teal-800 py-3"
+            className="bg-[#0d4341] text-white font-bold border-2 border-[#0d4341] py-2 rounded-md text-base hover:bg-pink-400 transition-colors"
           >
-            {loading ? <CircularProgress size={24} /> : 'Register'}
-          </Button>
-        </form>
+            {loading ? 'Loading...' : 'Register'}
+          </button>
 
-        <Typography className="mt-4 text-center">
-          Already have an account?{' '}
-          <Link to="/login" className="text-teal-600 hover:underline">
-            Log In
-          </Link>
-        </Typography>
-      </Paper>
-    </Box>
+          <p className="text-sm text-center mt-2">
+            Already have an account?{' '}
+            <Link
+              to="/login"
+              className="text-[#0d4341] font-bold hover:underline"
+            >
+              Log In
+            </Link>
+          </p>
+        </form>
+      </div>
+    </div>
   );
 };
 
