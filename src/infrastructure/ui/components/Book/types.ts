@@ -8,6 +8,7 @@ export interface BookDisplayProps {
   book: Book;
   viewMode: 'grid' | 'list' | 'compact';
   onViewDetails: (event: React.MouseEvent) => void;
+  children?: React.ReactNode;
 }
 
 export interface BookActionsProps {

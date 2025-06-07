@@ -176,16 +176,16 @@ const BookItem: React.FC<BookItemProps> = ({
   const renderBookItem = () => {
     if (viewMode === 'grid') {
       return (
-        <li className="relative mb-6">
+        <li className="relative mb-3">
           <div className="relative">
             {/* Botón de eliminar */}
-            <div className="absolute top-2 right-2 z-10 pointer-events-auto">
+            <div className="absolute top-1 right-1 z-10 pointer-events-auto">
               <button
                 aria-label="delete"
                 onClick={handleDelete}
-                className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-gray-100"
+                className="text-gray-400 hover:text-red-500 transition-colors p-0.5 rounded-full hover:bg-gray-100"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
@@ -193,60 +193,62 @@ const BookItem: React.FC<BookItemProps> = ({
 
             {/* Contenido principal del libro */}
             <div 
-              className="relative border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] hover:border-l-8"
+              className="relative border-l-3 border-teal-600 p-3 rounded-md bg-white shadow-sm w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:border-l-6"
               onClick={handleViewDetails}
             >
-              <div className="flex flex-col sm:flex-row">
+              <div className="flex flex-row">
                 {/* Imagen del libro */}
                 {currentBook.cover && (
-                  <div className="mb-4 sm:mb-0 sm:mr-6 flex-shrink-0">
+                  <div className="mr-4 flex-shrink-0">
                     <img
                       src={currentBook.cover}
                       alt={`Cover of ${currentBook.title}`}
-                      className="w-full sm:w-28 h-40 object-cover rounded-md shadow-sm"
+                      className="w-24 h-36 object-cover rounded-md shadow-sm"
                     />
                   </div>
                 )}
                 
                 {/* Información del libro */}
-                <div className="flex-1 flex flex-col text-left">
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">{currentBook.title}</h3>
+                <div className="flex-1 flex flex-col text-left min-w-0">
+                  <h3 className="text-base font-bold text-gray-800 mb-1 mr-2 truncate">{currentBook.title}</h3>
+                  
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">{currentBook.author} {currentBook.year && `(${currentBook.year})`}</p>
+                    <p className="text-xs text-gray-600 font-medium truncate">{currentBook.author} {currentBook.year && `(${currentBook.year})`}</p>
                     {currentBook.genre && (
-                      <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-1 px-2 py-1 rounded-full border border-pink-100 font-medium">{currentBook.genre}</span>
+                      <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-1 px-1.5 py-0.5 rounded-full border border-pink-100 font-medium truncate">{currentBook.genre}</span>
                     )}
                     
                     {/* Fechas de lectura justo debajo del género */}
                     {currentBook.status === 'read' && (
-                      <div className="mt-1">
+                      <div className="mt-1 w-full">
                         <BookReadingDates book={currentBook} />
                       </div>
                     )}
+                    
+                    {/* Rating debajo de las fechas */}
+                    {currentBook.status === 'read' && (
+                      <div className="mt-2">
+                        <BookRating 
+                          id={currentBook.id} 
+                          rating={editedBook.rating} 
+                          onChange={handleRatingChange}
+                          size="small" 
+                        />
+                      </div>
+                    )}
                   </div>
-                </div>
-              </div>
-              
-              {/* Sección inferior con rating y acciones */}
-              <div className="mt-2 pt-2 border-t border-gray-100">
-                <div className="sm:ml-36">
-                  {currentBook.status === 'read' && (
-                    <div className="mb-2">
-                      <BookRating 
-                        id={currentBook.id} 
-                        rating={editedBook.rating} 
-                        onChange={handleRatingChange} 
+                  
+                  {/* Acciones */}
+                  <div className="mt-2 pt-2 border-t border-gray-100">
+                    <div className="flex flex-wrap gap-1">
+                      <BookActions 
+                        book={currentBook} 
+                        onToggleStatus={handleToggleStatus} 
+                        onEditDates={handleEditDates}
+                        onRatingChange={handleRatingChange}
+                        viewMode={viewMode}
                       />
                     </div>
-                  )}
-                  <div className="mt-2">
-                    <BookActions 
-                      book={currentBook} 
-                      onToggleStatus={handleToggleStatus} 
-                      onEditDates={handleEditDates}
-                      onRatingChange={handleRatingChange}
-                      viewMode={viewMode}
-                    />
                   </div>
                 </div>
               </div>
@@ -259,64 +261,71 @@ const BookItem: React.FC<BookItemProps> = ({
     // List view
     if (viewMode === 'list') {
       return (
-        <li className="relative mb-4">
+        <li className="relative mb-2">
           <div className="relative">
             {/* Contenido principal del libro */}
             <div 
-              className="relative border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-sm w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:border-l-8"
+              className="relative border-l-3 border-teal-600 p-2.5 rounded-md bg-white shadow-sm w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:border-l-6"
               onClick={handleViewDetails}
             >
-              <div className="flex items-start">
+              <div className="flex flex-row items-start">
                 {/* Imagen del libro */}
                 {currentBook.cover && (
-                  <div className="flex-shrink-0 w-16 h-20 mr-5 overflow-hidden rounded">
-                    <img 
-                      src={currentBook.cover} 
-                      alt={`Cover of ${currentBook.title}`} 
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="mr-3 flex-shrink-0 w-12 h-18 sm:w-16 sm:h-24">
+                    <div className="w-full h-full relative rounded-md shadow-sm overflow-hidden">
+                      <img
+                        src={currentBook.cover}
+                        alt={`Cover of ${currentBook.title}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
                 )}
                 
                 {/* Información del libro */}
                 <div className="flex-1 flex flex-col text-left min-w-0">
-                  <h3 className="text-base font-bold text-gray-800 mb-2">{currentBook.title}</h3>
-                  <div className="mb-2">
-                    <div className="text-sm text-gray-600 font-medium">
+                  <h3 className="text-sm font-bold text-gray-800 mb-1 mr-2 truncate">{currentBook.title}</h3>
+                  
+                  <div className="mb-1">
+                    <div className="text-xs text-gray-600 font-medium truncate">
                       <span>{currentBook.author}</span>
                       {currentBook.year && <span> ({currentBook.year})</span>}
                     </div>
                     {currentBook.genre && (
-                      <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-1 px-2 py-0.5 rounded-full border border-pink-100 font-medium">{currentBook.genre}</span>
+                      <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-0.5 px-1.5 py-0.5 rounded-full border border-pink-100 font-medium truncate">{currentBook.genre}</span>
                     )}
                   </div>
                   
-                  {/* Rating en la parte derecha */}
-                  <div className="absolute top-4 right-4 z-10 pointer-events-auto">
-                    {currentBook.status === 'read' && (
+                  {/* Fechas de lectura */}
+                  {currentBook.status === 'read' && (
+                    <div className="mb-1 w-full">
+                      <BookReadingDates book={currentBook} />
+                    </div>
+                  )}
+                  
+                  {/* Rating debajo de las fechas */}
+                  {currentBook.status === 'read' && (
+                    <div className="mb-1">
                       <BookRating 
                         id={currentBook.id} 
                         rating={editedBook.rating} 
                         onChange={handleRatingChange}
                         size="small"
                       />
-                    )}
-                  </div>
+                    </div>
+                  )}
                   
-                  {/* Fechas de lectura y acciones */}
-                  <div className="flex items-center mt-2 gap-2">
-                    {currentBook.status === 'read' && (
-                      <div className="mr-4">
-                        <BookReadingDates book={currentBook} />
-                      </div>
-                    )}
-                    <BookActions 
-                      book={currentBook} 
-                      onToggleStatus={handleToggleStatus} 
-                      onEditDates={handleEditDates}
-                      onRatingChange={handleRatingChange}
-                      viewMode={viewMode}
-                    />
+                  <div className="mt-1">
+                    {/* Acciones */}
+                    <div className="flex flex-wrap gap-1">
+                      <BookActions 
+                        book={currentBook} 
+                        onToggleStatus={handleToggleStatus} 
+                        onEditDates={handleEditDates}
+                        onRatingChange={handleRatingChange}
+                        viewMode={viewMode}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -332,38 +341,42 @@ const BookItem: React.FC<BookItemProps> = ({
         <div className="relative">
           {/* Contenido principal del libro */}
           <div 
-            className="relative flex items-center py-3 px-4 w-full cursor-pointer transition-all duration-200 hover:bg-gray-50"
+            className="relative border-l-2 border-teal-600 py-2 px-3 w-full cursor-pointer transition-all duration-200 hover:bg-gray-50 rounded-md"
             onClick={handleViewDetails}
           >
-            <div className="flex items-start w-full">
-              {/* Información del libro */}
-              <div className="flex-1 mr-4">
-                <h3 className="text-base font-medium text-gray-800 mb-1">{currentBook.title}</h3>
-                <div>
-                  <p className="text-sm text-gray-600">{currentBook.author} {currentBook.year && `(${currentBook.year})`}</p>
+            <div className="flex flex-col sm:flex-row w-full">
+              {/* Información del libro - lado izquierdo */}
+              <div className="flex-1 min-w-0 mb-2 sm:mb-0 sm:mr-4">
+                <h3 className="text-sm font-medium text-gray-800 mb-1 mr-2 truncate">{currentBook.title}</h3>
+                <div className="flex flex-wrap items-center gap-1">
+                  <p className="text-xs text-gray-600 truncate">{currentBook.author} {currentBook.year && `(${currentBook.year})`}</p>
                   {currentBook.genre && (
-                    <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-1 px-2 py-0.5 rounded-full border border-pink-100 font-medium">{currentBook.genre}</span>
+                    <span className="text-xs text-teal-800 bg-pink-50 inline-block px-1.5 py-0.5 rounded-full border border-pink-100 font-medium truncate">{currentBook.genre}</span>
                   )}
                 </div>
                 
                 {/* Fechas de lectura (solo para libros leídos) */}
                 {currentBook.status === 'read' && (
-                  <div className="mt-1">
+                  <div className="mt-1 w-full">
                     <BookReadingDates book={currentBook} />
+                  </div>
+                )}
+                
+                {/* Rating debajo de las fechas */}
+                {currentBook.status === 'read' && (
+                  <div className="mt-1 mb-1">
+                    <BookRating 
+                      id={currentBook.id} 
+                      rating={editedBook.rating} 
+                      onChange={handleRatingChange}
+                      size="small"
+                    />
                   </div>
                 )}
               </div>
               
-              {/* Rating y acciones a la derecha */}
-              <div className="flex items-center gap-3 pointer-events-auto">
-                {currentBook.status === 'read' && (
-                  <BookRating 
-                    id={currentBook.id} 
-                    rating={editedBook.rating} 
-                    onChange={handleRatingChange}
-                    size="small"
-                  />
-                )}
+              {/* Acciones - lado derecho */}
+              <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
                 <BookActions 
                   book={currentBook} 
                   onToggleStatus={handleToggleStatus} 
