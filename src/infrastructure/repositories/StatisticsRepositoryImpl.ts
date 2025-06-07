@@ -16,10 +16,7 @@ export class StatisticsRepositoryImpl implements StatisticsRepository {
   async getUserStatistics(): Promise<UserStatistics> {
     try {
       const response = await axios.get(`${this.API_URL}/statistics`, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
       return response.data as UserStatistics;
     } catch (error) {

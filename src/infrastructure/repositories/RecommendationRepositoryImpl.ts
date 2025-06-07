@@ -18,10 +18,7 @@ export class RecommendationRepositoryImpl implements RecommendationRepository {
   async getRecommendations(): Promise<Recommendation | null> {
     try {
       const response = await axios.get(`${this.API_URL}/recommendations`, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
 
       if (response.data) {
@@ -48,10 +45,7 @@ export class RecommendationRepositoryImpl implements RecommendationRepository {
   async generateRecommendations(): Promise<Recommendation | null> {
     try {
       const response = await axios.post(`${this.API_URL}/recommendations/generate`, {}, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
 
       if (response.data) {

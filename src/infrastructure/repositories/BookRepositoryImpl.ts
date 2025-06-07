@@ -18,10 +18,7 @@ export class BookRepositoryImpl implements BookRepository {
     try {
       const response = await axios.get(`${this.API_URL}/books`, {
         params: { userId },
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
 
       // Check if the response has the expected structure
@@ -49,10 +46,7 @@ export class BookRepositoryImpl implements BookRepository {
       console.log('Adding book to API:', JSON.stringify(book, null, 2));
 
       const response = await axios.post(`${this.API_URL}/books`, book, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
 
       // Check if the response has the expected structure
@@ -99,10 +93,7 @@ export class BookRepositoryImpl implements BookRepository {
       console.log('Updating book in API:', filteredBook);
 
       const response = await axios.put(`${this.API_URL}/books/${id}`, filteredBook, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
 
       if (response.data && response.data.success && response.data.data) {
@@ -126,10 +117,7 @@ export class BookRepositoryImpl implements BookRepository {
   async deleteBook(id: string): Promise<boolean> {
     try {
       const response = await axios.delete(`${this.API_URL}/books/${id}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders()
-        }
+        headers: getAuthHeaders()
       });
 
       if (response.data && response.data.success) {
