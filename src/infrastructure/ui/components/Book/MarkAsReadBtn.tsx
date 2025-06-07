@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { BooksContext } from '../context/BooksContext';
-import { AuthContext } from '../context/AuthContext';
+import { BooksContext } from '../../context/BooksContext';
+import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { BookDetails } from '../../../domain/entities/SearchBook';
-import { BookDTO } from '../../../domain/entities/Book';
+import { BookDetails } from '../../../../domain/entities/SearchBook';
+import { BookDTO } from '../../../../domain/entities/Book';
 import Rating from '@mui/material/Rating';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';

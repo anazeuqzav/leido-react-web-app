@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -8,9 +8,9 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import BookSearch from './BookSearch';
-import SearchBar from './searchBar/SearchBar';
-import SearchResultsList from './searchBar/SearchResultsList';
+
+import SearchBar from '../searchBar/SearchBar';
+import SearchResultsList from '../searchBar/SearchResultsList';
 // Usar una URL relativa para el logo
 const logoPath = '/src/assets/logo.png';
 

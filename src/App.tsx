@@ -23,7 +23,7 @@ import RecommendationsPage from './infrastructure/ui/pages/Recommendations';
 import ReadBooks from './infrastructure/ui/components/lists/ReadBooks';
 import UnreadBooks from './infrastructure/ui/components/lists/UnreadBooks';
 import FavoriteBooks from './infrastructure/ui/components/lists/FavoriteBooks';
-import BookDetail from './infrastructure/ui/components/BookDetail';
+import BookDetail from './infrastructure/ui/components/book/BookDetail';
 
 // Configure colors for Material UI components
 const theme = createTheme({

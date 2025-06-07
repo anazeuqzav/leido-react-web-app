@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Button from '@mui/material/Button';
-import { Book } from '../../../domain/entities/Book';
-import { BooksContext } from '../context/BooksContext';
+import { Book } from '../../../../domain/entities/Book';
+import { BooksContext } from '../../context/BooksContext';
 import { toast } from 'react-toastify';
 
 interface UpdateReadDateModalProps {

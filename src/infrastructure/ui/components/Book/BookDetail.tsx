@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { SearchContext } from '../context/SearchContext';
-import { BooksContext } from '../context/BooksContext';
-import { AuthContext } from '../context/AuthContext';
+import { SearchContext } from '../../context/SearchContext';
+import { BooksContext } from '../../context/BooksContext';
+import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { BookDetails } from '../../../domain/entities/SearchBook';
-import { Book } from '../../../domain/entities/Book';
+import { BookDetails } from '../../../../domain/entities/SearchBook';
+import { Book } from '../../../../domain/entities/Book';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';

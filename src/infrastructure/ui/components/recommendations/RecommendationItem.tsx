@@ -5,7 +5,7 @@ import { Book, BookDTO } from '../../../../domain/entities/Book';
 import { BooksContext } from '../../context/BooksContext';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import AddBookDetailsModal from '../AddBookDetailsModal';
+import AddBookDetailsModal from '../modals/AddBookDetailsModal';
 import BookIcon from '@mui/icons-material/Book';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';

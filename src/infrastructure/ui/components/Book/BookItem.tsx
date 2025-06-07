@@ -8,8 +8,8 @@ import BookDisplay from './BookDisplay';
 import BookRating from './BookRating';
 import BookActions from './BookActions';
 import BookReadingDates from './BookReadingDates';
-import UpdateReadDateModal from '../UpdateReadDateModal';
-import AddBookDetailsModal from '../AddBookDetailsModal';
+import UpdateReadDateModal from '../modals/UpdateReadDateModal';
+import AddBookDetailsModal from '../modals/AddBookDetailsModal';
 
 /**
  * Component that represents an individual book in the list of books.
