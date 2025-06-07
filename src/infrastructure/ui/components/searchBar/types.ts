@@ -7,10 +7,11 @@ export interface SearchBarProps {
 
 export interface SearchResultItem {
   key: string;
+  id?: string; // OLID or other identifier for cover URL
   title: string;
-  author: string;
-  coverId?: string;
-  coverUrl?: string;
+  author?: string;
+  cover?: string; // Direct cover URL
+  author_name?: string | string[]; // For API response compatibility
 }
 
 export interface SearchResultProps {
@@ -18,7 +19,7 @@ export interface SearchResultProps {
 }
 
 export interface SearchResultsListProps {
-  results: SearchBook[];
+  results: SearchResultItem[];
 }
 
 export interface SearchSuggestion {

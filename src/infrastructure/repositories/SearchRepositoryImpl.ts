@@ -29,14 +29,21 @@ export class SearchRepositoryImpl implements SearchRepository {
         return response.data.docs
           .filter((doc: any) => doc.title && doc.author_name) // Filter out items without title or author
           .slice(0, 10) // Limit to 10 results
-          .map((doc: any) => ({
-            key: doc.key,
-            title: doc.title,
-            author_name: doc.author_name ? doc.author_name.join(', ') : 'Unknown',
-            cover_i: doc.cover_i
-              ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
-              : '/placeholder-cover.jpg',
-          }));
+          .map((doc: any) => {
+            // Extract OLID from the key (format: "/works/OL123W")
+            const olid = doc.cover_edition_key || (doc.edition_key && doc.edition_key[0]);
+            const coverUrl = olid 
+              ? `https://covers.openlibrary.org/b/olid/${olid}-M.jpg`
+              : (doc.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : undefined);
+              
+            return {
+              key: doc.key,
+              id: olid || doc.key.split('/').pop(), // Use OLID or last part of key as fallback
+              title: doc.title,
+              author_name: doc.author_name || [],
+              cover: coverUrl
+            };
+          });
       }
 
       return [];

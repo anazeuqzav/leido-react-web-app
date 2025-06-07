@@ -13,11 +13,14 @@ const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
   // Update results when search results change
   useEffect(() => {
     if (setResults) {
+      // The repository already formats the results with cover URLs
       const formattedResults = searchResults.map(book => ({
+        key: book.key,
+        id: book.id,
         title: book.title,
         author: Array.isArray(book.author_name) ? book.author_name.join(', ') : book.author_name || 'Unknown Author',
-        coverId: book.cover_i ? book.cover_i.toString() : undefined,
-        key: book.key,
+        author_name: book.author_name || [],
+        cover: book.cover
       }));
       setResults(formattedResults);
     }

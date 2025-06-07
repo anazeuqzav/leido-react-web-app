@@ -3,9 +3,11 @@
  */
 export interface SearchBook {
   key: string;
+  id?: string; // OLID or other identifier for cover URL
   title: string;
   author_name?: string[];
   cover_i?: number;
+  cover?: string; // Direct cover URL
 }
 
 /**
