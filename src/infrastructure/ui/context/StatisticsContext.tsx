@@ -4,6 +4,7 @@ import { StatisticsRepositoryImpl } from '../../repositories/StatisticsRepositor
 
 const statisticsRepository = new StatisticsRepositoryImpl();
 
+// Define the context type
 interface StatisticsContextType {
   statistics: UserStatistics | null;
   isLoading: boolean;
@@ -11,17 +12,20 @@ interface StatisticsContextType {
   refreshStatistics: () => Promise<void>;
 }
 
+// Create the context with a default value
 export const StatisticsContext = createContext<StatisticsContextType>({
   statistics: null,
   isLoading: false,
   error: null,
-  refreshStatistics: async () => {},
+  refreshStatistics: async () => { },
 });
 
+// Define the provider props
 interface StatisticsProviderProps {
   children: ReactNode;
 }
 
+/** StatisticsProvider component */
 export const StatisticsProvider: React.FC<StatisticsProviderProps> = ({ children }) => {
   const [statistics, setStatistics] = useState<UserStatistics | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

@@ -12,7 +12,6 @@ import SearchBar from '../searchBar/SearchBar';
 import SearchResultsList from '../searchBar/SearchResultsList';
 import { NavProps } from './types';
 
-// Usar una URL relativa para el logo
 const logoPath = '/src/assets/logo.png';
 
 /**
@@ -51,7 +50,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
     navigate('/login'); // Redirect to login page
   };
 
-  // Función para determinar si un enlace está activo
+  // Function to check if a link is active
   const isActive = (path: string) => {
     return location.pathname === path;
   };
@@ -60,19 +59,19 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
     <nav className="bg-gradient-to-r from-teal-800 to-teal-700 shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo y nombre de la aplicación */}
+          {/* Logo and application name */}
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <img 
-                src={logoPath} 
-                alt="Leído Logo" 
-                className="h-10 w-10 object-contain filter drop-shadow-md" 
+              <img
+                src={logoPath}
+                alt="Leído Logo"
+                className="h-10 w-10 object-contain filter drop-shadow-md"
               />
               <span className="text-white font-bold text-xl tracking-tight hidden sm:block">LEÍDO</span>
             </Link>
           </div>
-          
-          {/* Barra de búsqueda - visible en todos los tamaños */}
+
+          {/* Search bar visible in all sizes */}
           <div className="flex-1 max-w-md mx-4 relative" ref={resultsRef}>
             <SearchBar setResults={setResults} />
             {results.length > 0 && (
@@ -82,61 +81,61 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
             )}
           </div>
 
-          {/* Menú de navegación para pantallas medianas y grandes */}
+          {/* Navigation menu for medium and large screens */}
           <div className="hidden md:flex md:items-center md:space-x-1">
-            <Link 
-              to="/read" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/read') 
-                ? 'bg-teal-900 text-white' 
+            <Link
+              to="/read"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/read')
+                ? 'bg-teal-900 text-white'
                 : 'text-teal-100 hover:bg-teal-600 hover:text-white'}`}
             >
               <MenuBookIcon fontSize="small" />
               <span>Read</span>
             </Link>
-            
-            <Link 
-              to="/want-to-read" 
-              onClick={() => handleListChange("wantToRead")} 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/want-to-read') 
-                ? 'bg-teal-900 text-white' 
+
+            <Link
+              to="/want-to-read"
+              onClick={() => handleListChange("wantToRead")}
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/want-to-read')
+                ? 'bg-teal-900 text-white'
                 : 'text-teal-100 hover:bg-teal-600 hover:text-white'}`}
             >
               <BookmarkIcon fontSize="small" />
               <span>To Read</span>
             </Link>
-            
-            <Link 
-              to="/favorites" 
-              onClick={() => handleListChange("favorites")} 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/favorites') 
-                ? 'bg-teal-900 text-white' 
+
+            <Link
+              to="/favorites"
+              onClick={() => handleListChange("favorites")}
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/favorites')
+                ? 'bg-teal-900 text-white'
                 : 'text-teal-100 hover:bg-teal-600 hover:text-white'}`}
             >
               <FavoriteIcon fontSize="small" />
               <span>Favorites</span>
             </Link>
-            
-            <Link 
-              to="/recommendations" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/recommendations') 
-                ? 'bg-teal-900 text-white' 
+
+            <Link
+              to="/recommendations"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/recommendations')
+                ? 'bg-teal-900 text-white'
                 : 'text-teal-100 hover:bg-teal-600 hover:text-white'}`}
             >
               <ExploreIcon fontSize="small" />
               <span>Recommendations</span>
             </Link>
-            
-            <Link 
-              to="/statistics" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/statistics') 
-                ? 'bg-teal-900 text-white' 
+
+            <Link
+              to="/statistics"
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1 ${isActive('/statistics')
+                ? 'bg-teal-900 text-white'
                 : 'text-teal-100 hover:bg-teal-600 hover:text-white'}`}
             >
               <BarChartIcon fontSize="small" />
               <span>Statistics</span>
             </Link>
-            
-            {/* Botón de cerrar sesión */}
+
+            {/* Logout button */}
             <button
               onClick={handleLogout}
               aria-label="Log out"
@@ -145,8 +144,8 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
               <ExitToAppIcon fontSize="small" />
             </button>
           </div>
-          
-          {/* Botón de menú hamburguesa para pantallas pequeñas */}
+
+          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -164,7 +163,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
         </div>
       </div>
 
-      {/* Menú móvil, mostrar/ocultar según el estado */}
+      {/* Mobile menu, show/hide based on state */}
       <div className={`${menuOpen ? 'block' : 'hidden'} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 bg-teal-800 shadow-inner">
           <Link
@@ -182,7 +181,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
               <span>Read Books</span>
             </div>
           </Link>
-          
+
           <Link
             to="/want-to-read"
             onClick={() => {
@@ -198,7 +197,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
               <span>Want to Read</span>
             </div>
           </Link>
-          
+
           <Link
             to="/favorites"
             onClick={() => {
@@ -214,7 +213,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
               <span>Favorite Books</span>
             </div>
           </Link>
-          
+
           <Link
             to="/recommendations"
             onClick={() => setMenuOpen(false)}
@@ -227,7 +226,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
               <span>Recommendations</span>
             </div>
           </Link>
-          
+
           <Link
             to="/statistics"
             onClick={() => setMenuOpen(false)}
@@ -240,7 +239,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
               <span>Statistics</span>
             </div>
           </Link>
-          
+
           <button
             onClick={() => {
               handleLogout();

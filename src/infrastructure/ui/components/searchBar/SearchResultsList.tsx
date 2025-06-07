@@ -11,9 +11,9 @@ const SearchResultsList: React.FC<SearchResultsListProps> = ({ results }) => {
     return {
       key: book.key,
       title: book.title,
-      author: book.author || 
-             (Array.isArray(book.author_name) ? book.author_name.join(', ') : 
-             (typeof book.author_name === 'string' ? book.author_name : 'Unknown Author')),
+      author: book.author ||
+        (Array.isArray(book.author_name) ? book.author_name.join(', ') :
+          (typeof book.author_name === 'string' ? book.author_name : 'Unknown Author')),
       cover: `https://covers.openlibrary.org/b/olid/${book.id}-M.jpg`,
     };
   };

@@ -49,14 +49,14 @@ const Statistics: React.FC = () => {
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4">
       <h1 className="text-2xl font-bold mb-4 sm:mb-6 text-gray-800">Your Reading Statistics</h1>
-      
+
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
           <h2 className="text-base sm:text-lg font-semibold text-gray-800">Total Books Read</h2>
           <p className="text-3xl sm:text-4xl font-bold text-teal-600 mt-2">{statistics.totalBooks}</p>
         </div>
-        
+
         {statistics.bestMonth ? (
           <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
             <h2 className="text-base sm:text-lg font-semibold text-gray-800">Best Reading Month</h2>
@@ -69,7 +69,7 @@ const Statistics: React.FC = () => {
             <p className="text-gray-500">No data</p>
           </div>
         )}
-        
+
         {statistics.mostReadGenre ? (
           <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
             <h2 className="text-base sm:text-lg font-semibold text-gray-800">Most Read Genre</h2>
@@ -83,7 +83,7 @@ const Statistics: React.FC = () => {
           </div>
         )}
       </div>
-      
+
       {/* Monthly reads and genres charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
         {/* Monthly reads chart */}
@@ -112,7 +112,7 @@ const Statistics: React.FC = () => {
           )}
         </div>
       </div>
-      
+
       {/* Ratings and favorite books */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
         {/* Rating distribution */}
@@ -126,7 +126,7 @@ const Statistics: React.FC = () => {
             <p className="text-sm sm:text-base text-gray-500 px-1">Not enough data to display the chart.</p>
           )}
         </div>
-        
+
         {/* Top rated books */}
         <div className="bg-white p-2 sm:p-3 rounded-lg shadow-md">
           <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-teal-700">Top Rated Books</h2>

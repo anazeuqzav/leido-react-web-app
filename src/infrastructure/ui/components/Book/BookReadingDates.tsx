@@ -6,13 +6,13 @@ interface BookReadingDatesProps {
 }
 
 /**
- * Componente para mostrar las fechas de lectura de un libro
+ * Component that displays the reading dates of a book.
  */
 const BookReadingDates: React.FC<BookReadingDatesProps> = ({ book }) => {
   const { status, readDate, startDate } = book;
-  
+  // If the book is not read, return null
   if (status !== 'read') return null;
-  
+
   const localReadDate = readDate ? new Date(readDate).toLocaleDateString() : 'Not finished';
   const localStartDate = startDate ? new Date(startDate).toLocaleDateString() : 'Not started';
 

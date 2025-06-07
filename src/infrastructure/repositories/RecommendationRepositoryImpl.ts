@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Recommendation } from '../../domain/entities/Recommendation';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
-import { RecommendationRepository } from '../../application/interfaces/RecommendationRepository';
+import { RecommendationRepository } from '../../domain/interfaces/RecommendationRepository';
 
 /**
  * Implementation of the RecommendationRepository interface

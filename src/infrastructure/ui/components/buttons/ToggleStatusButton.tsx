@@ -1,17 +1,23 @@
 import React from 'react';
 import { ToggleStatusButtonProps } from './types';
 
+/**
+ * Component for toggling the status of a book (read or want to read)
+ */
 const ToggleStatusButton: React.FC<ToggleStatusButtonProps & { viewMode: 'grid' | 'list' | 'compact' }> = ({
   status,
   onToggleStatus,
   viewMode
 }) => {
+
+  // Handle click to toggle status
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onToggleStatus(e);
   };
 
+  // Render different buttons based on view mode
   if (viewMode === 'grid') {
     return status === 'read' ? (
       <button

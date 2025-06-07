@@ -26,11 +26,11 @@ export const BooksContext = createContext<BooksContextType>({
   readBooks: [],
   unreadBooks: [],
   favoriteBooks: [],
-  addBook: async () => {},
+  addBook: async () => { },
   updateBook: async () => undefined,
-  deleteBook: async () => {},
+  deleteBook: async () => { },
   getBookById: () => undefined,
-  fetchBooks: async () => {},
+  fetchBooks: async () => { },
   error: null,
 });
 
@@ -43,7 +43,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const { user, token } = useContext(AuthContext);
 
-  // Función para cargar libros desde la API
+  // Function to load books from the API
   const fetchBooksHandler = async (): Promise<void> => {
     if (user && token) {
       try {
@@ -61,7 +61,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
     fetchBooksHandler();
   }, [user, token]);
 
-  // Verificar si un libro ya existe por su externalId
+  // Verify if a book already exists by its externalId
   const bookExistsByExternalId = (externalId: string | undefined): Book | undefined => {
     if (!externalId) return undefined;
     return books.find(book => book.externalId === externalId);
@@ -70,30 +70,30 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   // Add a new book
   const addBookHandler = async (newBook: BookDTO) => {
     if (!user || !token) return;
-    
+
     try {
-      // Verificar si el libro ya existe por su externalId
+      // Verify if the book already exists by its externalId
       if (newBook.externalId) {
         const existingBook = bookExistsByExternalId(newBook.externalId);
-        
+
         if (existingBook) {
-          // El libro ya existe, mostrar un error
+          // The book already exists, show an error
           setError(`This book is already in your LEÍDO library"${existingBook.title}".`);
           throw new Error(`Libro duplicado: ${existingBook.title}`);
         }
       }
-      
-      // Obtener el ID de usuario desde localStorage si no está disponible en el contexto
+
+      // Get the user ID from localStorage if not available in the context
       let userId = user?.id;
-      
-      // Si el ID de usuario no está disponible en el contexto, intentar obtenerlo de diferentes fuentes
+
+      // If the user ID is not available in the context, try to obtain it from different sources
       if (!userId) {
         console.log('Intentando obtener userId desde diferentes fuentes');
-        
-        // 1. Intentar obtener desde localStorage['user']
+
+        // 1. Try to obtain from localStorage['user']
         const savedUserString = localStorage.getItem('user');
         console.log('Valor de localStorage["user"]:', savedUserString);
-        
+
         if (savedUserString) {
           try {
             const savedUser = JSON.parse(savedUserString);
@@ -104,55 +104,17 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
             console.error('Error al parsear el usuario de localStorage:', error);
           }
         }
-        
-        // 2. Si aún no tenemos userId, intentar decodificar el token JWT
-        if (!userId) {
-          const token = localStorage.getItem('token');
-          if (token) {
-            try {
-              // Decodificar el token JWT (parte de en medio, codificada en base64)
-              const payload = token.split('.')[1];
-              if (payload) {
-                const decodedPayload = JSON.parse(atob(payload));
-                console.log('Token JWT decodificado:', decodedPayload);
-                userId = decodedPayload.id; // El backend pone el ID de usuario en el campo 'id' del token
-                console.log('ID de usuario obtenido del token JWT:', userId);
-              }
-            } catch (error) {
-              console.error('Error al decodificar el token JWT:', error);
-            }
-          } else {
-            console.log('No se encontró token en localStorage');
-          }
-        }
-        
-        // 3. Intentar obtener el email como último recurso
-        if (!userId) {
-          // Como último recurso, usar el email como identificador (no es lo ideal pero puede funcionar temporalmente)
-          if (user?.email) {
-            userId = user.email;
-            console.log('Usando email como identificador temporal:', userId);
-          } else if (savedUserString) {
-            try {
-              const savedUser = JSON.parse(savedUserString);
-              if (savedUser.email) {
-                userId = savedUser.email;
-                console.log('Usando email de localStorage como identificador temporal:', userId);
-              }
-            } catch {}
-          }
-        }
       }
-      
-      // Si seguimos sin tener ID de usuario, no podemos continuar
+
+      // If we don't have a user ID, we can't continue
       if (!userId) {
         const error = new Error('No se pudo obtener el ID de usuario');
         console.error(error);
         setError(error.message);
         return;
       }
-      
-      // Si no existe, añadir el libro
+
+      // If the book doesn't exist, add it
       const addedBook = await bookRepository.addBook({ ...newBook, userId });
       setBooks([...books, addedBook]);
     } catch (error: any) {
@@ -164,32 +126,29 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   // Update a book
   const updateBookHandler = async (id: string, updatedBook: Partial<Book>) => {
     if (!user || !token) return;
-    
+
     try {
       const updatedData = await bookRepository.updateBook(id, updatedBook);
-      
-      // Actualizar la lista de libros, reemplazando el libro con el ID original
-      // con el libro actualizado que puede tener un nuevo ID
       setBooks((prevBooks) => {
-        // Primero eliminamos el libro con el ID original
+        // First remove the book with the original ID
         const filteredBooks = prevBooks.filter((book) => book.id !== id);
-        // Luego añadimos el libro actualizado (que puede tener un nuevo ID)
+        // Then add the updated book (which may have a new ID)
         return [...filteredBooks, updatedData];
       });
-      
-      // Devolver el libro actualizado para que los componentes puedan acceder al nuevo ID
+
+      // Return the updated book so components can access the new ID
       return updatedData;
     } catch (error: any) {
       console.error('Error updating book:', error);
       setError(error.message);
-      throw error; // Re-lanzar el error para que los componentes puedan manejarlo
+      throw error; // Re-throw the error so components can handle it
     }
   };
 
   // Delete a book
   const deleteBookHandler = async (id: string) => {
     if (!user || !token) return;
-    
+
     try {
       await bookRepository.deleteBook(id);
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
@@ -203,7 +162,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   const readBooks = Array.isArray(books) ? books.filter(book => book.status === 'read') : [];
   const unreadBooks = Array.isArray(books) ? books.filter(book => book.status === 'to-read') : [];
   const favoriteBooks = Array.isArray(books) ? books.filter(book => book.rating === 5) : [];
-  
+
   // Get a book by its ID
   const getBookByIdHandler = (id: string): Book | undefined => {
     return books.find(book => book.id === id);

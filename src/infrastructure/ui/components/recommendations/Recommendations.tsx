@@ -5,8 +5,11 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
-import { RecommendationsViewProps } from './types';
 
+/**
+ * Component to display recommendations
+ * @returns The recommendations component
+ */
 const Recommendations: React.FC = () => {
   const {
     recommendation,
@@ -68,7 +71,7 @@ const Recommendations: React.FC = () => {
   }
 
   // Filter recommendations based on search term
-  const filteredRecommendations = recommendation ? recommendation.recommendations.filter(rec => 
+  const filteredRecommendations = recommendation ? recommendation.recommendations.filter(rec =>
     rec.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     rec.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (rec.genre && rec.genre.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -78,10 +81,10 @@ const Recommendations: React.FC = () => {
   const groupedRecommendations = (filteredRecommendations || []).reduce<Record<string, typeof filteredRecommendations>>((acc, rec) => {
     // Extract the book title or author from the reason
     let sourceKey = '';
-    
+
     if (rec.reason.includes('"')) {
       // If there are quotes, extract the book title
-      const match = rec.reason.match(/"([^"]+)"/); 
+      const match = rec.reason.match(/"([^"]+)"/);
       if (match && match[1]) {
         const bookTitle = match[1];
         // Look for a "by Author" after the title
@@ -98,7 +101,7 @@ const Recommendations: React.FC = () => {
     } else {
       sourceKey = rec.reason; // Fallback
     }
-    
+
     if (!acc[sourceKey]) {
       acc[sourceKey] = [];
     }
@@ -112,7 +115,7 @@ const Recommendations: React.FC = () => {
         <div className="flex items-center mb-4 md:mb-0">
           <h2 className="text-2xl font-bold text-teal-800">Book Recommendations</h2>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
           {/* Search input */}
           <div className="relative flex-grow max-w-md">
@@ -127,17 +130,17 @@ const Recommendations: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
+
           {/* View mode toggle */}
           <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-            <button 
+            <button
               className={`p-2 ${viewMode === 'grid' ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
               onClick={() => setViewMode('grid')}
               title="Grid View"
             >
               <GridViewIcon fontSize="small" />
             </button>
-            <button 
+            <button
               className={`p-2 ${viewMode === 'list' ? 'bg-teal-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'}`}
               onClick={() => setViewMode('list')}
               title="List View"
@@ -145,7 +148,7 @@ const Recommendations: React.FC = () => {
               <ViewListIcon fontSize="small" />
             </button>
           </div>
-          
+
           {/* Refresh button */}
           <button
             className="flex items-center justify-center gap-1 border border-teal-600 text-teal-600 hover:bg-teal-50 px-3 py-2 rounded-lg transition-colors"
@@ -184,25 +187,25 @@ const Recommendations: React.FC = () => {
           {Object.entries(groupedRecommendations).map(([sourceKey, recommendations], index) => {
             // Determine the type of recommendation to display an appropriate title
             let title = sourceKey;
-            
+
             // If the sourceKey starts with "Genre:", format the title
             if (sourceKey.startsWith('Genre:')) {
               title = `Recommendations by ${sourceKey.toLowerCase()}`;
             } else {
               title = `Because you liked ${sourceKey}`;
             }
-            
+
             return (
               <div key={index} className="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold text-teal-800 mb-4 border-b border-pink-100 pb-2">
                   {title}
                 </h2>
-                
+
                 {viewMode === 'grid' ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {recommendations.map((rec, recIndex) => (
                       <div key={recIndex} className="flex flex-col h-full">
-                        <RecommendationItem recommendation={{...rec, reason: ''}} viewMode={viewMode} />
+                        <RecommendationItem recommendation={{ ...rec, reason: '' }} viewMode={viewMode} />
                       </div>
                     ))}
                   </div>
@@ -210,7 +213,7 @@ const Recommendations: React.FC = () => {
                   <div className="flex flex-col gap-4">
                     {recommendations.map((rec, recIndex) => (
                       <div key={recIndex}>
-                        <RecommendationItem recommendation={{...rec, reason: ''}} viewMode={viewMode} />
+                        <RecommendationItem recommendation={{ ...rec, reason: '' }} viewMode={viewMode} />
                       </div>
                     ))}
                   </div>

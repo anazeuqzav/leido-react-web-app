@@ -3,11 +3,10 @@ import Rating from '@mui/material/Rating';
 import { BookRatingProps } from './types';
 
 /**
- * Componente para mostrar y gestionar la calificación de un libro
+ * Component that displays and manages a book's rating.
  */
 const BookRating: React.FC<BookRatingProps> = ({ id, rating, onChange, size = 'medium' }) => {
   const handleRatingChange = (event: React.SyntheticEvent, newValue: number | null) => {
-    // Stop event propagation to prevent parent click handlers from firing
     event.stopPropagation();
     onChange(newValue);
   };

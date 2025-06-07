@@ -12,7 +12,7 @@ const BookActions: React.FC<BookActionsProps> = ({
   onEditDates,
   viewMode
 }) => {
-  // Create safe handlers that check if the callback exists and stop event propagation
+  // Handler for toggle status
   const handleToggleStatus = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onToggleStatus) {
@@ -20,18 +20,12 @@ const BookActions: React.FC<BookActionsProps> = ({
     }
   };
 
+  // Handler for edit dates
   const handleEditDates = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onEditDates) {
       onEditDates(e);
     }
-  };
-
-  const commonProps = {
-    status: book.status,
-    onToggleStatus: handleToggleStatus,
-    onEditDates: handleEditDates,
-    viewMode
   };
 
   // Render buttons based on view mode

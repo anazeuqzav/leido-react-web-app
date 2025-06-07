@@ -18,7 +18,7 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   token: null,
   login: async () => false,
-  logout: () => {},
+  logout: () => { },
 });
 
 interface AuthProviderProps {
@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     const savedToken = localStorage.getItem('token');
-    
+
     if (savedUser && savedToken) {
       setUser(JSON.parse(savedUser));
       setToken(savedToken);
@@ -49,13 +49,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string): Promise<boolean> => {
     const credentials: UserCredentials = { email, password };
     const result = await authRepository.login(credentials);
-    
+
     if (result) {
       setUser(result.user);
       setToken(result.token);
       return true;
     }
-    
+
     return false;
   };
 

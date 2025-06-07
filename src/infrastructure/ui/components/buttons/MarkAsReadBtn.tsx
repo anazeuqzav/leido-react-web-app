@@ -16,35 +16,35 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
   const { user } = useContext(AuthContext);
   const [rating, setRating] = useState(0);
   const [readDate, setReadDate] = useState(new Date()); // default to today
-  const [startDate, setStartDate] = useState<Date | null>(null); // fecha de inicio de lectura
+  const [startDate, setStartDate] = useState<Date | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleAddToRead = async () => {
     if (!book || !user) return;
-    
+
     try {
-      // Extraer el OLID (Open Library ID) de la clave del libro
+      // Get the OLID from the book key
       const olid = book.key.split('/').pop() || '';
-      
+
       const newBook: BookDTO = {
         title: book.title,
         author: authorNames.join(', '),
         year: book.first_publish_date ? parseInt(book.first_publish_date.substring(0, 4)) : undefined,
         genre: book.subjects ? book.subjects[0] : undefined,
         status: 'read',
-        rating: rating, // Send the exact rating value (can be decimal)
-        cover: coverUrl || undefined, // Make cover optional
+        rating: rating,
+        cover: coverUrl || undefined,
         userId: user.id,
         readDate,
-        startDate: startDate || readDate, // Si no hay fecha de inicio, usar la fecha de lectura
-        externalId: olid, // Guardar el identificador único de OpenLibrary
+        startDate: startDate || readDate, // if no start date, use the read date
+        externalId: olid,
       };
-      
+
       await addBook(newBook);
-      
+
       // Show toast notification
       toast.success(`"${book.title}" has been marked as read!`);
-      
+
       setSuccessMessage("Book added successfully!");
       setTimeout(() => {
         setSuccessMessage("");
@@ -64,13 +64,13 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
           <Rating
             name="book-rating"
             value={rating}
-            precision={0.5} // Allow half-star ratings
+            precision={0.5}
             onChange={(event, newValue) => setRating(newValue || 0)}
             size="medium"
             className="ml-1"
           />
         </div>
-        
+
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-sm text-gray-700 font-medium block mb-1">Start Date:</label>
@@ -84,7 +84,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
               isClearable
             />
           </div>
-          
+
           <div>
             <label className="text-sm text-gray-700 font-medium block mb-1">Finish Date:</label>
             <DatePicker
@@ -97,7 +97,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
             />
           </div>
         </div>
-        
+
         <div className="flex gap-2 mt-2 justify-end">
           <button
             onClick={handleAddToRead}
@@ -110,7 +110,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
           </button>
         </div>
       </div>
-      
+
       {successMessage && (
         <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg z-10">
           <div className="text-teal-600 flex items-center">

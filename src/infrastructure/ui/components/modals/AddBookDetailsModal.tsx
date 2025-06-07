@@ -8,11 +8,11 @@ import { AddBookDetailsModalProps } from './types';
 /**
  * Component for selecting reading dates and rating when adding a book as read
  */
-const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onConfirm, 
-  initialStartDate = new Date(), 
+const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  initialStartDate = new Date(),
   initialReadDate = new Date(),
   initialRating = 0
 }) => {
@@ -20,7 +20,7 @@ const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
   const [readDate, setReadDate] = useState<Date | null>(initialReadDate);
   const [rating, setRating] = useState<number | null>(initialRating);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const handleSave = () => {
     setIsSubmitting(true);
     onConfirm(startDate, readDate, rating);
@@ -30,7 +30,7 @@ const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 transition-all duration-300" 
+    <div className="fixed inset-0 flex items-center justify-center z-50 transition-all duration-300"
       style={{ backgroundColor: 'rgba(20, 30, 40, 0.75)', backdropFilter: 'blur(3px)' }}>
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl transform transition-all duration-300 scale-100 border-l-4 border-teal-600 bg-gradient-to-br from-white to-pink-50">
         <div className="flex items-center mb-4">
@@ -41,7 +41,7 @@ const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
           </div>
           <h2 className="text-xl font-bold text-gray-800">Add Reading Dates</h2>
         </div>
-        
+
         <div className="space-y-5">
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">Start Reading Date:</label>
@@ -55,7 +55,7 @@ const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
               isClearable
             />
           </div>
-          
+
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">Finish Reading Date:</label>
             <DatePicker
@@ -69,7 +69,7 @@ const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
               isClearable
             />
           </div>
-          
+
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">Rating:</label>
             <Rating
@@ -83,7 +83,7 @@ const AddBookDetailsModal: React.FC<AddBookDetailsModalProps> = ({
             />
           </div>
         </div>
-        
+
         <div className="flex justify-end gap-3 mt-6">
           <Button
             variant="outlined"

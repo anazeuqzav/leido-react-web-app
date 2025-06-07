@@ -23,6 +23,9 @@ ChartJS.register(
   Legend
 );
 
+/**
+ * Component to display a monthly read chart
+ */
 const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
   // Format month names for display with month and year on separate lines
   const formatMonthLabel = (monthStr: string): string[] => {
@@ -33,7 +36,7 @@ const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
       date.getFullYear().toString()
     ];
   };
-  
+
   // Get current month and year to highlight the current month if present
   const currentDate = new Date();
   const currentYearMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
@@ -47,12 +50,12 @@ const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
       {
         label: 'Books read',
         data: sortedData.map(item => item.count),
-        backgroundColor: 'rgba(79, 70, 229, 0.2)', // Indigo color (más claro)
-        borderColor: 'rgba(79, 70, 229, 0.8)', // Indigo color
+        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+        borderColor: 'rgba(79, 70, 229, 0.8)',
         borderWidth: 2,
-        pointBackgroundColor: sortedData.map(item => 
-          item.month === currentYearMonth 
-            ? 'rgba(139, 92, 246, 1)' // Highlight current month with purple
+        pointBackgroundColor: sortedData.map(item =>
+          item.month === currentYearMonth
+            ? 'rgba(139, 92, 246, 1)'
             : 'rgba(79, 70, 229, 1)'
         ),
         pointRadius: 5,

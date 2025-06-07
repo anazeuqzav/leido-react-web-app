@@ -20,70 +20,54 @@ const UpdateReadDateModal: React.FC<UpdateReadDateModalProps> = ({ book, onClose
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Extraer la función updateBook del contexto
-  // Esta función devuelve un objeto Book actualizado
+
   const { updateBook } = useContext(BooksContext);
 
   const handleSave = async () => {
     try {
       setIsSubmitting(true);
       setError(null);
-      
-      // Prepare the update data
+
       const updateData: Partial<Book> = {};
-      
-      // Si el libro está en estado 'to-read', actualizarlo a 'read'
+
       if (book.status === 'to-read') {
         updateData.status = 'read';
       }
-      
-      // Only include dates if they've changed
+
       if (startDate !== (book.startDate ? new Date(book.startDate) : null)) {
-        // Convert null to undefined for the Book type
         updateData.startDate = startDate === null ? undefined : startDate;
       }
-      
+
       if (readDate !== (book.readDate ? new Date(book.readDate) : null)) {
-        // Convert null to undefined for the Book type
         updateData.readDate = readDate === null ? undefined : readDate;
       }
-      
-      // Si estamos marcando como leído, asegurarnos de que hay una fecha de finalización
+
       if (updateData.status === 'read' && !updateData.readDate && !book.readDate) {
         updateData.readDate = new Date();
       }
-      
-      // Si estamos marcando como leído y no hay fecha de inicio, usar la fecha actual
+
       if (updateData.status === 'read' && !updateData.startDate && !book.startDate) {
         updateData.startDate = new Date();
       }
-      
-      // Only update if there are changes
       if (Object.keys(updateData).length > 0) {
         console.log('Updating book dates and status:', updateData);
         try {
-          // La función updateBook devuelve Promise<void> según la definición del contexto
-          // pero el backend actualiza el libro y puede cambiar su ID
           await updateBook(book.id, updateData);
-          
-          // Mostrar notificación de éxito si cambiamos el estado
+
           if (updateData.status === 'read') {
             toast.success(`"${book.title}" has been marked as read!`);
           }
-          
-          // Notificar al componente padre con el ID actual del libro
-          // El componente padre debe actualizar el libro desde el contexto
+
           if (onBookUpdated) {
             console.log('Libro actualizado con ID:', book.id);
             onBookUpdated(book.id);
           }
         } catch (error) {
           console.error('Error al actualizar fechas del libro:', error);
-          throw error; // Re-lanzar el error para que sea capturado por el bloque catch externo
+          throw error;
         }
       }
-      
+
       onClose();
     } catch (err: any) {
       console.error('Error updating book dates:', err);
@@ -94,7 +78,7 @@ const UpdateReadDateModal: React.FC<UpdateReadDateModalProps> = ({ book, onClose
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 transition-all duration-300" 
+    <div className="fixed inset-0 flex items-center justify-center z-50 transition-all duration-300"
       style={{ backgroundColor: 'rgba(20, 30, 40, 0.75)', backdropFilter: 'blur(3px)' }}>
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl transform transition-all duration-300 scale-100 border-l-4 border-teal-600 bg-gradient-to-br from-white to-pink-50">
         <div className="flex items-center mb-4">
@@ -106,7 +90,7 @@ const UpdateReadDateModal: React.FC<UpdateReadDateModalProps> = ({ book, onClose
           <h2 className="text-xl font-bold text-gray-800">Edit Reading Dates</h2>
         </div>
         <p className="text-sm text-gray-600 mb-5 pl-2 border-l-2 border-teal-200">"{book.title}" by {book.author}</p>
-        
+
         <div className="space-y-5">
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">Start Reading Date:</label>
@@ -120,7 +104,7 @@ const UpdateReadDateModal: React.FC<UpdateReadDateModalProps> = ({ book, onClose
               isClearable
             />
           </div>
-          
+
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">Finish Reading Date:</label>
             <DatePicker
@@ -135,13 +119,13 @@ const UpdateReadDateModal: React.FC<UpdateReadDateModalProps> = ({ book, onClose
             />
           </div>
         </div>
-        
+
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-3 mt-4 rounded">
             <p className="text-red-700 text-sm">{error}</p>
           </div>
         )}
-        
+
         <div className="flex justify-end gap-3 mt-6">
           <Button
             variant="outlined"

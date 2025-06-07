@@ -21,10 +21,13 @@ ChartJS.register(
   Legend
 );
 
+/**
+ * Component to display a rating distribution chart
+ */
 const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data, showLegend = true }) => {
   // Sort data by rating
   const sortedData = [...data].sort((a, b) => a.rating - b.rating);
-  
+
   // Prepare data for the chart
   const chartData = {
     labels: sortedData.map(item => `${item.rating} ★`),
@@ -33,18 +36,18 @@ const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data,
         label: 'Number of books',
         data: sortedData.map(item => item.count),
         backgroundColor: [
-          'rgba(236, 72, 153, 0.6)',  // pink-500
-          'rgba(219, 39, 119, 0.6)',   // pink-600
-          'rgba(20, 184, 166, 0.6)',   // teal-500
-          'rgba(13, 148, 136, 0.6)',   // teal-600
-          'rgba(14, 116, 144, 0.6)',   // cyan-700
+          'rgba(236, 72, 153, 0.6)',
+          'rgba(219, 39, 119, 0.6)',
+          'rgba(20, 184, 166, 0.6)',
+          'rgba(13, 148, 136, 0.6)',
+          'rgba(14, 116, 144, 0.6)',
         ],
         borderColor: [
-          'rgb(236, 72, 153)',   // pink-500
-          'rgb(219, 39, 119)',   // pink-600
-          'rgb(20, 184, 166)',   // teal-500
-          'rgb(13, 148, 136)',   // teal-600
-          'rgb(14, 116, 144)',   // cyan-700
+          'rgb(236, 72, 153)',
+          'rgb(219, 39, 119)',
+          'rgb(20, 184, 166)',
+          'rgb(13, 148, 136)',
+          'rgb(14, 116, 144)',
         ],
         borderWidth: 1,
       },
@@ -64,7 +67,7 @@ const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data,
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
+          label: function (context: any) {
             const value = context.parsed.y;
             return `${value} ${value === 1 ? 'book' : 'books'}`;
           }

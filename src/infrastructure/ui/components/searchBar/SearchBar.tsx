@@ -13,7 +13,6 @@ const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
   // Update results when search results change
   useEffect(() => {
     if (setResults) {
-      // The repository already formats the results with cover URLs
       const formattedResults = searchResults.map(book => ({
         key: book.key,
         id: book.id,
@@ -26,14 +25,15 @@ const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
     }
   }, [searchResults, setResults]);
 
+  // Handle input changes
   const handleChange = (value: string) => {
     setInput(value);
-    
+
     if (!value.trim()) {
       setResults?.([]);
       return;
     }
-    
+
     if (onSearch) {
       onSearch(value);
     } else {

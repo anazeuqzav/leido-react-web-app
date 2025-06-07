@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+import { Book } from '../../../../domain/entities/Book';
 import { BookDetails } from '../../../../domain/entities/SearchBook';
 
 export interface EditDatesButtonProps {

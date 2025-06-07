@@ -21,6 +21,9 @@ ChartJS.register(
   Legend
 );
 
+/**
+ * Component to display a top authors chart
+ */
 const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data, maxItems = 5, showLegend = true }) => {
   // Sort data by count (highest to lowest)
   const sortedData = [...data].sort((a, b) => b.count - a.count);

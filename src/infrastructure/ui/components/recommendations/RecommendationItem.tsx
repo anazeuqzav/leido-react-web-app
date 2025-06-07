@@ -10,27 +10,28 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import { RecommendationItemProps } from './types';
 
+/**
+ * Component to display a recommendation item
+ * @param recommendation - The recommendation to display
+ * @param viewMode - The view mode to display the recommendation in (grid or list)
+ * @returns The recommendation item component
+ */
 const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation, viewMode = 'grid' }) => {
   const navigate = useNavigate();
   const { addBook } = useContext(BooksContext);
   const { user } = useContext(AuthContext);
-  
-  // Estado para rastrear si el libro ya ha sido añadido a la lista de lectura
   const [isAddedToWantToRead, setIsAddedToWantToRead] = useState(false);
   const [isAddedToRead, setIsAddedToRead] = useState(false);
-  
-  // Estado para controlar el modal de fechas
   const [showDateModal, setShowDateModal] = useState(false);
-  // Estado para almacenar el libro que se está añadiendo
   const [bookToAdd, setBookToAdd] = useState<BookDTO | null>(null);
-  
+
   // Create a book from the recommendation
   const createBookFromRecommendation = (status: 'read' | 'to-read') => {
     if (!user) {
       console.error('No authenticated user');
       return;
     }
-    
+
     // Verificar que haya un token de autenticación
     const token = localStorage.getItem('token');
     if (!token) {
@@ -45,17 +46,14 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
       year: recommendation.year || undefined,
       genre: recommendation.genre || undefined,
       status: status,
-      // El rating debe ser entre 1 y 5 según la validación del backend
       rating: status === 'read' ? 1 : undefined,
       cover: recommendation.cover || undefined,
       externalId: recommendation.externalId || undefined,
-      // Incluimos una cadena vacía como userId, será reemplazada en BooksContext
-      userId: '',  // Requerido por TypeScript, pero será reemplazado en BooksContext
-      // Convertir las fechas a formato ISO 8601 para el backend
+      userId: '',
       readDate: status === 'read' ? new Date().toISOString() : undefined,
       startDate: status === 'read' ? new Date().toISOString() : undefined
     };
-    
+
     console.log('Adding book from recommendation:', newBook);
     addBook(newBook)
       .then(() => {
@@ -70,49 +68,47 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
         toast.error('Failed to add book to your library. Please try again.');
       });
   };
-  
+
   const handleAddToRead = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    // En lugar de añadir directamente, preparamos el libro y mostramos el modal
+
     if (!user) {
       console.error('No authenticated user');
       return;
     }
-    
-    // Crear un objeto que cumpla con BookDTO
+
+    // Create a book from the recommendation
     const newBook: BookDTO = {
       title: recommendation.title,
       author: recommendation.author,
       year: recommendation.year || undefined,
       genre: recommendation.genre || undefined,
       status: 'read',
-      rating: 1, // Valor por defecto, se puede cambiar en el modal
+      rating: 1,
       cover: recommendation.cover || undefined,
       externalId: recommendation.externalId || undefined,
-      userId: '',  // Requerido por TypeScript, pero será reemplazado en BooksContext
+      userId: '',
       readDate: new Date().toISOString(),
       startDate: new Date().toISOString()
     };
-    
-    // Guardar el libro y mostrar el modal
+
+    // Save the book and show the modal
     setBookToAdd(newBook);
     setShowDateModal(true);
   };
-  
-  // Función para manejar la confirmación del modal de fechas
+
+  // Function to handle modal confirmation
   const handleDateModalConfirm = (startDate: Date | null, readDate: Date | null, rating: number | null) => {
     if (!bookToAdd) return;
-    
-    // Actualizar las fechas y el rating con los valores del modal
+
+    // Update the dates and rating with the modal values
     const updatedBook: BookDTO = {
       ...bookToAdd,
       startDate: startDate ? startDate.toISOString() : undefined,
       readDate: readDate ? readDate.toISOString() : undefined,
       rating: rating || undefined
     };
-    
-    // Añadir el libro con las fechas actualizadas
+
     addBook(updatedBook)
       .then(() => {
         toast.success(`"${recommendation.title}" has been added to your read books!`);
@@ -122,22 +118,22 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
         console.error('Error adding book from recommendation:', error);
         toast.error('Failed to add book to your library. Please try again.');
       });
-    
-    // Cerrar el modal
+
+    // Close the modal
     setShowDateModal(false);
   };
-  
+
   const handleAddToWantToRead = (e: React.MouseEvent) => {
     e.stopPropagation();
     createBookFromRecommendation('to-read');
-    // Marcar el libro como añadido para deshabilitar el botón
+    // Mark the book as added to disable the button
     setIsAddedToWantToRead(true);
   };
-  
+
   const handleClick = () => {
-    // Si tenemos un externalId, navegamos a la página de detalles del libro
+    // If we have an externalId, navigate to the book details page
     if (recommendation.externalId) {
-      // Navegamos a la página de detalles del libro usando la ruta /book/ para libros de OpenLibrary
+      // Navigate to the book details page using the /book/ route for OpenLibrary books
       navigate(`/book/${recommendation.externalId}`);
     }
   };
@@ -150,7 +146,7 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
           <p className="text-sm text-teal-800 font-medium">{recommendation.reason}</p>
         </div>
       )}
-      <div 
+      <div
         className="relative flex flex-col border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] hover:border-l-8"
         onClick={handleClick}
       >
@@ -178,13 +174,13 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
               </div>
             )}
           </div>
-          
+
           {/* Book information */}
           <div className="flex-1 flex flex-col gap-1 text-left">
             <h3 className="text-lg font-bold text-gray-800 line-clamp-2">{recommendation.title}</h3>
             <p className="text-sm text-gray-600 font-medium">{recommendation.author} {recommendation.year && `(${recommendation.year})`}</p>
             {recommendation.genre && <p className="text-xs text-teal-800 bg-pink-50 inline-block px-2 py-1 rounded-full border border-pink-100 font-medium">{recommendation.genre}</p>}
-            
+
             {/* Buttons to add to lists */}
             <div className="flex flex-wrap gap-2 mt-4">
               <button
@@ -195,7 +191,7 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
                 <AutoStoriesIcon className="mr-1" style={{ fontSize: 16 }} />
                 {isAddedToRead ? 'Added to read' : 'Mark as read'}
               </button>
-              
+
               <button
                 className={`text-teal-800 text-xs font-medium border border-pink-200 ${isAddedToWantToRead ? 'bg-gray-100 cursor-not-allowed' : 'bg-pink-50 hover:bg-pink-100'} px-3 py-1.5 rounded-full transition-colors flex items-center`}
                 onClick={handleAddToWantToRead}
@@ -213,16 +209,16 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
 
   // Render list view (horizontal layout)
   const renderListView = () => (
-    <div 
+    <div
       className="relative flex items-center border-l-4 border-teal-600 p-3 rounded-lg bg-white shadow-sm w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:border-l-8"
       onClick={handleClick}
     >
       {/* Book cover */}
       {recommendation.cover ? (
         <div className="flex-shrink-0 w-16 h-20 mr-4 overflow-hidden rounded">
-          <img 
-            src={recommendation.cover} 
-            alt={`Cover of ${recommendation.title}`} 
+          <img
+            src={recommendation.cover}
+            alt={`Cover of ${recommendation.title}`}
             className="w-full h-full object-cover"
           />
         </div>
@@ -231,19 +227,19 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
           <BookIcon style={{ fontSize: 32 }} />
         </div>
       )}
-      
+
       {/* Book information */}
       <div className="flex-1 flex flex-col gap-1 text-left min-w-0">
         <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-gray-800 truncate">{recommendation.title}</h3>
         </div>
-        
+
         <div className="flex items-center text-sm text-gray-600 font-medium">
           <span className="truncate">{recommendation.author}</span>
           {recommendation.year && <span className="ml-1">({recommendation.year})</span>}
           {recommendation.genre && <span className="ml-2 text-xs text-teal-800 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100 font-medium">{recommendation.genre}</span>}
         </div>
-        
+
         <div className="flex items-center mt-1 gap-2">
           <button
             className={`text-white text-xs font-medium ${isAddedToRead ? 'bg-gray-400 cursor-not-allowed' : 'bg-teal-600 hover:bg-teal-700'} px-2 py-0.5 rounded-full transition-colors flex items-center`}
@@ -253,7 +249,7 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
             <AutoStoriesIcon className="mr-1" style={{ fontSize: 14 }} />
             {isAddedToRead ? 'Added to read' : 'Mark as read'}
           </button>
-          
+
           <button
             className={`text-teal-800 text-xs font-medium border border-pink-200 ${isAddedToWantToRead ? 'bg-gray-100 cursor-not-allowed' : 'bg-pink-50 hover:bg-pink-100'} px-2 py-0.5 rounded-full transition-colors flex items-center`}
             onClick={handleAddToWantToRead}
@@ -270,8 +266,8 @@ const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation,
   return (
     <>
       {viewMode === 'grid' ? renderGridView() : renderListView()}
-      
-      {/* Modal para seleccionar fechas */}
+
+      {/* Modal for selecting dates */}
       {showDateModal && (
         <AddBookDetailsModal
           isOpen={showDateModal}

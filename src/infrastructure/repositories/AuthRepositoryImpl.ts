@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { User, UserCredentials } from '../../domain/entities/User';
-import { AuthRepository } from '../../application/interfaces/AuthRepository';
+import { AuthRepository } from '../../domain/interfaces/AuthRepository';
 
 /**
  * Implementation of the AuthRepository interface
