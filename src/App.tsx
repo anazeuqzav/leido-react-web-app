@@ -20,9 +20,9 @@ import StatisticsPage from './infrastructure/ui/pages/Statistics';
 import RecommendationsPage from './infrastructure/ui/pages/Recommendations';
 
 // Components
-import ReadBooks from './infrastructure/ui/components/ReadBooks';
-import UnreadBooks from './infrastructure/ui/components/UnreadBooks';
-import FavoriteBooks from './infrastructure/ui/components/FavoriteBooks';
+import ReadBooks from './infrastructure/ui/components/lists/ReadBooks';
+import UnreadBooks from './infrastructure/ui/components/lists/UnreadBooks';
+import FavoriteBooks from './infrastructure/ui/components/lists/FavoriteBooks';
 import BookDetail from './infrastructure/ui/components/BookDetail';
 
 // Configure colors for Material UI components

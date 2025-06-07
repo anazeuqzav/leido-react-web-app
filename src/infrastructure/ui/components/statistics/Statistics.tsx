@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { UserStatistics } from '../../../domain/entities/Statistics';
-import { StatisticsService } from '../../../application/services/StatisticsService';
-import { StatisticsUseCases } from '../../../domain/useCases/StatisticsUseCases';
-import { StatisticsRepositoryImpl } from '../../adapters/StatisticsRepositoryImpl';
-import MonthlyReadChart from './statistics/MonthlyReadChart';
-import TopGenresChart from './statistics/TopGenresChart';
-import TopAuthorsChart from './statistics/TopAuthorsChart';
-import RatingDistributionChart from './statistics/RatingDistributionChart';
-import TopRatedBooks from './statistics/TopRatedBooks';
+import { UserStatistics } from '../../../../domain/entities/Statistics';
+import { StatisticsService } from '../../../../application/services/StatisticsService';
+import { StatisticsUseCases } from '../../../../domain/useCases/StatisticsUseCases';
+import { StatisticsRepositoryImpl } from '../../../adapters/StatisticsRepositoryImpl';
+import MonthlyReadChart from './MonthlyReadChart';
+import TopGenresChart from './TopGenresChart';
+import TopAuthorsChart from './TopAuthorsChart';
+import RatingDistributionChart from './RatingDistributionChart';
+import TopRatedBooks from './TopRatedBooks';
 
 // Inicializar servicios y casos de uso
 const statisticsRepository = new StatisticsRepositoryImpl();

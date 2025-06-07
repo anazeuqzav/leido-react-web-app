@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { BooksContext } from '../context/BooksContext';
-import BookItem from './BookItem';
-import { Book } from '../../../domain/entities/Book';
+import { BooksContext } from '../../context/BooksContext';
+import BookItem from '../Book/BookItem';
 import SortIcon from '@mui/icons-material/Sort';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';

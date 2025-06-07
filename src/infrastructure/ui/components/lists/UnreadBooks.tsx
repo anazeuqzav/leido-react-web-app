@@ -1,25 +1,24 @@
 import React, { useContext, useState } from 'react';
-import { BooksContext } from '../context/BooksContext';
-import BookItem from './BookItem';
-import { Book } from '../../../domain/entities/Book';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import { BooksContext } from '../../context/BooksContext';
+import BookItem from '../Book/BookItem';
 import SortIcon from '@mui/icons-material/Sort';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 /**
- * Component that displays the list of books that have been read
+ * Component that displays the list of books that are to be read
  */
-const ReadBooks: React.FC = () => {
-  const { readBooks } = useContext(BooksContext);
+const UnreadBooks: React.FC = () => {
+  const { unreadBooks } = useContext(BooksContext);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('recent'); // 'recent', 'title', 'author', 'rating'
+  const [sortOption, setSortOption] = useState('recent'); // 'recent', 'title', 'author'
   const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list', 'compact'
 
   // Filter books based on search term
-  const filteredBooks = readBooks.filter(book => 
+  const filteredBooks = unreadBooks.filter(book => 
     book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
     book.genre?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -32,11 +31,13 @@ const ReadBooks: React.FC = () => {
         return a.title.localeCompare(b.title);
       case 'author':
         return a.author.localeCompare(b.author);
-      case 'rating':
-        return (b.rating || 0) - (a.rating || 0);
+      case 'genre':
+        return (a.genre || '').localeCompare(b.genre || '');
       case 'recent':
       default:
-        return new Date(b.readDate || 0).getTime() - new Date(a.readDate || 0).getTime();
+        // Sort by date added (usando id como aproximación de orden de adición)
+        // Los IDs más recientes suelen ser mayores
+        return b.id.localeCompare(a.id);
     }
   });
 
@@ -44,7 +45,7 @@ const ReadBooks: React.FC = () => {
     <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div className="flex items-center mb-4 md:mb-0">
-          <h2 className="text-2xl font-bold text-teal-800">My Reading Journey</h2>
+          <h2 className="text-2xl font-bold text-teal-800">My Reading List</h2>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -96,10 +97,10 @@ const ReadBooks: React.FC = () => {
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
               >
-                <option value="recent">Recently Read</option>
+                <option value="recent">Recently Added</option>
                 <option value="title">Title A-Z</option>
                 <option value="author">Author A-Z</option>
-                <option value="rating">Highest Rating</option>
+                <option value="genre">Genre</option>
               </select>
             </div>
           </div>
@@ -108,24 +109,16 @@ const ReadBooks: React.FC = () => {
       
       {/* Stats summary */}
       <div className="bg-pink-50 p-4 rounded-lg shadow-sm mb-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <p className="text-sm text-gray-500">Books Read</p>
-            <p className="text-2xl font-bold text-teal-700">{readBooks.length}</p>
-          </div>
-          <div className="bg-white p-3 rounded-md shadow-sm">
-            <p className="text-sm text-gray-500">Avg Rating</p>
-            <p className="text-2xl font-bold text-teal-700">
-              {readBooks.length > 0 
-                ? (readBooks.reduce((sum, book) => sum + (book.rating || 0), 0) / readBooks.length).toFixed(1)
-                : '0.0'}
-            </p>
+            <p className="text-sm text-gray-500">Books To Read</p>
+            <p className="text-2xl font-bold text-teal-700">{unreadBooks.length}</p>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
             <p className="text-sm text-gray-500">Top Genre</p>
             <p className="text-lg font-bold text-teal-700 truncate">
-              {readBooks.length > 0 
-                ? Object.entries(readBooks.reduce((genres, book) => {
+              {unreadBooks.length > 0 
+                ? Object.entries(unreadBooks.reduce((genres, book) => {
                     if (book.genre) {
                       genres[book.genre] = (genres[book.genre] || 0) + 1;
                     }
@@ -136,11 +129,11 @@ const ReadBooks: React.FC = () => {
             </p>
           </div>
           <div className="bg-white p-3 rounded-md shadow-sm">
-            <p className="text-sm text-gray-500">Latest Read</p>
+            <p className="text-sm text-gray-500">Latest Addition</p>
             <p className="text-lg font-bold text-teal-700 truncate">
-              {readBooks.length > 0 
-                ? [...readBooks].sort((a, b) => 
-                    new Date(b.readDate || 0).getTime() - new Date(a.readDate || 0).getTime()
+              {unreadBooks.length > 0 
+                ? [...unreadBooks].sort((a, b) => 
+                    b.id.localeCompare(a.id)
                   )[0]?.title || 'None'
                 : 'None'}
             </p>
@@ -154,7 +147,7 @@ const ReadBooks: React.FC = () => {
           {searchTerm ? (
             <p className="text-gray-600">No books match your search criteria.</p>
           ) : (
-            <p className="text-gray-600">You haven't read any books yet.</p>
+            <p className="text-gray-600">You haven't added any books to your reading list yet.</p>
           )}
         </div>
       ) : (
@@ -190,4 +183,4 @@ const ReadBooks: React.FC = () => {
   );
 };
 
-export default ReadBooks;
+export default UnreadBooks;

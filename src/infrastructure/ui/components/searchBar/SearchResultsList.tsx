@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchBook } from '../../../domain/entities/SearchBook';
+import { SearchBook } from '../../../../domain/entities/SearchBook';
 import SearchResult from './SearchResult';
 
 interface SearchResultsListProps {

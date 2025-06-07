@@ -1,5 +1,5 @@
 import React from 'react';
-import StatisticsComponent from '../components/Statistics';
+import StatisticsComponent from '../components/statistics/Statistics';
 
 const StatisticsPage: React.FC = () => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import RecommendationsComponent from '../components/Recommendations';
+import RecommendationsComponent from '../components/recommendations/Recommendations';
 
 const RecommendationsPage: React.FC = () => {
   return (

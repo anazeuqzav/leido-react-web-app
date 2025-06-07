@@ -9,8 +9,8 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookSearch from './BookSearch';
-import SearchBar from './SearchBar';
-import SearchResultsList from './SearchResultsList';
+import SearchBar from './searchBar/SearchBar';
+import SearchResultsList from './searchBar/SearchResultsList';
 // Usar una URL relativa para el logo
 const logoPath = '/src/assets/logo.png';
 

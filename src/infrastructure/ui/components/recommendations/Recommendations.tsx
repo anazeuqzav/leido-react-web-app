@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Recommendation } from '../../../domain/entities/Recommendation';
-import { RecommendationService } from '../../../application/services/RecommendationService';
-import { RecommendationUseCases } from '../../../domain/useCases/RecommendationUseCases';
-import { RecommendationRepositoryImpl } from '../../adapters/RecommendationRepositoryImpl';
-import RecommendationItem from './recommendations/RecommendationItem';
+import { Recommendation } from '../../../../domain/entities/Recommendation';
+import { RecommendationService } from '../../../../application/services/RecommendationService';
+import { RecommendationUseCases } from '../../../../domain/useCases/RecommendationUseCases';
+import { RecommendationRepositoryImpl } from '../../../adapters/RecommendationRepositoryImpl';
+import RecommendationItem from './RecommendationItem';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';

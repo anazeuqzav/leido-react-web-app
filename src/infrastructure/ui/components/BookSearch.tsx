@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { SearchContext } from '../context/SearchContext';
-import SearchBar from './SearchBar';
-import SearchResultsList from './SearchResultsList';
+import SearchBar from './searchBar/SearchBar';
+import SearchResultsList from './searchBar/SearchResultsList';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
