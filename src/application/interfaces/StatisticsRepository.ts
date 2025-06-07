@@ -1,4 +1,4 @@
-import { UserStatistics } from '../entities/Statistics';
+import { UserStatistics } from '../../domain/entities/Statistics';
 
 /**
  * Interfaz para el repositorio de estadísticas

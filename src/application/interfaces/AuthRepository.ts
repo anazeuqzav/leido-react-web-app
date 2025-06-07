@@ -1,4 +1,4 @@
-import { User, UserCredentials } from '../entities/User';
+import { User, UserCredentials } from "../../domain/entities/User";
 
 /**
  * Interface for the Authentication Repository

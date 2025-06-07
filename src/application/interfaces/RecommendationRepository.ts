@@ -1,4 +1,4 @@
-import { Recommendation } from '../entities/Recommendation';
+import { Recommendation } from '../../domain/entities/Recommendation';
 
 export interface RecommendationRepository {
   getRecommendations(): Promise<Recommendation | null>;
