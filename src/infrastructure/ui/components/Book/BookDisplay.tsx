@@ -1,42 +1,120 @@
-import React from 'react';
-import { BookDisplayProps } from './types';
+import React, { ReactNode } from 'react';
+import { Book } from '../../../../domain/entities/Book';
+import BookRating from './BookRating';
+import BookActions from './BookActions';
+import BookReadingDates from './BookReadingDates';
+
+export interface BookDisplayProps {
+  book: Book;
+  viewMode?: 'grid' | 'list' | 'compact';
+  onViewDetails?: () => void;
+  onDelete?: (e: React.MouseEvent) => void;
+  onToggleStatus?: (e: React.MouseEvent) => void;
+  onEditDates?: (e: React.MouseEvent) => void;
+  onRatingChange?: (newValue: number | null) => void;
+  children?: ReactNode;
+}
 
 /**
  * Componente que se encarga únicamente de mostrar la información del libro
  * según el modo de visualización seleccionado.
  */
-const BookDisplay: React.FC<BookDisplayProps> = ({ book, viewMode, onViewDetails, children }) => {
-  const { title, author, year, genre, cover } = book;
+const BookDisplay: React.FC<BookDisplayProps> = ({
+  book,
+  viewMode = 'grid', // por defecto
+  onViewDetails,
+  onDelete,
+  onToggleStatus,
+  onEditDates,
+  onRatingChange,
+  children
+}) => {
+  const { title, author, year, genre, cover, status } = book;
 
   // Grid view (default) - Card layout with image and details
   if (viewMode === 'grid') {
     return (
-      <div 
-        className="relative border-l-4 border-teal-600 p-4 rounded-lg bg-white shadow-md w-full cursor-pointer transition-all duration-300 hover:shadow-xl hover:translate-y-[-2px] hover:border-l-8"
-        onClick={onViewDetails}
-      >
-        <div className="flex flex-col sm:flex-row">
-          {/* Imagen del libro */}
-          {cover && (
-            <div className="mb-4 sm:mb-0 sm:mr-6 flex-shrink-0 w-full max-w-[120px] sm:w-28">
-              <div className="aspect-[3/4] w-full relative rounded-md shadow-sm overflow-hidden">
-                <img
-                  src={cover}
-                  alt={`Cover of ${title}`}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
+      <div className="relative mb-3">
+        <div className="relative">
+          {/* Delete button */}
+          {onDelete && (
+            <div className="absolute top-1 right-1 z-10 pointer-events-auto">
+              <button
+                aria-label="delete"
+                onClick={onDelete}
+                className="text-gray-400 hover:text-red-500 transition-colors p-0.5 rounded-full hover:bg-gray-100"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
             </div>
           )}
-          
-          {/* Información del libro */}
-          <div className="flex-1 flex flex-col text-left">
-            <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
-            <div>
-              <p className="text-sm text-gray-600 font-medium">{author} {year && `(${year})`}</p>
-              {genre && (
-                <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-1 px-2 py-1 rounded-full border border-pink-100 font-medium">{genre}</span>
+
+          {/* Main book content */}
+          <div 
+            className="relative border-l-3 border-teal-600 p-3 rounded-md bg-white shadow-sm w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:border-l-6"
+            onClick={onViewDetails}
+          >
+            <div className="flex flex-row">
+              {/* Book cover */}
+              {book.cover && (
+                <div className="mr-4 flex-shrink-0">
+                  <img
+                    src={book.cover}
+                    alt={`Cover of ${book.title}`}
+                    className="w-24 h-36 object-cover rounded-md shadow-sm"
+                    loading="lazy"
+                  />
+                </div>
               )}
+              
+              {/* Book info */}
+              <div className="flex-1 flex flex-col text-left min-w-0">
+                <h3 className="text-base font-bold text-gray-800 mb-1 truncate">
+                  {book.title}
+                </h3>
+                
+                <div>
+                  <p className="text-xs text-gray-600 font-medium truncate">
+                    {book.author} {book.year && `(${book.year})`}
+                  </p>
+                  {book.genre && (
+                    <span className="text-xs text-teal-800 bg-pink-50 inline-block mt-1 px-1.5 py-0.5 rounded-full border border-pink-100 font-medium truncate">
+                      {book.genre}
+                    </span>
+                  )}
+                  
+                  {/* Reading dates */}
+                  {status === 'read' && (
+                    <div className="mt-1 w-full">
+                      <BookReadingDates book={book} />
+                    </div>
+                  )}
+                  
+                  {/* Rating */}
+                  {status === 'read' && onRatingChange && (
+                    <div className="mt-2">
+                      <BookRating 
+                        id={book.id} 
+                        rating={book.rating} 
+                        onChange={onRatingChange}
+                        size="small"
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Actions */}
+                <div className="mt-2">
+                  <BookActions 
+                    book={book} 
+                    viewMode={viewMode}
+                    onToggleStatus={onToggleStatus}
+                    onEditDates={onEditDates}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

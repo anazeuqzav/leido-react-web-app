@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { BooksContext } from '../../context/BooksContext';
-import BookItem from '../book/BookItem';
 import SortIcon from '@mui/icons-material/Sort';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import StarIcon from '@mui/icons-material/Star';
+import BookItem from '../book/BookItem';
 
 /**
  * Component that displays the list of favorite books (rated 5 stars)
@@ -14,8 +14,8 @@ import StarIcon from '@mui/icons-material/Star';
 const FavoriteBooks: React.FC = () => {
   const { favoriteBooks } = useContext(BooksContext);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('rating'); // 'rating', 'title', 'author', 'recent'
-  const [viewMode, setViewMode] = useState('grid'); // 'grid', 'list', 'compact'
+  const [sortOption, setSortOption] = useState('recent'); 
+  const [viewMode, setViewMode] = useState('grid');
 
   // Filter books based on search term
   const filteredBooks = favoriteBooks.filter(book => 
@@ -35,13 +35,8 @@ const FavoriteBooks: React.FC = () => {
         return (a.genre || '').localeCompare(b.genre || '');
       case 'recent':
         return new Date(b.readDate || 0).getTime() - new Date(a.readDate || 0).getTime();
-      case 'rating':
       default:
-        // Ordenar por rating (descendente) y luego por fecha de lectura (más reciente primero)
-        if ((b.rating || 0) === (a.rating || 0)) {
           return new Date(b.readDate || 0).getTime() - new Date(a.readDate || 0).getTime();
-        }
-        return (b.rating || 0) - (a.rating || 0);
     }
   });
 
@@ -102,7 +97,6 @@ const FavoriteBooks: React.FC = () => {
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
               >
-                <option value="rating">Highest Rating</option>
                 <option value="recent">Recently Read</option>
                 <option value="title">Title A-Z</option>
                 <option value="author">Author A-Z</option>

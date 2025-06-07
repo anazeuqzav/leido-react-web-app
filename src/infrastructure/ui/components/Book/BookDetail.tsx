@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import MarkAsReadBtn from './MarkAsReadBtn';
+import MarkAsReadBtn from '../buttons/MarkAsReadBtn';
 
 /**
  * Component that displays detailed information about a book

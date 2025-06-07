@@ -39,8 +39,8 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
         year: book.first_publish_date ? parseInt(book.first_publish_date.substring(0, 4)) : undefined,
         genre: book.subjects ? book.subjects[0] : undefined,
         status: 'read',
-        rating,
-        cover: coverUrl,
+        rating: rating, // Send the exact rating value (can be decimal)
+        cover: coverUrl || undefined, // Make cover optional
         userId: user.id,
         readDate,
         startDate: startDate || readDate, // Si no hay fecha de inicio, usar la fecha de lectura
@@ -71,7 +71,7 @@ const MarkAsReadBtn: React.FC<MarkAsReadBtnProps> = ({ book, authorNames, coverU
           <Rating
             name="book-rating"
             value={rating}
-            precision={0.5}
+            precision={0.5} // Allow half-star ratings
             onChange={(event, newValue) => setRating(newValue || 0)}
             size="medium"
             className="ml-1"

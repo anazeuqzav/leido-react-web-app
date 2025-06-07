@@ -13,10 +13,10 @@ export interface BookDisplayProps {
 
 export interface BookActionsProps {
   book: Book;
-  onToggleStatus: (event: React.MouseEvent) => void;
-  onEditDates: (event: React.MouseEvent) => void;
-  onRatingChange: (value: number | null) => void;
   viewMode: 'grid' | 'list' | 'compact';
+  onToggleStatus?: (event: React.MouseEvent) => void;
+  onEditDates?: (event: React.MouseEvent) => void;
+  onRatingChange?: (value: number | null) => void;
 }
 
 export interface BookRatingProps {
