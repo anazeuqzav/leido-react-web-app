@@ -6,7 +6,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 /**
  * Component that displays the list of books that are to be read

@@ -8,16 +8,17 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
 import SearchBar from '../searchBar/SearchBar';
 import SearchResultsList from '../searchBar/SearchResultsList';
+import { NavProps } from './types';
+
 // Usar una URL relativa para el logo
 const logoPath = '/src/assets/logo.png';
 
 /**
  * Navigation component for the application
  */
-const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCurrentList }) => {
+const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
   const [results, setResults] = useState<any[]>([]);
   const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -142,7 +143,6 @@ const Nav: React.FC<{ setCurrentList?: (listName: string) => void }> = ({ setCur
               className="ml-2 px-3 py-2 rounded-md text-sm font-medium bg-pink-600 text-white hover:bg-pink-700 transition-colors duration-200 flex items-center space-x-1 shadow-sm"
             >
               <ExitToAppIcon fontSize="small" />
-              <span>Log Out</span>
             </button>
           </div>
           

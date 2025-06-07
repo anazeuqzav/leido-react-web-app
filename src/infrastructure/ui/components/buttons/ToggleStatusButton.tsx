@@ -1,12 +1,7 @@
 import React from 'react';
+import { ToggleStatusButtonProps } from './types';
 
-interface ToggleStatusButtonProps {
-  status: string;
-  onToggleStatus: (e: React.MouseEvent) => void;
-  viewMode: 'grid' | 'list' | 'compact';
-}
-
-const ToggleStatusButton: React.FC<ToggleStatusButtonProps> = ({
+const ToggleStatusButton: React.FC<ToggleStatusButtonProps & { viewMode: 'grid' | 'list' | 'compact' }> = ({
   status,
   onToggleStatus,
   viewMode

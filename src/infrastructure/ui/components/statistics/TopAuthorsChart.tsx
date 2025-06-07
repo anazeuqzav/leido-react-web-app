@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { AuthorStats } from '../../../../domain/entities/Statistics';
+import { TopAuthorsChartProps } from './types';
 
 // Register ChartJS components
 ChartJS.register(
@@ -21,11 +21,7 @@ ChartJS.register(
   Legend
 );
 
-interface TopAuthorsChartProps {
-  data: AuthorStats[];
-}
-
-const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data }) => {
+const TopAuthorsChart: React.FC<TopAuthorsChartProps> = ({ data, maxItems = 5, showLegend = true }) => {
   // Sort data by count (highest to lowest)
   const sortedData = [...data].sort((a, b) => b.count - a.count);
 

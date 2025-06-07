@@ -1,9 +1,5 @@
 import React from "react";
-
-interface EditDatesButtonProps {
-    status: string;
-    onEditDates: (e: React.MouseEvent) => void;
-}
+import { EditDatesButtonProps } from "./types";
 
 const EditDatesButton = ({ status, onEditDates }: EditDatesButtonProps) => {
     if (status !== 'read') return null;

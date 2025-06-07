@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RecommendationItem as RecommendationItemType } from '../../../../domain/entities/Recommendation';
 import { Book, BookDTO } from '../../../../domain/entities/Book';
 import { BooksContext } from '../../context/BooksContext';
 import { AuthContext } from '../../context/AuthContext';
@@ -9,11 +8,7 @@ import AddBookDetailsModal from '../modals/AddBookDetailsModal';
 import BookIcon from '@mui/icons-material/Book';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-
-interface RecommendationItemProps {
-  recommendation: RecommendationItemType;
-  viewMode?: 'grid' | 'list';
-}
+import { RecommendationItemProps } from './types';
 
 const RecommendationItem: React.FC<RecommendationItemProps> = ({ recommendation, viewMode = 'grid' }) => {
   const navigate = useNavigate();

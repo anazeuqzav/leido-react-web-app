@@ -1,14 +1,10 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Book, BookDTO } from '../../../domain/entities/Book';
-import { BookService } from '../../../application/services/BookService';
-import { BookUseCases } from '../../../domain/useCases/BookUseCases';
-import { BookRepositoryImpl } from '../../adapters/BookRepositoryImpl';
+import { BookRepositoryImpl } from '../../repositories/BookRepositoryImpl';
 import { AuthContext } from './AuthContext';
 
 // Create the repository, use cases, and service
 const bookRepository = new BookRepositoryImpl();
-const bookUseCases = new BookUseCases(bookRepository);
-const bookService = new BookService(bookUseCases);
 
 // Define the context type
 interface BooksContextType {
@@ -51,7 +47,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   const fetchBooksHandler = async (): Promise<void> => {
     if (user && token) {
       try {
-        const fetchedBooks = await bookService.getBooks(user.id);
+        const fetchedBooks = await bookRepository.getBooks(user.id);
         setBooks(fetchedBooks);
       } catch (error: any) {
         console.error('Error loading books:', error);
@@ -157,7 +153,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
       }
       
       // Si no existe, añadir el libro
-      const addedBook = await bookService.addBook({ ...newBook, userId });
+      const addedBook = await bookRepository.addBook({ ...newBook, userId });
       setBooks([...books, addedBook]);
     } catch (error: any) {
       console.error('Error adding book:', error);
@@ -170,7 +166,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
     if (!user || !token) return;
     
     try {
-      const updatedData = await bookService.updateBook(id, updatedBook);
+      const updatedData = await bookRepository.updateBook(id, updatedBook);
       
       // Actualizar la lista de libros, reemplazando el libro con el ID original
       // con el libro actualizado que puede tener un nuevo ID
@@ -195,7 +191,7 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
     if (!user || !token) return;
     
     try {
-      await bookService.deleteBook(id);
+      await bookRepository.deleteBook(id);
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
     } catch (error: any) {
       console.error('Error deleting book:', error);
@@ -204,9 +200,9 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
   };
 
   // Filter books by status
-  const readBooks = Array.isArray(books) ? bookService.getReadBooks(books) : [];
-  const unreadBooks = Array.isArray(books) ? bookService.getUnreadBooks(books) : [];
-  const favoriteBooks = Array.isArray(books) ? bookService.getFavoriteBooks(books) : [];
+  const readBooks = Array.isArray(books) ? books.filter(book => book.status === 'read') : [];
+  const unreadBooks = Array.isArray(books) ? books.filter(book => book.status === 'to-read') : [];
+  const favoriteBooks = Array.isArray(books) ? books.filter(book => book.rating === 5) : [];
   
   // Get a book by its ID
   const getBookByIdHandler = (id: string): Book | undefined => {

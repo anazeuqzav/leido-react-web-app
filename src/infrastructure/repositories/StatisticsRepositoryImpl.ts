@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { UserStatistics } from '../../domain/entities/Statistics';
-import { StatisticsRepository } from '../../domain/ports/StatisticsRepository';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
+import { StatisticsRepository } from '../../application/interfaces/StatisticsRepository';
 
 /**
  * Statistics repository implementation

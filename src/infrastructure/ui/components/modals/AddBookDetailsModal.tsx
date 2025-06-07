@@ -3,15 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
-
-interface AddBookDetailsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: (startDate: Date | null, readDate: Date | null, rating: number | null) => void;
-  initialStartDate?: Date;
-  initialReadDate?: Date;
-  initialRating?: number;
-}
+import { AddBookDetailsModalProps } from './types';
 
 /**
  * Component for selecting reading dates and rating when adding a book as read

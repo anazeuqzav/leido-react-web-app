@@ -5,12 +5,7 @@ import Button from '@mui/material/Button';
 import { Book } from '../../../../domain/entities/Book';
 import { BooksContext } from '../../context/BooksContext';
 import { toast } from 'react-toastify';
-
-interface UpdateReadDateModalProps {
-  book: Book;
-  onClose: () => void;
-  onBookUpdated?: (bookId: string) => void;
-}
+import { UpdateReadDateModalProps } from './types';
 
 /**
  * Component for editing the reading dates of a book

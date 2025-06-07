@@ -2,18 +2,11 @@ import React, { useState, useContext } from 'react';
 import { BooksContext } from '../../context/BooksContext';
 import { AuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
-import { BookDetails } from '../../../../domain/entities/SearchBook';
 import { BookDTO } from '../../../../domain/entities/Book';
 import Rating from '@mui/material/Rating';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-interface MarkAsReadBtnProps {
-  book: BookDetails;
-  authorNames: string[];
-  coverUrl: string;
-  onSuccess: () => void;
-}
+import { MarkAsReadBtnProps } from './types';
 
 /**
  * Component for marking a book as read with rating and date

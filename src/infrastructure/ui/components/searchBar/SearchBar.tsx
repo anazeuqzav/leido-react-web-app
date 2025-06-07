@@ -1,48 +1,40 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useContext, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-
-export interface SearchBarProps {
-  onSearch?: (term: string) => void;
-  setResults?: (results: any[]) => void;
-}
+import { SearchContext } from '../../context/SearchContext';
+import { SearchBarProps, SearchResultItem } from './types';
 
 /**
  * Component for inputting search queries
  */
 const SearchBar = ({ onSearch, setResults }: SearchBarProps) => {
   const [input, setInput] = useState("");
+  const { searchBooks, searchResults } = useContext(SearchContext);
 
-  const fetchData = async (value: string) => {
-    if (!value || !setResults) {
-      setResults?.([]);
-      return;
-    }
-
-    try {
-      const response = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(value + " language:eng")}`);
-      const books = response.data.docs.map((doc: any) => ({
-        title: doc.title,
-        author: doc.author_name ? doc.author_name[0] : "Unknown Author",
-        coverId: doc.cover_i,
-        key: doc.key,
+  // Update results when search results change
+  useEffect(() => {
+    if (setResults) {
+      const formattedResults = searchResults.map(book => ({
+        title: book.title,
+        author: Array.isArray(book.author_name) ? book.author_name.join(', ') : book.author_name || 'Unknown Author',
+        coverId: book.cover_i ? book.cover_i.toString() : undefined,
+        key: book.key,
       }));
-
-      setResults(books.slice(0, 5)); // limitar a 5 resultados
-    } catch (error) {
-      console.error(error);
+      setResults(formattedResults);
     }
-  };
+  }, [searchResults, setResults]);
 
   const handleChange = (value: string) => {
     setInput(value);
     
-    if (onSearch) {
-      onSearch(value);
+    if (!value.trim()) {
+      setResults?.([]);
+      return;
     }
     
-    if (setResults) {
-      fetchData(value);
+    if (onSearch) {
+      onSearch(value);
+    } else {
+      searchBooks(value);
     }
   };
 

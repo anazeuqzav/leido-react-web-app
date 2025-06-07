@@ -1,90 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { Recommendation } from '../../../../domain/entities/Recommendation';
-import { RecommendationService } from '../../../../application/services/RecommendationService';
-import { RecommendationUseCases } from '../../../../domain/useCases/RecommendationUseCases';
-import { RecommendationRepositoryImpl } from '../../../adapters/RecommendationRepositoryImpl';
+import React, { useEffect, useMemo } from 'react';
+import { useRecommendation } from '../../context/RecommendationContext';
 import RecommendationItem from './RecommendationItem';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SearchIcon from '@mui/icons-material/Search';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
-
-// Initialize services and use cases
-const recommendationRepository = new RecommendationRepositoryImpl();
-const recommendationUseCases = new RecommendationUseCases(recommendationRepository);
-const recommendationService = new RecommendationService(recommendationUseCases);
+import { RecommendationsViewProps } from './types';
 
 const Recommendations: React.FC = () => {
-  const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const {
+    recommendation,
+    isLoading,
+    error,
+    refreshing,
+    fetchRecommendations,
+    generateRecommendations,
+    searchTerm,
+    setSearchTerm,
+    viewMode,
+    setViewMode
+  } = useRecommendation();
+
+  const handleRefresh = async () => {
+    await generateRecommendations();
+  };
 
   useEffect(() => {
     fetchRecommendations();
-  }, []);
+  }, [fetchRecommendations]);
 
-  const fetchRecommendations = async () => {
-    try {
-      setLoading(true);
-      const data = await recommendationService.getRecommendations();
-      setRecommendation(data);
-      setError(null);
-    } catch (err: any) {
-      console.error('Error fetching recommendations:', err);
-      let errorMessage = 'Could not load recommendations. Please try again later.';
-      
-      // Mostrar información más detallada sobre el error
-      if (err.response) {
-        // Error de respuesta del servidor
-        errorMessage += ` Error del servidor: ${err.response.status} - ${err.response.statusText}`;
-        console.error('Error response:', err.response.data);
-      } else if (err.request) {
-        // Error de conexión
-        errorMessage += ' No se pudo conectar con el servidor. Verifica que el backend esté en ejecución.';
-      } else {
-        // Otro tipo de error
-        errorMessage += ` Detalle: ${err.message}`;
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRefresh = async () => {
-    try {
-      setRefreshing(true);
-      const data = await recommendationService.generateRecommendations();
-      setRecommendation(data);
-      setError(null);
-    } catch (err: any) {
-      console.error('Error generating recommendations:', err);
-      let errorMessage = 'Could not generate new recommendations. Please try again later.';
-      
-      // Mostrar información más detallada sobre el error
-      if (err.response) {
-        // Error de respuesta del servidor
-        errorMessage += ` Error del servidor: ${err.response.status} - ${err.response.statusText}`;
-        console.error('Error response:', err.response.data);
-      } else if (err.request) {
-        // Error de conexión
-        errorMessage += ' No se pudo conectar con el servidor. Verifica que el backend esté en ejecución.';
-      } else {
-        // Otro tipo de error
-        errorMessage += ` Detalle: ${err.message}`;
-      }
-      
-      setError(errorMessage);
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -130,7 +75,7 @@ const Recommendations: React.FC = () => {
   ) : [];
 
   // Group recommendations by source book/author
-  const groupedRecommendations = filteredRecommendations.reduce((acc, rec) => {
+  const groupedRecommendations = (filteredRecommendations || []).reduce<Record<string, typeof filteredRecommendations>>((acc, rec) => {
     // Extract the book title or author from the reason
     let sourceKey = '';
     

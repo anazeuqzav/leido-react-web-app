@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { SearchBook, BookDetails } from '../../domain/entities/SearchBook';
-import { SearchRepository } from '../../domain/ports/SearchRepository';
+import { SearchRepository } from '../../application/interfaces/SearchRepository';
 
 /**
  * Implementation of the SearchRepository interface

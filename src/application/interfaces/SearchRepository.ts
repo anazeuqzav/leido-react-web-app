@@ -1,4 +1,4 @@
-import { SearchBook, BookDetails } from '../entities/SearchBook';
+import { SearchBook, BookDetails } from '../../domain/entities/SearchBook';
 
 /**
  * Interface for the Search Repository

@@ -6,7 +6,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { GenreStats } from '../../../../domain/entities/Statistics';
+import { TopGenresChartProps } from './types';
 
 // Register ChartJS components
 ChartJS.register(
@@ -15,11 +15,7 @@ ChartJS.register(
   Legend
 );
 
-interface TopGenresChartProps {
-  data: GenreStats[];
-}
-
-const TopGenresChart: React.FC<TopGenresChartProps> = ({ data }) => {
+const TopGenresChart: React.FC<TopGenresChartProps> = ({ data, maxItems = 5, showLegend = true }) => {
   // Colors for the chart - Usando una paleta más moderna y que coincide con el resto de la app
   const backgroundColors = [
     'rgba(20, 184, 166, 0.7)',  // teal-500

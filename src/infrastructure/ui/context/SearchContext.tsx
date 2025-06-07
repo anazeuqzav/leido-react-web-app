@@ -1,13 +1,9 @@
 import React, { createContext, useState, ReactNode } from 'react';
 import { SearchBook, BookDetails } from '../../../domain/entities/SearchBook';
-import { SearchService } from '../../../application/services/SearchService';
-import { SearchUseCases } from '../../../domain/useCases/SearchUseCases';
-import { SearchRepositoryImpl } from '../../adapters/SearchRepositoryImpl';
+import { SearchRepositoryImpl } from '../../repositories/SearchRepositoryImpl';
 
 // Create the repository, use cases, and service
 const searchRepository = new SearchRepositoryImpl();
-const searchUseCases = new SearchUseCases(searchRepository);
-const searchService = new SearchService(searchUseCases);
 
 // Define the context type
 interface SearchContextType {
@@ -50,7 +46,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
     setError(null);
 
     try {
-      const results = await searchService.searchBooks(query);
+      const results = await searchRepository.searchBooks(query);
       setSearchResults(results);
     } catch (error: any) {
       console.error('Error searching books:', error);
@@ -67,7 +63,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
    */
   const getBookDetailsHandler = async (bookId: string): Promise<BookDetails> => {
     try {
-      return await searchService.getBookDetails(bookId);
+      return await searchRepository.getBookDetails(bookId);
     } catch (error: any) {
       console.error('Error fetching book details:', error);
       setError(error.message || 'Error fetching book details');

@@ -1,43 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { UserStatistics } from '../../../../domain/entities/Statistics';
-import { StatisticsService } from '../../../../application/services/StatisticsService';
-import { StatisticsUseCases } from '../../../../domain/useCases/StatisticsUseCases';
-import { StatisticsRepositoryImpl } from '../../../adapters/StatisticsRepositoryImpl';
+import React from 'react';
+
 import MonthlyReadChart from './MonthlyReadChart';
 import TopGenresChart from './TopGenresChart';
 import TopAuthorsChart from './TopAuthorsChart';
 import RatingDistributionChart from './RatingDistributionChart';
 import TopRatedBooks from './TopRatedBooks';
 
-// Inicializar servicios y casos de uso
-const statisticsRepository = new StatisticsRepositoryImpl();
-const statisticsUseCases = new StatisticsUseCases(statisticsRepository);
-const statisticsService = new StatisticsService(statisticsUseCases);
+import { useStatistics } from '../../context/StatisticsContext';
 
 const Statistics: React.FC = () => {
-  const [statistics, setStatistics] = useState<UserStatistics | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchStatistics = async () => {
-      try {
-        setLoading(true);
-        const data = await statisticsService.getUserStatistics();
-        // Añadir mensaje de depuración
-        console.log('Datos de estadísticas recibidos:', data);
-        setStatistics(data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching statistics:', err);
-        setError('Could not load statistics. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStatistics();
-  }, []);
+  const { statistics, isLoading: loading, error } = useStatistics();
 
   if (loading) {
     return (
@@ -133,7 +105,7 @@ const Statistics: React.FC = () => {
           <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-teal-700 px-1">Most Read Genres</h2>
           {statistics.topGenres.length > 0 ? (
             <div className="-mt-1">
-              <TopGenresChart data={statistics.topGenres} />
+              <TopGenresChart data={statistics.topGenres} maxItems={5} showLegend={true} />
             </div>
           ) : (
             <p className="text-sm sm:text-base text-gray-500 px-1">Not enough data to display the chart.</p>
@@ -148,35 +120,25 @@ const Statistics: React.FC = () => {
           <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-teal-700 px-1">Rating Distribution</h2>
           {statistics.ratingDistribution.length > 0 ? (
             <div className="-mt-1 -mb-3">
-              <RatingDistributionChart data={statistics.ratingDistribution} />
+              <RatingDistributionChart data={statistics.ratingDistribution} showLegend={true} />
             </div>
           ) : (
-            <p className="text-sm sm:text-base text-gray-500 px-1">Not enough ratings to display the chart.</p>
+            <p className="text-sm sm:text-base text-gray-500 px-1">Not enough data to display the chart.</p>
           )}
         </div>
         
         {/* Top rated books */}
-        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-md">
-          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-4 text-pink-600 px-1">Your Favorite Books</h2>
+        <div className="bg-white p-2 sm:p-3 rounded-lg shadow-md">
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-teal-700">Top Rated Books</h2>
           {statistics.topRatedBooks.length > 0 ? (
-            <TopRatedBooks books={statistics.topRatedBooks} />
+            <TopRatedBooks books={statistics.topRatedBooks} maxItems={5} />
           ) : (
-            <p className="text-sm sm:text-base text-gray-500 px-1">Not enough ratings to display your favorites.</p>
+            <p className="text-sm sm:text-base text-gray-500">Not enough data to display top books.</p>
           )}
         </div>
       </div>
 
-      {/* Authors chart */}
-      <div className="bg-white pt-2 pb-3 px-2 sm:pt-3 sm:pb-4 sm:px-3 rounded-lg shadow-md">
-        <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-pink-600 px-1">Top 5 Most Read Authors</h2>
-        {statistics.topFiveAuthors.length > 0 ? (
-          <div className="-mt-1 mb-1">
-            <TopAuthorsChart data={statistics.topFiveAuthors} />
-          </div>
-        ) : (
-          <p className="text-sm sm:text-base text-gray-500 px-1">Not enough data to display the chart.</p>
-        )}
-      </div>
+      {/* Top authors - Removed duplicate section */}
     </div>
   );
 };

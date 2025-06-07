@@ -1,16 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface SearchResultProps {
-  result: {
-    key: string;
-    title: string;
-    author?: string;
-    coverId?: number;
-    author_name?: string[];
-    cover_i?: number;
-  };
-}
+import { SearchResultProps } from './types';
 
 /**
  * Component that displays a single search result
@@ -24,8 +14,8 @@ const SearchResult = ({ result }: SearchResultProps) => {
   };
   
   // Get cover image URL if available
-  const coverUrl = result.coverId || result.cover_i
-    ? `https://covers.openlibrary.org/b/id/${result.coverId || result.cover_i}-S.jpg` 
+  const coverUrl = result.coverId
+    ? `https://covers.openlibrary.org/b/id/${result.coverId}-S.jpg`
     : "https://via.placeholder.com/50x75?text=No+Cover";
 
   return (
@@ -41,7 +31,7 @@ const SearchResult = ({ result }: SearchResultProps) => {
       <div className="flex flex-col">
         <div className="font-bold text-sm text-gray-800">{result.title}</div>
         <div className="text-xs text-gray-500">
-          {result.author || (result.author_name && result.author_name.join(', ')) || "Unknown Author"}
+          {result.author}
         </div>
       </div>
     </div>

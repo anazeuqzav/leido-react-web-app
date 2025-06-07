@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { MonthlyReadStats } from '../../../../domain/entities/Statistics';
+import { MonthlyReadChartProps } from './types';
 
 // Register ChartJS components
 ChartJS.register(
@@ -22,10 +22,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-
-interface MonthlyReadChartProps {
-  data: MonthlyReadStats[];
-}
 
 const MonthlyReadChart: React.FC<MonthlyReadChartProps> = ({ data }) => {
   // Format month names for display with month and year on separate lines

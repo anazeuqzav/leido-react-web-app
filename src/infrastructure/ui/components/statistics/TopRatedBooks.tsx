@@ -1,11 +1,7 @@
 import React from 'react';
-import { BookRanking } from '../../../../domain/entities/Statistics';
+import { TopRatedBooksProps } from './types';
 
-interface TopRatedBooksProps {
-  books: BookRanking[];
-}
-
-const TopRatedBooks: React.FC<TopRatedBooksProps> = ({ books }) => {
+const TopRatedBooks: React.FC<TopRatedBooksProps> = ({ books, maxItems = 5 }) => {
   // Sort books by rating (highest to lowest)
   const sortedBooks = [...books].sort((a, b) => b.rating - a.rating);
   

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
-import { RatingStats } from '../../../../domain/entities/Statistics';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +9,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { RatingDistributionChartProps } from './types';
 
 // Register Chart.js components
 ChartJS.register(
@@ -21,11 +21,7 @@ ChartJS.register(
   Legend
 );
 
-interface RatingDistributionChartProps {
-  data: RatingStats[];
-}
-
-const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data }) => {
+const RatingDistributionChart: React.FC<RatingDistributionChartProps> = ({ data, showLegend = true }) => {
   // Sort data by rating
   const sortedData = [...data].sort((a, b) => a.rating - b.rating);
   

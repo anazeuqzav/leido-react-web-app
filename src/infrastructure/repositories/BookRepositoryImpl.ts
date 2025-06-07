@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Book, BookDTO } from '../../domain/entities/Book';
-import { BookRepository } from '../../domain/ports/BookRepository';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
+import { BookRepository } from '../../application/interfaces/BookRepository';
 
 /**
  * Implementation of the BookRepository interface

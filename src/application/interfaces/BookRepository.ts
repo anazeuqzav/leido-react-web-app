@@ -1,4 +1,4 @@
-import { Book, BookDTO } from '../entities/Book';
+import { Book, BookDTO } from '../../domain/entities/Book';
 
 /**
  * Interface for the Book Repository

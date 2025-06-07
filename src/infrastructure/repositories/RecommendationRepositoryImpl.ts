@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Recommendation } from '../../domain/entities/Recommendation';
-import { RecommendationRepository } from '../../domain/ports/RecommendationRepository';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
+import { RecommendationRepository } from '../../application/interfaces/RecommendationRepository';
 
 export class RecommendationRepositoryImpl implements RecommendationRepository {
   private API_URL = 'http://localhost:5000/api';

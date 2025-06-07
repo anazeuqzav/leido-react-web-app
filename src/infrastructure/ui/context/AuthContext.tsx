@@ -1,13 +1,9 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { User, UserCredentials } from '../../../domain/entities/User';
-import { AuthService } from '../../../application/services/AuthService';
-import { AuthUseCases } from '../../../domain/useCases/AuthUseCases';
-import { AuthRepositoryImpl } from '../../adapters/AuthRepositoryImpl';
+import { AuthRepositoryImpl } from '../../repositories/AuthRepositoryImpl';
 
 // Create the repository, use cases, and service
 const authRepository = new AuthRepositoryImpl();
-const authUseCases = new AuthUseCases(authRepository);
-const authService = new AuthService(authUseCases);
 
 // Define the context type
 interface AuthContextType {
@@ -52,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    */
   const login = async (email: string, password: string): Promise<boolean> => {
     const credentials: UserCredentials = { email, password };
-    const result = await authService.login(credentials);
+    const result = await authRepository.login(credentials);
     
     if (result) {
       setUser(result.user);
@@ -67,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    * Logout a user
    */
   const logout = () => {
-    authService.logout();
+    authRepository.logout();
     setUser(null);
     setToken(null);
   };
