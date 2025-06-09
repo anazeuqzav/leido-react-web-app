@@ -138,7 +138,17 @@ const Statistics: React.FC = () => {
         </div>
       </div>
 
-      {/* Top authors - Removed duplicate section */}
+      {/* Top authors section */}
+      <div className="bg-white p-2 sm:p-3 rounded-lg shadow-md mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-teal-700 px-1">Most Read Authors</h2>
+        {statistics.topAuthors.length > 0 ? (
+          <div className="-mt-1">
+            <TopAuthorsChart data={statistics.topAuthors} maxItems={5} showLegend={true} />
+          </div>
+        ) : (
+          <p className="text-sm sm:text-base text-gray-500 px-1">Not enough data to display the chart.</p>
+        )}
+      </div>
     </div>
   );
 };

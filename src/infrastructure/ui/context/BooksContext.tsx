@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 import { Book, BookDTO } from '../../../domain/entities/Book';
 import { BookRepositoryImpl } from '../../repositories/BookRepositoryImpl';
 import { AuthContext } from './AuthContext';
+import { publish } from '../../utils/eventBus';
 
 // Create the repository, use cases, and service
 const bookRepository = new BookRepositoryImpl();
@@ -117,6 +118,9 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
       // If the book doesn't exist, add it
       const addedBook = await bookRepository.addBook({ ...newBook, userId });
       setBooks([...books, addedBook]);
+      
+      // Publish event to notify that books have been updated
+      publish('BOOKS_UPDATED');
     } catch (error: any) {
       console.error('Error adding book:', error);
       setError(error.message);
@@ -136,6 +140,9 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
         return [...filteredBooks, updatedData];
       });
 
+      // Publish event to notify that books have been updated
+      publish('BOOKS_UPDATED');
+      
       // Return the updated book so components can access the new ID
       return updatedData;
     } catch (error: any) {
@@ -152,6 +159,9 @@ export const BooksProvider: React.FC<BooksProviderProps> = ({ children }) => {
     try {
       await bookRepository.deleteBook(id);
       setBooks((prevBooks) => prevBooks.filter((book) => book.id !== id));
+      
+      // Publish event to notify that books have been updated
+      publish('BOOKS_UPDATED');
     } catch (error: any) {
       console.error('Error deleting book:', error);
       setError(error.message);

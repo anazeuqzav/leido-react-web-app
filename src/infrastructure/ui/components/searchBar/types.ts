@@ -11,12 +11,10 @@ export interface SearchResultItem {
   title: string;
   author?: string;
   cover?: string; // Direct cover URL
+  cover_i?: number; // Cover ID from Open Library API
   author_name?: string | string[]; // For API response compatibility
 }
 
-export interface SearchResultProps {
-  result: SearchResultItem;
-}
 
 export interface SearchResultsListProps {
   results: SearchResultItem[];
@@ -32,4 +30,16 @@ export interface SearchFilters {
   author?: string;
   year?: number;
   language?: string;
+}
+
+export interface SearchResultProps {
+  result: {
+    key: string;
+    title: string;
+    author?: string;
+    coverId?: number;
+    author_name?: string[];
+    cover_i?: number;
+    cover?: string;
+  };
 }

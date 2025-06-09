@@ -14,7 +14,7 @@ const SearchResultsList: React.FC<SearchResultsListProps> = ({ results }) => {
       author: book.author ||
         (Array.isArray(book.author_name) ? book.author_name.join(', ') :
           (typeof book.author_name === 'string' ? book.author_name : 'Unknown Author')),
-      cover: `https://covers.openlibrary.org/b/olid/${book.id}-M.jpg`,
+      cover: book.cover || (book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : undefined),
     };
   };
 
@@ -28,9 +28,15 @@ const SearchResultsList: React.FC<SearchResultsListProps> = ({ results }) => {
 
   return (
     <div className="w-full bg-white flex flex-col shadow-md rounded-lg mt-2 max-h-72 overflow-y-auto absolute top-12 z-10">
-      {results.map((result) => (
-        <SearchResult key={result.key} result={mapToResultItem(result)} />
-      ))}
+      {results.map((result) => {
+        // Ensure author_name is always an array or undefined
+        const processedResult = {
+          ...mapToResultItem(result),
+          author_name: Array.isArray(result.author_name) ? result.author_name : 
+                      (typeof result.author_name === 'string' ? [result.author_name] : undefined)
+        };
+        return <SearchResult key={result.key} result={processedResult} />;
+      })}
     </div>
   );
 };

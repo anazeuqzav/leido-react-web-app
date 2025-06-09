@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { User, UserCredentials } from '../../../domain/entities/User';
 import { AuthRepositoryImpl } from '../../repositories/AuthRepositoryImpl';
 
-// Create the repository, use cases, and service
+// Create the repository
 const authRepository = new AuthRepositoryImpl();
 
 // Define the context type

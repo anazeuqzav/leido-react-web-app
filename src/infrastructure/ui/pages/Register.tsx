@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
 
 /**
  * Register page component
@@ -46,28 +47,34 @@ const Register: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        username, 
+        email, 
+        password
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         navigate('/login');
       } else {
-        setError(data.message || 'Registration failed');
+        setError(response.data?.message || 'Registration failed');
       }
     } catch (err: any) {
-      setError(err.message || 'Registration failed');
+      setError(err.response?.data?.message || err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-white">
+    <div 
+      className="flex flex-col items-center justify-center h-screen" 
+      style={{
+        backgroundImage: `url('/src/assets/background.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <div className="flex flex-col items-center mb-6">
         <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">LEÍDO</h1>
         <h2 className="font-[Poppins] text-[20px] font-normal text-gray-700 mt-1 text-center">
@@ -78,7 +85,7 @@ const Register: React.FC = () => {
       <div className="flex flex-col items-center justify-center">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-5 rounded-lg shadow-lg flex flex-col w-[300px] gap-3"
+          className="bg-white p-5 rounded-lg shadow-lg flex flex-col w-[300px] gap-3 bg-opacity-95"
         >
           <h2 className="mb-3 text-[#0d4341] text-lg font-semibold text-center">
             Create an Account

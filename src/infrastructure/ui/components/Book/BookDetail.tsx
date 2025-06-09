@@ -70,7 +70,7 @@ const BookDetail: React.FC = () => {
                 if (userBook.cover) {
                   setCoverUrl(userBook.cover);
                 } else if (bookDetails.covers && bookDetails.covers.length > 0) {
-                  setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-L.jpg`);
+                  setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-M.jpg`);
                 }
 
                 // Author
@@ -99,7 +99,8 @@ const BookDetail: React.FC = () => {
 
           // Cover image
           if (bookDetails.covers && bookDetails.covers.length > 0) {
-            setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-L.jpg`);
+            // Using M size instead of L for better compatibility
+            setCoverUrl(`https://covers.openlibrary.org/b/id/${bookDetails.covers[0]}-M.jpg`);
           }
 
           // Check if the book already exists in the library by its externalId

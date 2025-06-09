@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { UserStatistics } from '../../../domain/entities/Statistics';
 import { StatisticsRepositoryImpl } from '../../repositories/StatisticsRepositoryImpl';
+import { subscribe, unsubscribe } from '../../utils/eventBus';
 
 const statisticsRepository = new StatisticsRepositoryImpl();
 
@@ -52,6 +53,19 @@ export const StatisticsProvider: React.FC<StatisticsProviderProps> = ({ children
   // Load statistics on component mount
   useEffect(() => {
     fetchStatistics();
+    
+    // Subscribe to BOOKS_UPDATED event
+    const handleBooksUpdated = () => {
+      console.log('Statistics: Received BOOKS_UPDATED event, refreshing statistics...');
+      fetchStatistics();
+    };
+    
+    subscribe('BOOKS_UPDATED', handleBooksUpdated);
+    
+    // Cleanup subscription when component unmounts
+    return () => {
+      unsubscribe('BOOKS_UPDATED', handleBooksUpdated);
+    };
   }, [fetchStatistics]);
 
   /**

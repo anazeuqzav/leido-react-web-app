@@ -6,10 +6,6 @@
  * Gets authentication headers with token
  * @returns Headers object with authorization token
  */
-/**
- * Gets authentication headers with token
- * @returns Headers object with authorization token
- */
 export const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
   

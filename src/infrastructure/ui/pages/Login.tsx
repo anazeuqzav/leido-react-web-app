@@ -25,7 +25,15 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-white">
+    <div 
+      className="flex flex-col items-center justify-center h-screen" 
+      style={{
+        backgroundImage: `url('/src/assets/background.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <div className="flex flex-col items-center mb-6">
         <h1 className="text-[80px] font-[Anton] text-[#0d4341] m-0">LEÍDO</h1>
         <h2 className="font-[Poppins] text-[20px] font-normal text-gray-700 mt-1 text-center">
@@ -36,7 +44,7 @@ const Login: React.FC = () => {
       <div className="flex flex-col items-center justify-center">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-5 rounded-lg shadow-lg flex flex-col w-[300px] gap-3"
+          className="bg-white p-5 rounded-lg shadow-lg flex flex-col w-[300px] gap-3 bg-opacity-95"
         >
           <h2 className="mb-3 text-[#0d4341] text-lg font-semibold text-center">
             Log In

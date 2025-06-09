@@ -32,7 +32,7 @@ export class SearchRepositoryImpl implements SearchRepository {
             key: doc.key,
             title: doc.title,
             author_name: doc.author_name ? doc.author_name.join(', ') : 'Unknown',
-            cover_i: doc.cover_i 
+            cover: doc.cover_i 
               ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
               : '/placeholder-cover.jpg',
           }));
