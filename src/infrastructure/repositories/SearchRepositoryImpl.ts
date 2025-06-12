@@ -1,11 +1,12 @@
 import axios from 'axios';
+import config from '../../config/api';
 import { SearchBook, BookDetails } from '../../domain/entities/SearchBook';
 import { SearchRepository } from '../../application/interfaces/SearchRepository'
 /**
  * Implementation of the SearchRepository interface
  */
 export class SearchRepositoryImpl implements SearchRepository {
-  private API_URL = 'https://openlibrary.org';
+  private API_URL = config.OPEN_LIBRARY_URL;
 
   /**
    * Search for books

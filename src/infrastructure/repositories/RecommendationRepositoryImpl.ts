@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../../config/api';
 import { Recommendation } from '../../domain/entities/Recommendation';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
 import { RecommendationRepository } from '../../application/interfaces/RecommendationRepository';
@@ -8,7 +9,7 @@ import { RecommendationRepository } from '../../application/interfaces/Recommend
  * Handles all recommendation-related API calls
  */
 export class RecommendationRepositoryImpl implements RecommendationRepository {
-  private API_URL = 'http://localhost:5000/api';
+  private API_URL = config.API_URL;
 
   /**
    * Fetches personalized book recommendations for the current user

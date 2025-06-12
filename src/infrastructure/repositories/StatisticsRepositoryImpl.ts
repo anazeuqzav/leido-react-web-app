@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../../config/api';
 import { UserStatistics } from '../../domain/entities/Statistics';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
 import { StatisticsRepository } from '../../application/interfaces/StatisticsRepository';
@@ -7,7 +8,7 @@ import { StatisticsRepository } from '../../application/interfaces/StatisticsRep
  * Statistics repository implementation
  */
 export class StatisticsRepositoryImpl implements StatisticsRepository {
-  private API_URL = 'http://localhost:5000/api';
+  private API_URL = config.API_URL;
 
   /**
    * Gets user statistics

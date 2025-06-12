@@ -11,8 +11,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import SearchBar from '../searchBar/SearchBar';
 import SearchResultsList from '../searchBar/SearchResultsList';
 import { NavProps } from './types';
-
-const logoPath = '/src/assets/logo.png';
+import logoImage from '../../../../assets/logo.png';
 
 /**
  * Navigation component for the application
@@ -63,7 +62,7 @@ const Nav: React.FC<NavProps> = ({ setCurrentList }) => {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <img
-                src={logoPath}
+                src={logoImage}
                 alt="Leído Logo"
                 className="h-10 w-10 object-contain filter drop-shadow-md"
               />

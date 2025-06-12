@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../../config/api';
 import { User, UserCredentials } from '../../domain/entities/User';
 import { AuthRepository } from '../../application/interfaces/AuthRepository';
 
@@ -6,7 +7,7 @@ import { AuthRepository } from '../../application/interfaces/AuthRepository';
  * Implementation of the AuthRepository interface
  */
 export class AuthRepositoryImpl implements AuthRepository {
-  private API_URL = 'http://localhost:5000/api';
+  private API_URL = config.API_URL;
 
   /**
    * Login a user

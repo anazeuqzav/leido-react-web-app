@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../../config/api';
 import { Book, BookDTO } from '../../domain/entities/Book';
 import { getAuthHeaders, handleAuthError } from '../utils/authUtils';
 import { BookRepository } from '../../application/interfaces/BookRepository';
@@ -7,7 +8,7 @@ import { BookRepository } from '../../application/interfaces/BookRepository';
  * Implementation of the BookRepository interface
  */
 export class BookRepositoryImpl implements BookRepository {
-  private API_URL = 'http://localhost:5000/api';
+  private API_URL = config.API_URL;
 
   /**
    * Get all books for a user

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
+import config from '../../../config/api';
 
 /**
  * Register page component
@@ -47,7 +48,7 @@ const Register: React.FC = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      const response = await axios.post(`${config.API_URL}/auth/register`, {
         username, 
         email, 
         password
