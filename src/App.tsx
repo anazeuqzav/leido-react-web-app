@@ -22,7 +22,7 @@ import RecommendationsPage from './infrastructure/ui/pages/Recommendations';
 import ReadBooks from './infrastructure/ui/components/lists/ReadBooks';
 import UnreadBooks from './infrastructure/ui/components/lists/UnreadBooks';
 import FavoriteBooks from './infrastructure/ui/components/lists/FavoriteBooks';
-import BookDetail from './infrastructure/ui/components/book/BookDetail';
+import { BookDetail } from './infrastructure/ui/components/book';
 import { StatisticsProvider } from './infrastructure/ui/context/StatisticsContext';
 import { RecommendationProvider } from './infrastructure/ui/context/RecommendationContext';
 
