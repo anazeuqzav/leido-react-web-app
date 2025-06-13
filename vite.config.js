@@ -10,9 +10,13 @@ export default defineConfig({
     tailwindcss(),
   ],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    },
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname, 'src') },
+      { find: '@components', replacement: path.resolve(__dirname, 'src/infrastructure/ui/components') },
+      { find: '@pages', replacement: path.resolve(__dirname, 'src/infrastructure/ui/pages') },
+      { find: '@context', replacement: path.resolve(__dirname, 'src/infrastructure/ui/context') },
+      { find: '@domain', replacement: path.resolve(__dirname, 'src/domain') },
+    ],
   },
   build: {
     outDir: 'dist',

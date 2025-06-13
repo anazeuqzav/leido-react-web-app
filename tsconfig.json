@@ -15,7 +15,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "typeRoots": ["./node_modules/@types", "./env.d.ts"]
+    "typeRoots": ["./node_modules/@types", "./env.d.ts"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/infrastructure/ui/components/*"],
+      "@pages/*": ["src/infrastructure/ui/pages/*"],
+      "@context/*": ["src/infrastructure/ui/context/*"],
+      "@domain/*": ["src/domain/*"]
+    }
   },
   "include": ["src", "env.d.ts"],
 }
